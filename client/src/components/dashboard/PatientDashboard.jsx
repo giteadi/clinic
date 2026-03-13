@@ -5,6 +5,7 @@ import { COLORS } from "../../constants/colors";
 import { DOCTORS } from "../../constants/data";
 import Avatar from "../common/Avatar";
 import BackButton from "../common/BackButton";
+import { useSelector } from "react-redux";
 
 export default function PatientDashboard({ setView }) {
   const [activeTab, setActiveTab] = useState("upcoming");

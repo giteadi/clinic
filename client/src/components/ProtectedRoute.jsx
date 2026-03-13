@@ -5,9 +5,9 @@ import LoginPage from './pages/LoginPage';
 // Role-based access configuration
 const ROLE_ACCESS = {
   guest: ['home', 'doctors', 'clinics', 'appointment', 'login'],
-  patient: ['home', 'doctors', 'clinics', 'appointment', 'patient-dashboard', 'login'],
-  admin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'login'],
-  superadmin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'superadmin-dashboard', 'login', 'add-clinic', 'manage-users', 'analytics', 'system-config', 'system-health', 'broadcast']
+  patient: ['home', 'doctors', 'clinics', 'appointment', 'patient-dashboard', 'login', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation'],
+  admin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'login', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation'],
+  superadmin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'superadmin-dashboard', 'login', 'add-clinic', 'manage-users', 'analytics', 'system-config', 'system-health', 'broadcast', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation']
 };
 
 export default function ProtectedRoute({ children, view, setView }) {

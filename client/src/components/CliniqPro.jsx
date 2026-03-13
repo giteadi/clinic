@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 import Navbar from "./layout/Navbar";
 import Footer from "./layout/Footer";
+import ProtectedRoute from "./ProtectedRoute";
+import Home from "./pages/Home";
+import LoginPage from "./pages/LoginPage";
+import AppointmentPage from "./pages/AppointmentPage";
+import DoctorsPage from "./pages/DoctorsPage";
+import ClinicPage from "./pages/ClinicPage";
+import PatientDashboard from "./dashboard/PatientDashboard";
+import AdminDashboard from "./dashboard/AdminDashboard";
+import SuperAdminDashboard from "./dashboard/SuperAdminDashboard";
+import SystemControls from "./admin/SystemControls";
+import ClinicSelectionPage from "./pages/ClinicSelectionPage";
+import DoctorSelectionPage from "./pages/DoctorSelectionPage";
+import DoctorBookingPage from "./pages/DoctorBookingPage";
+import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import Hero from "./sections/Hero";
 import SearchSection from "./sections/SearchSection";
 import ReviewsSection from "./sections/ReviewsSection";
 import InquirySection from "./sections/InquirySection";
-import DoctorsView from "./sections/DoctorsView";
-import BookingModal from "./sections/BookingModal";
-import PatientDashboard from "./dashboard/PatientDashboard";
-import AdminDashboard from "./dashboard/AdminDashboard";
-import SuperAdminDashboard from "./dashboard/SuperAdminDashboard";
-import AppointmentPage from "./pages/AppointmentPage";
-import DoctorsPage from "./pages/DoctorsPage";
-import ClinicPage from "./pages/ClinicPage";
-import LoginPage from "./pages/LoginPage";
-import ProtectedRoute from "./ProtectedRoute";
-import SystemControls from "./admin/SystemControls";
 
 export default function CliniqPro() {
   const [view, setView] = useState("home");
@@ -115,6 +119,26 @@ export default function CliniqPro() {
           {view === "broadcast" && (
             <div key="broadcast">
               <SystemControls activeTab="broadcast" setView={setView} />
+            </div>
+          )}
+          {view === "clinic-selection" && (
+            <div key="clinic-selection">
+              <ClinicSelectionPage setView={setView} />
+            </div>
+          )}
+          {view === "doctor-selection" && (
+            <div key="doctor-selection">
+              <DoctorSelectionPage setView={setView} />
+            </div>
+          )}
+          {view === "doctor-booking" && (
+            <div key="doctor-booking">
+              <DoctorBookingPage setView={setView} />
+            </div>
+          )}
+          {view === "booking-confirmation" && (
+            <div key="booking-confirmation">
+              <BookingConfirmationPage setView={setView} />
             </div>
           )}
         </ProtectedRoute>

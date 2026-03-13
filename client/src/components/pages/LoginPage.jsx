@@ -61,7 +61,20 @@ export default function LoginPage({ setView }) {
             name: "John Doe",
             email: formData.email,
             role: "patient",
-            phone: "+91 98765 43212"
+            phone: "+91 98765 43212",
+            linkedClinic: {
+              id: 1,
+              name: "City Medical Center",
+              address: "123 MG Road, Mumbai",
+              phone: "+91 22 2345 6789",
+              rating: 4.8,
+              doctors: 25,
+              specialties: ["General", "Cardiology", "Orthopedics"],
+              image: "🏥",
+              timings: "24/7",
+              distance: "2.5 km",
+              availableSlots: 45
+            }
           };
           dispatch(loginSuccess({ user, token: "mock-patient-token" }));
           setView("patient-dashboard");
@@ -72,7 +85,20 @@ export default function LoginPage({ setView }) {
             name: formData.email.split("@")[0],
             email: formData.email,
             role: "patient",
-            phone: formData.phone || "+91 98765 43210"
+            phone: formData.phone || "+91 98765 43210",
+            linkedClinic: {
+              id: 1,
+              name: "City Medical Center",
+              address: "123 MG Road, Mumbai",
+              phone: "+91 22 2345 6789",
+              rating: 4.8,
+              doctors: 25,
+              specialties: ["General", "Cardiology", "Orthopedics"],
+              image: "🏥",
+              timings: "24/7",
+              distance: "2.5 km",
+              availableSlots: 45
+            }
           };
           dispatch(loginSuccess({ user, token: "mock-patient-token" }));
           setView("patient-dashboard");

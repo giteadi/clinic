@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Stethoscope,
@@ -10,9 +10,11 @@ import {
   X
 } from "lucide-react";
 import { COLORS } from "../../constants/colors";
+import { logout, clearPersistedData } from "../../store/authSlice";
 
 export default function Navbar({ view, setView, userRole, setUserRole }) {
   const { user, isAuthenticated } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -31,6 +33,15 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(clearPersistedData());
+    setUserRole("guest");
+    setView("home");
+    setOpen(false);
+  };
 
   return (
     <>
@@ -198,7 +209,21 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
 
           {/* DESKTOP BOOK APPOINTMENT BUTTON */}
           <button
-            onClick={() => setView("appointment")}
+            onClick={() => {
+              if (isAuthenticated && actualUserRole !== "guest") {
+                // Check if user is a patient and has a linked clinic
+                if (actualUserRole === "patient" && user?.linkedClinic) {
+                  // Set the linked clinic and go directly to doctor selection
+                  localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
+                  setView("doctor-selection");
+                } else {
+                  // For other users or patients without linked clinic, show clinic selection
+                  setView("clinic-selection");
+                }
+              } else {
+                setView("login");
+              }
+            }}
             className="desktop-book-btn"
             style={{
               background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
@@ -217,11 +242,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           {/* LOGIN/LOGOUT BUTTON - DESKTOP */}
           {isAuthenticated && actualUserRole !== "guest" ? (
             <button
-              onClick={() => {
-                setUserRole("guest");
-                setView("home");
-                // Add logout dispatch here if needed
-              }}
+              onClick={handleLogout}
               className="desktop-logout-btn"
               style={{
                 background: COLORS.red,
@@ -349,12 +370,43 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               ))}
             </div>
 
+            {/* BOOK APPOINTMENT BUTTON IN MOBILE MENU */}
+            {isAuthenticated && actualUserRole !== "guest" && (
+              <button
+                onClick={() => {
+                  // Check if user is a patient and has a linked clinic
+                  if (actualUserRole === "patient" && user?.linkedClinic) {
+                    // Set the linked clinic and go directly to doctor selection
+                    localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
+                    setView("doctor-selection");
+                  } else {
+                    // For other users or patients without linked clinic, show clinic selection
+                    setView("clinic-selection");
+                  }
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "12px 16px",
+                  cursor: "pointer",
+                  color: COLORS.white,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  width: "100%",
+                  marginBottom: 12
+                }}
+              >
+                Book Appointment
+              </button>
+            )}
+
             {/* ACTION BUTTON INSIDE MOBILE MENU */}
             {isAuthenticated && actualUserRole !== "guest" ? (
               <button
                 onClick={() => {
-                  setUserRole("guest");
-                  setView("home");
+                  handleLogout();
                   setMobileMenuOpen(false);
                 }}
                 style={{
@@ -363,7 +415,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                   borderRadius: 8,
                   padding: "12px 16px",
                   cursor: "pointer",
-                  color: COLORS.slate,
+                  color: COLORS.red,
                   fontSize: 14,
                   fontWeight: 600,
                   display: "flex",
