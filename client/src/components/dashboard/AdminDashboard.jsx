@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import { Users, Calendar, TrendingUp, DollarSign, Activity, Bell, Settings, ChevronRight, BarChart3 } from "lucide-react";
 import { COLORS } from "../../constants/colors";
 import Avatar from "../common/Avatar";
+import BackButton from "../common/BackButton";
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ setView }) {
   const [activeTab, setActiveTab] = useState("overview");
 
   const stats = [
@@ -26,11 +27,17 @@ export default function AdminDashboard() {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
-            <div>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
-                Admin Dashboard
-              </h1>
-              <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage your clinic operations efficiently.</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <BackButton 
+                onClick={() => setView && setView("home")}
+                text="Back to Home"
+              />
+              <div>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
+                  Admin Dashboard
+                </h1>
+                <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage clinic operations and staff</p>
+              </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <button style={{

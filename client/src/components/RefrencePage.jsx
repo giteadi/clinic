@@ -912,7 +912,7 @@ function SuperAdminDashboard() {
                     <div style={{ color: COLORS.gold, fontWeight: 600, fontSize: 14 }}>{c.revenue}</div>
                     <div style={{ color: COLORS.slate, fontSize: 11 }}>revenue</div>
                   </div>
-                  <Badge color={c.status === "active" ? COLORS.teal : COLORS.slate}>{c.status}</Badge>
+                  <Badge color={c.status === "active" ? COLORS.teal : COLORS.red}>{c.status}</Badge>
                 </div>
               </motion.div>
             ))}

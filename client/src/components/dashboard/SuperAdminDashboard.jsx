@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Building2, Users, TrendingUp, Globe, Settings, Bell, ChevronRight, BarChart3, Shield, Activity, Plus, Edit2, Trash2, Eye, Pause, Play } from "lucide-react";
 import { COLORS } from "../../constants/colors";
 import Avatar from "../common/Avatar";
+import BackButton from "../common/BackButton";
 import { addClinic, updateClinic, deleteClinic, toggleClinicStatus, addActivity, updateSystemHealth } from "../../store/superAdminSlice";
 
 export default function SuperAdminDashboard({ setView }) {
@@ -93,11 +94,17 @@ export default function SuperAdminDashboard({ setView }) {
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "32px 20px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
-            <div>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
-                Super Admin Dashboard
-              </h1>
-              <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage all clinics and operations across India.</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <BackButton 
+                onClick={() => setView && setView("home")}
+                text="Back to Home"
+              />
+              <div>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
+                  Super Admin Dashboard
+                </h1>
+                <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage all clinics and operations across India.</p>
+              </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <button style={{
@@ -223,8 +230,8 @@ export default function SuperAdminDashboard({ setView }) {
                       <div style={{ color: COLORS.teal, fontSize: 12 }}>{formatCurrency(clinic.revenue)}</div>
                       <div style={{
                         padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600,
-                        background: clinic.status === "active" ? `${COLORS.teal}18` : `${COLORS.gold}18`,
-                        color: clinic.status === "active" ? COLORS.teal : COLORS.gold,
+                        background: clinic.status === "active" ? `${COLORS.teal}18` : `${COLORS.red}20`,
+                        color: clinic.status === "active" ? COLORS.teal : COLORS.red,
                         marginTop: 4
                       }}>
                         {clinic.status}
@@ -288,15 +295,15 @@ export default function SuperAdminDashboard({ setView }) {
               </div>
               <div style={{ padding: 20, display: "grid", gap: 12 }}>
                 {[
-                  { icon: Building2, label: "Add New Clinic", color: COLORS.teal, description: "Register a new clinic" },
-                  { icon: Users, label: "Manage Users", color: COLORS.gold, description: "Admin and patient accounts" },
-                  { icon: BarChart3, label: "Analytics", color: "#9C27B0", description: "View detailed reports" },
-                  { icon: Settings, label: "System Config", color: COLORS.slate, description: "Global settings" },
-                  { icon: Activity, label: "System Health", color: "#E91E63", description: "Monitor performance" },
-                  { icon: Bell, label: "Broadcast", color: "#FF9800", description: "Send notifications" },
+                  { icon: Building2, label: "Add New Clinic", color: COLORS.teal, description: "Register a new clinic", view: "add-clinic" },
+                  { icon: Users, label: "Manage Users", color: COLORS.gold, description: "Admin and patient accounts", view: "manage-users" },
+                  { icon: BarChart3, label: "Analytics", color: "#9C27B0", description: "View detailed reports", view: "analytics" },
+                  { icon: Settings, label: "System Config", color: COLORS.slate, description: "Global settings", view: "system-config" },
+                  { icon: Activity, label: "System Health", color: "#E91E63", description: "Monitor performance", view: "system-health" },
+                  { icon: Bell, label: "Broadcast", color: "#FF9800", description: "Send notifications", view: "broadcast" },
                 ].map((action, i) => (
                   <motion.button key={action.label} whileHover={{ scale: 1.02 }}
-                    onClick={() => setView && setView("system-controls")}
+                    onClick={() => setView && setView(action.view)}
                     style={{
                       display: "flex", alignItems: "center", gap: 16,
                       padding: 16, background: COLORS.cream, borderRadius: 12,

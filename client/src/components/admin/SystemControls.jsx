@@ -30,14 +30,130 @@ import {
   Globe
 } from "lucide-react";
 import { COLORS } from "../../constants/colors";
+import Link from "../common/Link";
+import BackButton from "../common/BackButton";
 
-export default function SystemControls() {
-  const [activeTab, setActiveTab] = useState("clinics");
+export default function SystemControls({ activeTab: initialTab = "clinics", setView }) {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [showAddClinicModal, setShowAddClinicModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+
+  // Dynamic System Config State
+  const [systemConfig, setSystemConfig] = useState({
+    general: {
+      systemName: "CliniQ Pro",
+      defaultTimezone: "UTC+05:30",
+      maintenanceMode: false,
+      userRegistration: true,
+      autoBackup: true,
+      sessionTimeout: "30",
+      maxFileSize: "10",
+      allowedFileTypes: "pdf,doc,docx,jpg,png"
+    },
+    security: {
+      twoFactorAuth: true,
+      passwordComplexity: "high",
+      loginAttempts: "5",
+      sessionEncryption: true,
+      apiRateLimit: "100",
+      ipWhitelist: "",
+      auditLogging: true,
+      dataRetention: "365"
+    },
+    notifications: {
+      emailNotifications: true,
+      smsNotifications: false,
+      pushNotifications: true,
+      appointmentReminders: true,
+      systemAlerts: true,
+      marketingEmails: false,
+      weeklyReports: true,
+      emergencyAlerts: true
+    },
+    features: {
+      onlineBooking: true,
+      videoConsultation: true,
+      prescriptionUpload: true,
+      patientPortal: true,
+      doctorMobileApp: true,
+      autoScheduling: false,
+      aiDiagnosis: false,
+      multiLanguageSupport: true
+    }
+  });
+
+  const [configSaved, setConfigSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Handler functions
+  const handleConfigChange = (category, field, value) => {
+    setSystemConfig(prev => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [field]: value
+      }
+    }));
+    setConfigSaved(false);
+  };
+
+  const handleSaveConfig = async () => {
+    setSaving(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setSaving(false);
+    setConfigSaved(true);
+    setTimeout(() => setConfigSaved(false), 3000);
+  };
+
+  const handleResetConfig = () => {
+    setSystemConfig({
+      general: {
+        systemName: "CliniQ Pro",
+        defaultTimezone: "UTC+05:30",
+        maintenanceMode: false,
+        userRegistration: true,
+        autoBackup: true,
+        sessionTimeout: "30",
+        maxFileSize: "10",
+        allowedFileTypes: "pdf,doc,docx,jpg,png"
+      },
+      security: {
+        twoFactorAuth: true,
+        passwordComplexity: "high",
+        loginAttempts: "5",
+        sessionEncryption: true,
+        apiRateLimit: "100",
+        ipWhitelist: "",
+        auditLogging: true,
+        dataRetention: "365"
+      },
+      notifications: {
+        emailNotifications: true,
+        smsNotifications: false,
+        pushNotifications: true,
+        appointmentReminders: true,
+        systemAlerts: true,
+        marketingEmails: false,
+        weeklyReports: true,
+        emergencyAlerts: true
+      },
+      features: {
+        onlineBooking: true,
+        videoConsultation: true,
+        prescriptionUpload: true,
+        patientPortal: true,
+        doctorMobileApp: true,
+        autoScheduling: false,
+        aiDiagnosis: false,
+        multiLanguageSupport: true
+      }
+    });
+    setConfigSaved(false);
+  };
 
   // Mock data
   const [clinics, setClinics] = useState([
@@ -351,9 +467,68 @@ export default function SystemControls() {
 
   const renderConfigTab = () => (
     <div style={{ padding: 24 }}>
-      <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>System Configuration</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>System Configuration</h3>
+        <div style={{ display: "flex", gap: 12 }}>
+          <button
+            onClick={handleResetConfig}
+            style={{
+              background: "none",
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: 8,
+              padding: "8px 16px",
+              cursor: "pointer",
+              color: COLORS.slate,
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            Reset to Default
+          </button>
+          <button
+            onClick={handleSaveConfig}
+            disabled={saving}
+            style={{
+              background: configSaved ? COLORS.teal : `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              border: "none",
+              borderRadius: 8,
+              padding: "8px 20px",
+              cursor: saving ? "not-allowed" : "pointer",
+              color: COLORS.white,
+              fontSize: 14,
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              opacity: saving ? 0.7 : 1
+            }}
+          >
+            {saving ? (
+              <>
+                <div style={{
+                  width: 16,
+                  height: 16,
+                  border: `2px solid ${COLORS.white}`,
+                  borderTop: "2px solid transparent",
+                  borderRadius: "50%",
+                  animation: "spin 1s linear infinite"
+                }} />
+                Saving...
+              </>
+            ) : configSaved ? (
+              <>
+                <CheckCircle size={16} />
+                Saved
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </button>
+        </div>
+      </div>
       
       <div style={{ display: "grid", gap: 24 }}>
+        {/* General Settings */}
         <div style={{
           background: "#0f172a",
           border: `1px solid ${COLORS.border}`,
@@ -362,55 +537,118 @@ export default function SystemControls() {
         }}>
           <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>General Settings</h4>
           <div style={{ display: "grid", gap: 16 }}>
-            {[
-              { label: "System Name", value: "CliniQ Pro", type: "text" },
-              { label: "Default Timezone", value: "UTC+05:30", type: "select" },
-              { label: "Maintenance Mode", value: "Disabled", type: "toggle" },
-              { label: "User Registration", value: "Enabled", type: "toggle" }
-            ].map((setting, index) => (
-              <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: COLORS.white, fontSize: 14 }}>{setting.label}</span>
-                {setting.type === "toggle" ? (
-                  <button style={{
-                    width: 48,
-                    height: 24,
-                    background: setting.value === "Enabled" ? COLORS.teal : "#374151",
-                    border: "none",
-                    borderRadius: 12,
-                    cursor: "pointer",
-                    position: "relative"
-                  }}>
-                    <div style={{
-                      width: 20,
-                      height: 20,
-                      background: COLORS.white,
-                      borderRadius: "50%",
-                      position: "absolute",
-                      top: 2,
-                      left: setting.value === "Enabled" ? 26 : 2,
-                      transition: "all 0.2s"
-                    }} />
-                  </button>
-                ) : (
-                  <input
-                    type={setting.type}
-                    value={setting.value}
-                    readOnly
-                    style={{
-                      background: "#111827",
-                      border: `1px solid ${COLORS.border}`,
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      color: COLORS.white,
-                      fontSize: 14
-                    }}
-                  />
-                )}
-              </div>
-            ))}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>System Name</span>
+              <input
+                type="text"
+                value={systemConfig.general.systemName}
+                onChange={(e) => handleConfigChange('general', 'systemName', e.target.value)}
+                style={{
+                  background: "#111827",
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 6,
+                  padding: "8px 12px",
+                  color: COLORS.white,
+                  fontSize: 14,
+                  width: "200px"
+                }}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Default Timezone</span>
+              <select
+                value={systemConfig.general.defaultTimezone}
+                onChange={(e) => handleConfigChange('general', 'defaultTimezone', e.target.value)}
+                style={{
+                  background: "#111827",
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 6,
+                  padding: "8px 12px",
+                  color: COLORS.white,
+                  fontSize: 14,
+                  width: "200px",
+                  cursor: "pointer"
+                }}
+              >
+                <option value="UTC+05:30">UTC+05:30</option>
+                <option value="UTC+00:00">UTC+00:00</option>
+                <option value="UTC-05:00">UTC-05:00</option>
+                <option value="UTC+08:00">UTC+08:00</option>
+              </select>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Maintenance Mode</span>
+              <button
+                onClick={() => handleConfigChange('general', 'maintenanceMode', !systemConfig.general.maintenanceMode)}
+                style={{
+                  width: 48,
+                  height: 24,
+                  background: systemConfig.general.maintenanceMode ? COLORS.teal : "#374151",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  position: "relative"
+                }}
+              >
+                <div style={{
+                  width: 20,
+                  height: 20,
+                  background: COLORS.white,
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: 2,
+                  left: systemConfig.general.maintenanceMode ? 26 : 2,
+                  transition: "all 0.2s"
+                }} />
+              </button>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>User Registration</span>
+              <button
+                onClick={() => handleConfigChange('general', 'userRegistration', !systemConfig.general.userRegistration)}
+                style={{
+                  width: 48,
+                  height: 24,
+                  background: systemConfig.general.userRegistration ? COLORS.teal : "#374151",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  position: "relative"
+                }}
+              >
+                <div style={{
+                  width: 20,
+                  height: 20,
+                  background: COLORS.white,
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: 2,
+                  left: systemConfig.general.userRegistration ? 26 : 2,
+                  transition: "all 0.2s"
+                }} />
+              </button>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Session Timeout (minutes)</span>
+              <input
+                type="number"
+                value={systemConfig.general.sessionTimeout}
+                onChange={(e) => handleConfigChange('general', 'sessionTimeout', e.target.value)}
+                style={{
+                  background: "#111827",
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 6,
+                  padding: "8px 12px",
+                  color: COLORS.white,
+                  fontSize: 14,
+                  width: "200px"
+                }}
+              />
+            </div>
           </div>
         </div>
 
+        {/* Security Settings */}
         <div style={{
           background: "#0f172a",
           border: `1px solid ${COLORS.border}`,
@@ -419,55 +657,202 @@ export default function SystemControls() {
         }}>
           <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Security Settings</h4>
           <div style={{ display: "grid", gap: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Two-Factor Authentication</span>
+              <button
+                onClick={() => handleConfigChange('security', 'twoFactorAuth', !systemConfig.security.twoFactorAuth)}
+                style={{
+                  width: 48,
+                  height: 24,
+                  background: systemConfig.security.twoFactorAuth ? COLORS.teal : "#374151",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  position: "relative"
+                }}
+              >
+                <div style={{
+                  width: 20,
+                  height: 20,
+                  background: COLORS.white,
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: 2,
+                  left: systemConfig.security.twoFactorAuth ? 26 : 2,
+                  transition: "all 0.2s"
+                }} />
+              </button>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Password Complexity</span>
+              <select
+                value={systemConfig.security.passwordComplexity}
+                onChange={(e) => handleConfigChange('security', 'passwordComplexity', e.target.value)}
+                style={{
+                  background: "#111827",
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 6,
+                  padding: "8px 12px",
+                  color: COLORS.white,
+                  fontSize: 14,
+                  width: "200px",
+                  cursor: "pointer"
+                }}
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Login Attempts</span>
+              <input
+                type="number"
+                value={systemConfig.security.loginAttempts}
+                onChange={(e) => handleConfigChange('security', 'loginAttempts', e.target.value)}
+                style={{
+                  background: "#111827",
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 6,
+                  padding: "8px 12px",
+                  color: COLORS.white,
+                  fontSize: 14,
+                  width: "200px"
+                }}
+              />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: COLORS.white, fontSize: 14 }}>Session Encryption</span>
+              <button
+                onClick={() => handleConfigChange('security', 'sessionEncryption', !systemConfig.security.sessionEncryption)}
+                style={{
+                  width: 48,
+                  height: 24,
+                  background: systemConfig.security.sessionEncryption ? COLORS.teal : "#374151",
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  position: "relative"
+                }}
+              >
+                <div style={{
+                  width: 20,
+                  height: 20,
+                  background: COLORS.white,
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: 2,
+                  left: systemConfig.security.sessionEncryption ? 26 : 2,
+                  transition: "all 0.2s"
+                }} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Notification Settings */}
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 24
+        }}>
+          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Notification Settings</h4>
+          <div style={{ display: "grid", gap: 16 }}>
             {[
-              { label: "Two-Factor Authentication", value: "Enabled", type: "toggle" },
-              { label: "Session Timeout", value: "30 minutes", type: "text" },
-              { label: "Password Complexity", value: "High", type: "select" },
-              { label: "Login Attempts", value: "5", type: "number" }
-            ].map((setting, index) => (
-              <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: COLORS.white, fontSize: 14 }}>{setting.label}</span>
-                {setting.type === "toggle" ? (
-                  <button style={{
+              { key: 'emailNotifications', label: 'Email Notifications' },
+              { key: 'smsNotifications', label: 'SMS Notifications' },
+              { key: 'pushNotifications', label: 'Push Notifications' },
+              { key: 'appointmentReminders', label: 'Appointment Reminders' },
+              { key: 'systemAlerts', label: 'System Alerts' },
+              { key: 'weeklyReports', label: 'Weekly Reports' }
+            ].map(({ key, label }) => (
+              <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: COLORS.white, fontSize: 14 }}>{label}</span>
+                <button
+                  onClick={() => handleConfigChange('notifications', key, !systemConfig.notifications[key])}
+                  style={{
                     width: 48,
                     height: 24,
-                    background: setting.value === "Enabled" ? COLORS.teal : "#374151",
+                    background: systemConfig.notifications[key] ? COLORS.teal : "#374151",
                     border: "none",
                     borderRadius: 12,
                     cursor: "pointer",
                     position: "relative"
-                  }}>
-                    <div style={{
-                      width: 20,
-                      height: 20,
-                      background: COLORS.white,
-                      borderRadius: "50%",
-                      position: "absolute",
-                      top: 2,
-                      left: setting.value === "Enabled" ? 26 : 2,
-                      transition: "all 0.2s"
-                    }} />
-                  </button>
-                ) : (
-                  <input
-                    type={setting.type}
-                    value={setting.value}
-                    readOnly
-                    style={{
-                      background: "#111827",
-                      border: `1px solid ${COLORS.border}`,
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      color: COLORS.white,
-                      fontSize: 14
-                    }}
-                  />
-                )}
+                  }}
+                >
+                  <div style={{
+                    width: 20,
+                    height: 20,
+                    background: COLORS.white,
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: 2,
+                    left: systemConfig.notifications[key] ? 26 : 2,
+                    transition: "all 0.2s"
+                  }} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Feature Settings */}
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 24
+        }}>
+          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Feature Settings</h4>
+          <div style={{ display: "grid", gap: 16 }}>
+            {[
+              { key: 'onlineBooking', label: 'Online Booking' },
+              { key: 'videoConsultation', label: 'Video Consultation' },
+              { key: 'prescriptionUpload', label: 'Prescription Upload' },
+              { key: 'patientPortal', label: 'Patient Portal' },
+              { key: 'doctorMobileApp', label: 'Doctor Mobile App' },
+              { key: 'autoScheduling', label: 'Auto Scheduling' },
+              { key: 'aiDiagnosis', label: 'AI Diagnosis' },
+              { key: 'multiLanguageSupport', label: 'Multi-Language Support' }
+            ].map(({ key, label }) => (
+              <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: COLORS.white, fontSize: 14 }}>{label}</span>
+                <button
+                  onClick={() => handleConfigChange('features', key, !systemConfig.features[key])}
+                  style={{
+                    width: 48,
+                    height: 24,
+                    background: systemConfig.features[key] ? COLORS.teal : "#374151",
+                    border: "none",
+                    borderRadius: 12,
+                    cursor: "pointer",
+                    position: "relative"
+                  }}
+                >
+                  <div style={{
+                    width: 20,
+                    height: 20,
+                    background: COLORS.white,
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: 2,
+                    left: systemConfig.features[key] ? 26 : 2,
+                    transition: "all 0.2s"
+                  }} />
+                </button>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 
@@ -711,8 +1096,17 @@ export default function SystemControls() {
   return (
     <div style={{ minHeight: "100vh", background: "#0a0f1f", paddingTop: 80 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px" }}>
-        <h2 style={{ color: COLORS.white, fontSize: 32, fontWeight: 700, marginBottom: 8 }}>System Controls</h2>
-        <p style={{ color: COLORS.slate, fontSize: 16, marginBottom: 32 }}>Manage your clinic system efficiently</p>
+        {/* Header with Back Button */}
+        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 24 }}>
+          <BackButton 
+            onClick={() => setView && setView("superadmin-dashboard")}
+            text="Back to Dashboard"
+          />
+          <div>
+            <h2 style={{ color: COLORS.white, fontSize: 32, fontWeight: 700, marginBottom: 8 }}>System Controls</h2>
+            <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage your clinic system efficiently</p>
+          </div>
+        </div>
 
         {/* Tab Navigation */}
         <div style={{
@@ -725,7 +1119,7 @@ export default function SystemControls() {
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
-              <button
+              <Link
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
@@ -760,7 +1154,7 @@ export default function SystemControls() {
                     {tab.description}
                   </div>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>

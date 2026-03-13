@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, User, Phone, Mail, ArrowLeft, CheckCircle } from "lucide-react";
 import { COLORS } from "../../constants/colors";
+import BackButton from "../common/BackButton";
 
 export default function AppointmentPage({ setView }) {
   const [step, setStep] = useState(1);
@@ -91,17 +92,11 @@ export default function AppointmentPage({ setView }) {
 
         {/* Header */}
         <div style={{ marginBottom: "clamp(32px, 5vw, 48px)" }}>
-          <button
+          <BackButton 
             onClick={() => setView("home")}
-            style={{
-              display: "flex", alignItems: "center", gap: 8,
-              background: "none", border: "none", cursor: "pointer",
-              color: COLORS.slate, marginBottom: 16,
-              fontSize: 14, fontWeight: 500
-            }}
-          >
-            <ArrowLeft size={18} /> Back to Home
-          </button>
+            text="Back to Home"
+            style={{ marginBottom: 16 }}
+          />
           
           <h1 style={{
             fontFamily: "'Playfair Display', serif",

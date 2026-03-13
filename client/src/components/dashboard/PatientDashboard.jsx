@@ -4,6 +4,7 @@ import { Calendar, Clock, FileText, Bell, User, ChevronRight, Heart, Activity, S
 import { COLORS } from "../../constants/colors";
 import { DOCTORS } from "../../constants/data";
 import Avatar from "../common/Avatar";
+import BackButton from "../common/BackButton";
 
 export default function PatientDashboard({ setView }) {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -25,11 +26,17 @@ export default function PatientDashboard({ setView }) {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
-            <div>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
-                Patient Dashboard
-              </h1>
-              <p style={{ color: COLORS.slate, fontSize: 16 }}>Welcome back! Manage your health journey.</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <BackButton 
+                onClick={() => setView && setView("home")}
+                text="Back to Home"
+              />
+              <div>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
+                  Patient Dashboard
+                </h1>
+                <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage your appointments and medical records</p>
+              </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <button style={{

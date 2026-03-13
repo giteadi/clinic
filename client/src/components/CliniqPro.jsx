@@ -84,7 +84,37 @@ export default function CliniqPro() {
           )}
           {view === "system-controls" && (
             <div key="system-controls">
-              <SystemControls />
+              <SystemControls activeTab="clinics" setView={setView} />
+            </div>
+          )}
+          {view === "add-clinic" && (
+            <div key="add-clinic">
+              <SystemControls activeTab="clinics" setView={setView} />
+            </div>
+          )}
+          {view === "manage-users" && (
+            <div key="manage-users">
+              <SystemControls activeTab="users" setView={setView} />
+            </div>
+          )}
+          {view === "analytics" && (
+            <div key="analytics">
+              <SystemControls activeTab="analytics" setView={setView} />
+            </div>
+          )}
+          {view === "system-config" && (
+            <div key="system-config">
+              <SystemControls activeTab="config" setView={setView} />
+            </div>
+          )}
+          {view === "system-health" && (
+            <div key="system-health">
+              <SystemControls activeTab="health" setView={setView} />
+            </div>
+          )}
+          {view === "broadcast" && (
+            <div key="broadcast">
+              <SystemControls activeTab="broadcast" setView={setView} />
             </div>
           )}
         </ProtectedRoute>

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 
 // Role-based access configuration
@@ -7,7 +7,7 @@ const ROLE_ACCESS = {
   guest: ['home', 'doctors', 'clinics', 'appointment', 'login'],
   patient: ['home', 'doctors', 'clinics', 'appointment', 'patient-dashboard', 'login'],
   admin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'login'],
-  superadmin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'superadmin-dashboard', 'login']
+  superadmin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'superadmin-dashboard', 'login', 'add-clinic', 'manage-users', 'analytics', 'system-config', 'system-health', 'broadcast']
 };
 
 export default function ProtectedRoute({ children, view, setView }) {
@@ -37,7 +37,9 @@ export default function ProtectedRoute({ children, view, setView }) {
     };
     
     const redirectView = dashboardMap[userRole] || 'home';
-    setView(redirectView);
+    useEffect(() => {
+      setView(redirectView);
+    }, [redirectView, setView]);
     return null;
   }
   
@@ -50,7 +52,9 @@ export default function ProtectedRoute({ children, view, setView }) {
     };
     
     const redirectView = dashboardMap[userRole] || 'home';
-    setView(redirectView);
+    useEffect(() => {
+      setView(redirectView);
+    }, [redirectView, setView]);
     return null;
   }
   
