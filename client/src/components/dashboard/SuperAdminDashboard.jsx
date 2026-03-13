@@ -1,24 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
-import { Building2, Users, TrendingUp, Globe, Settings, Bell, ChevronRight, BarChart3, Shield, Activity } from "lucide-react";
+import { Building2, Users, TrendingUp, Globe, Settings, Bell, ChevronRight, BarChart3, Shield, Activity, Plus, Edit2, Trash2, Eye, Pause, Play } from "lucide-react";
 import { COLORS } from "../../constants/colors";
 import Avatar from "../common/Avatar";
+import { addClinic, updateClinic, deleteClinic, toggleClinicStatus, addActivity, updateSystemHealth } from "../../store/superAdminSlice";
 
-export default function SuperAdminDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
+export default function SuperAdminDashboard({ setView }) {
+  const dispatch = useDispatch();
+  const { globalStats, clinics, systemHealth, recentActivities } = useSelector(state => state.superAdmin);
+  const [showAddClinicModal, setShowAddClinicModal] = useState(false);
+  const [editingClinic, setEditingClinic] = useState(null);
+  const [newClinic, setNewClinic] = useState({
+    name: "",
+    city: "",
+    state: "",
+    doctors: 0,
+    established: ""
+  });
 
-  const globalStats = [
-    { icon: Building2, label: "Total Clinics", value: "156", change: "+8%", trend: "up" },
-    { icon: Users, label: "Total Patients", value: "45.2K", change: "+12%", trend: "up" },
-    { icon: TrendingUp, label: "Total Revenue", value: "₹8.4Cr", change: "+18%", trend: "up" },
-    { icon: Activity, label: "Active Doctors", value: "1,248", change: "+15%", trend: "up" },
-  ];
+  // Simulate real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Random system health updates
+      dispatch(updateSystemHealth({
+        responseTime: `${Math.floor(Math.random() * 50 + 100)}ms`,
+        errorRate: `${(Math.random() * 0.5).toFixed(1)}%`
+      }));
+    }, 5000);
 
-  const clinics = [
-    { id: 1, name: "HeartCare Clinic", city: "Mumbai", patients: "2,456", revenue: "₹12.4L", status: "active" },
-    { id: 2, name: "SkinFirst Clinic", city: "Delhi", patients: "1,823", revenue: "₹8.2L", status: "active" },
-    { id: 3, name: "KidsWell Center", city: "Bangalore", patients: "1,567", revenue: "₹6.8L", status: "active" },
-    { id: 4, name: "BoneCare Hospital", city: "Chennai", patients: "987", revenue: "₹4.2L", status: "maintenance" },
+    return () => clearInterval(interval);
+  }, [dispatch]);
+
+  const formatNumber = (num) => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'Cr';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
+  };
+
+  const formatCurrency = (num) => {
+    return '₹' + formatNumber(num);
+  };
+
+  const handleAddClinic = () => {
+    if (newClinic.name && newClinic.city) {
+      dispatch(addClinic(newClinic));
+      dispatch(addActivity({
+        type: "clinic_added",
+        clinic: newClinic.name,
+        city: newClinic.city,
+        admin: "Super Admin"
+      }));
+      setNewClinic({ name: "", city: "", state: "", doctors: 0, established: "" });
+      setShowAddClinicModal(false);
+    }
+  };
+
+  const handleToggleClinicStatus = (clinicId) => {
+    dispatch(toggleClinicStatus(clinicId));
+    const clinic = clinics.find(c => c.id === clinicId);
+    dispatch(addActivity({
+      type: "clinic_status_changed",
+      clinic: clinic.name,
+      status: clinic.status === "active" ? "maintenance" : "active",
+      admin: "Super Admin"
+    }));
+  };
+
+  const handleDeleteClinic = (clinicId) => {
+    const clinic = clinics.find(c => c.id === clinicId);
+    if (window.confirm(`Are you sure you want to delete ${clinic.name}?`)) {
+      dispatch(deleteClinic(clinicId));
+      dispatch(addActivity({
+        type: "clinic_deleted",
+        clinic: clinic.name,
+        city: clinic.city,
+        admin: "Super Admin"
+      }));
+    }
+  };
+
+  // Dynamic stats from Redux
+  const dynamicStats = [
+    { icon: Building2, label: "Total Clinics", value: globalStats.totalClinics, change: `+${globalStats.monthlyGrowth.clinics}%`, trend: "up" },
+    { icon: Users, label: "Total Patients", value: formatNumber(globalStats.totalPatients), change: `+${globalStats.monthlyGrowth.patients}%`, trend: "up" },
+    { icon: TrendingUp, label: "Total Revenue", value: formatCurrency(globalStats.totalRevenue), change: `+${globalStats.monthlyGrowth.revenue}%`, trend: "up" },
+    { icon: Activity, label: "Active Doctors", value: formatNumber(globalStats.activeDoctors), change: `+${globalStats.monthlyGrowth.doctors}%`, trend: "up" },
   ];
 
   return (
@@ -65,7 +132,7 @@ export default function SuperAdminDashboard() {
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
             gap: 20, marginBottom: 32 
           }}>
-            {globalStats.map((stat, i) => (
+            {dynamicStats.map((stat, i) => (
               <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 style={{
                   background: COLORS.white, borderRadius: 16, padding: 24,
@@ -122,19 +189,38 @@ export default function SuperAdminDashboard() {
                 <Globe size={18} color={COLORS.slate} />
               </div>
               <div style={{ padding: 20 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                  <h4 style={{ color: COLORS.navy, fontWeight: 600, fontSize: 16 }}>Clinic Management</h4>
+                  <button
+                    onClick={() => setShowAddClinicModal(true)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6,
+                      background: COLORS.teal, color: COLORS.white,
+                      border: "none", borderRadius: 8, padding: "8px 12px",
+                      fontSize: 12, fontWeight: 600, cursor: "pointer"
+                    }}
+                  >
+                    <Plus size={14} /> Add Clinic
+                  </button>
+                </div>
                 {clinics.map(clinic => (
                   <motion.div key={clinic.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                     style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center",
                       padding: "16px 0", borderBottom: `1px solid ${COLORS.border}`
                     }}>
-                    <div>
-                      <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 15 }}>{clinic.name}</div>
-                      <div style={{ color: COLORS.slate, fontSize: 12 }}>{clinic.city}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{clinic.name}</div>
+                      <div style={{ color: COLORS.slate, fontSize: 12, marginBottom: 2 }}>{clinic.city}, {clinic.state}</div>
+                      <div style={{ display: "flex", gap: 12, fontSize: 11 }}>
+                        <span style={{ color: COLORS.slate }}>⭐ {clinic.rating}</span>
+                        <span style={{ color: COLORS.slate }}>👨‍⚕️ {clinic.doctors} doctors</span>
+                        <span style={{ color: COLORS.slate }}>📅 {clinic.established}</span>
+                      </div>
                     </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 13 }}>{clinic.patients} patients</div>
-                      <div style={{ color: COLORS.teal, fontSize: 12 }}>{clinic.revenue}</div>
+                    <div style={{ textAlign: "right", marginRight: 16 }}>
+                      <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 13 }}>{formatNumber(clinic.patients)} patients</div>
+                      <div style={{ color: COLORS.teal, fontSize: 12 }}>{formatCurrency(clinic.revenue)}</div>
                       <div style={{
                         padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600,
                         background: clinic.status === "active" ? `${COLORS.teal}18` : `${COLORS.gold}18`,
@@ -143,6 +229,41 @@ export default function SuperAdminDashboard() {
                       }}>
                         {clinic.status}
                       </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button
+                        onClick={() => handleToggleClinicStatus(clinic.id)}
+                        style={{
+                          background: "none", border: "none", cursor: "pointer",
+                          padding: 4, borderRadius: 4,
+                          display: "flex", alignItems: "center"
+                        }}
+                        title={clinic.status === "active" ? "Deactivate" : "Activate"}
+                      >
+                        {clinic.status === "active" ? <Pause size={16} color={COLORS.gold} /> : <Play size={16} color={COLORS.teal} />}
+                      </button>
+                      <button
+                        onClick={() => setEditingClinic(clinic)}
+                        style={{
+                          background: "none", border: "none", cursor: "pointer",
+                          padding: 4, borderRadius: 4,
+                          display: "flex", alignItems: "center"
+                        }}
+                        title="Edit"
+                      >
+                        <Edit2 size={16} color={COLORS.slate} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClinic(clinic.id)}
+                        style={{
+                          background: "none", border: "none", cursor: "pointer",
+                          padding: 4, borderRadius: 4,
+                          display: "flex", alignItems: "center"
+                        }}
+                        title="Delete"
+                      >
+                        <Trash2 size={16} color="#E91E63" />
+                      </button>
                     </div>
                   </motion.div>
                 ))}
@@ -175,6 +296,7 @@ export default function SuperAdminDashboard() {
                   { icon: Bell, label: "Broadcast", color: "#FF9800", description: "Send notifications" },
                 ].map((action, i) => (
                   <motion.button key={action.label} whileHover={{ scale: 1.02 }}
+                    onClick={() => setView && setView("system-controls")}
                     style={{
                       display: "flex", alignItems: "center", gap: 16,
                       padding: 16, background: COLORS.cream, borderRadius: 12,

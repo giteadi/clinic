@@ -41,6 +41,10 @@ const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
+    },
+    // Clear all persisted data
+    clearPersistedData: (state) => {
+      return initialState;
     }
   }
 });
@@ -51,7 +55,8 @@ export const {
   loginFailure,
   logout,
   updateUser,
-  clearError
+  clearError,
+  clearPersistedData
 } = authSlice.actions;
 
 export default authSlice.reducer;

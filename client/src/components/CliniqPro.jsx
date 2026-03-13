@@ -16,6 +16,7 @@ import DoctorsPage from "./pages/DoctorsPage";
 import ClinicPage from "./pages/ClinicPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
+import SystemControls from "./admin/SystemControls";
 
 export default function CliniqPro() {
   const [view, setView] = useState("home");
@@ -73,12 +74,17 @@ export default function CliniqPro() {
           )}
           {view === "admin-dashboard" && (
             <div key="admin">
-              <AdminDashboard />
+              <AdminDashboard setView={setView} />
             </div>
           )}
           {view === "superadmin-dashboard" && (
             <div key="superadmin">
-              <SuperAdminDashboard />
+              <SuperAdminDashboard setView={setView} />
+            </div>
+          )}
+          {view === "system-controls" && (
+            <div key="system-controls">
+              <SystemControls />
             </div>
           )}
         </ProtectedRoute>

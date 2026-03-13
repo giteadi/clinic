@@ -1,0 +1,1196 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Building2,
+  Users,
+  BarChart3,
+  Settings,
+  Activity,
+  Send,
+  Plus,
+  Search,
+  Filter,
+  Download,
+  Bell,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  TrendingUp,
+  UserPlus,
+  Shield,
+  Database,
+  Cpu,
+  Wifi,
+  HardDrive,
+  Eye,
+  Edit,
+  Trash2,
+  Mail,
+  Smartphone,
+  Globe
+} from "lucide-react";
+import { COLORS } from "../../constants/colors";
+
+export default function SystemControls() {
+  const [activeTab, setActiveTab] = useState("clinics");
+  const [showAddClinicModal, setShowAddClinicModal] = useState(false);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  // Mock data
+  const [clinics, setClinics] = useState([
+    { id: 1, name: "City Medical Center", status: "active", doctors: 15, patients: 1200, revenue: "$450K" },
+    { id: 2, name: "Health Plus Clinic", status: "active", doctors: 8, patients: 800, revenue: "$280K" },
+    { id: 3, name: "Wellness Hub", status: "inactive", doctors: 12, patients: 950, revenue: "$380K" }
+  ]);
+
+  const [users, setUsers] = useState([
+    { id: 1, name: "Dr. Sarah Johnson", role: "admin", email: "sarah@clinic.com", status: "active", lastLogin: "2 hours ago" },
+    { id: 2, name: "John Smith", role: "patient", email: "john@email.com", status: "active", lastLogin: "1 day ago" },
+    { id: 3, name: "Dr. Mike Chen", role: "doctor", email: "mike@clinic.com", status: "inactive", lastLogin: "3 days ago" }
+  ]);
+
+  const [systemHealth] = useState({
+    cpu: 45,
+    memory: 62,
+    storage: 78,
+    network: 95,
+    database: 88,
+    uptime: "99.9%"
+  });
+
+  const [analytics] = useState({
+    totalClinics: 156,
+    totalUsers: 12450,
+    totalDoctors: 892,
+    revenue: "$2.4M",
+    growth: 12.5,
+    appointments: 3456
+  });
+
+  const tabs = [
+    { id: "clinics", label: "Add New Clinic", icon: Building2, description: "Register a new clinic" },
+    { id: "users", label: "Manage Users", icon: Users, description: "Admin and patient accounts" },
+    { id: "analytics", label: "Analytics", icon: BarChart3, description: "View detailed reports" },
+    { id: "config", label: "System Config", icon: Settings, description: "Global settings" },
+    { id: "health", label: "System Health", icon: Activity, description: "Monitor performance" },
+    { id: "broadcast", label: "Broadcast", icon: Send, description: "Send notifications" }
+  ];
+
+  const renderClinicsTab = () => (
+    <div style={{ padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>Clinic Management</h3>
+        <button
+          onClick={() => setShowAddClinicModal(true)}
+          style={{
+            background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+            border: "none",
+            borderRadius: 8,
+            padding: "10px 20px",
+            cursor: "pointer",
+            color: COLORS.white,
+            fontSize: 14,
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: 8
+          }}
+        >
+          <Plus size={16} /> Add New Clinic
+        </button>
+      </div>
+
+      <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+        <div style={{ flex: 1, position: "relative" }}>
+          <Search size={18} color={COLORS.slate} style={{ position: "absolute", left: 12, top: 12 }} />
+          <input
+            type="text"
+            placeholder="Search clinics..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              width: "100%",
+              background: "#0f172a",
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: 8,
+              padding: "12px 16px 12px 44px",
+              color: COLORS.white,
+              fontSize: 14
+            }}
+          />
+        </div>
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          style={{
+            background: "#0f172a",
+            border: `1px solid ${COLORS.border}`,
+            borderRadius: 8,
+            padding: "12px 16px",
+            color: COLORS.white,
+            fontSize: 14,
+            cursor: "pointer"
+          }}
+        >
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div style={{ background: "#0f172a", borderRadius: 12, overflow: "hidden", border: `1px solid ${COLORS.border}` }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr style={{ background: "#111827", borderBottom: `1px solid ${COLORS.border}` }}>
+              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Clinic Name</th>
+              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Status</th>
+              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Doctors</th>
+              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Patients</th>
+              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Revenue</th>
+              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clinics.map((clinic) => (
+              <tr key={clinic.id} style={{ borderBottom: `1px solid ${COLORS.border}` }}>
+                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.name}</td>
+                <td style={{ padding: 16 }}>
+                  <span style={{
+                    background: clinic.status === "active" ? `${COLORS.teal}20` : `${COLORS.red}20`,
+                    color: clinic.status === "active" ? COLORS.teal : COLORS.red,
+                    padding: "4px 12px",
+                    borderRadius: 20,
+                    fontSize: 12,
+                    fontWeight: 600
+                  }}>
+                    {clinic.status}
+                  </span>
+                </td>
+                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.doctors}</td>
+                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.patients}</td>
+                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.revenue}</td>
+                <td style={{ padding: 16 }}>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.slate }}>
+                      <Eye size={16} />
+                    </button>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.slate }}>
+                      <Edit size={16} />
+                    </button>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.red }}>
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  const renderUsersTab = () => (
+    <div style={{ padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>User Management</h3>
+        <button
+          onClick={() => setShowAddUserModal(true)}
+          style={{
+            background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+            border: "none",
+            borderRadius: 8,
+            padding: "10px 20px",
+            cursor: "pointer",
+            color: COLORS.white,
+            fontSize: 14,
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: 8
+          }}
+        >
+          <UserPlus size={16} /> Add New User
+        </button>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+        {users.map((user) => (
+          <div key={user.id} style={{
+            background: "#0f172a",
+            border: `1px solid ${COLORS.border}`,
+            borderRadius: 12,
+            padding: 20
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
+              <div>
+                <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{user.name}</h4>
+                <p style={{ color: COLORS.slate, fontSize: 14 }}>{user.email}</p>
+              </div>
+              <span style={{
+                background: user.status === "active" ? `${COLORS.teal}20` : `${COLORS.red}20`,
+                color: user.status === "active" ? COLORS.teal : COLORS.red,
+                padding: "4px 12px",
+                borderRadius: 20,
+                fontSize: 12,
+                fontWeight: 600
+              }}>
+                {user.status}
+              </span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{
+                background: "#111827",
+                color: COLORS.slate,
+                padding: "4px 12px",
+                borderRadius: 6,
+                fontSize: 12,
+                fontWeight: 500
+              }}>
+                {user.role}
+              </span>
+              <span style={{ color: COLORS.slate, fontSize: 12 }}>Last login: {user.lastLogin}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderAnalyticsTab = () => (
+    <div style={{ padding: 24 }}>
+      <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Analytics Dashboard</h3>
+      
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20, marginBottom: 32 }}>
+        <div style={{
+          background: `linear-gradient(135deg, ${COLORS.teal}20, ${COLORS.teal}10)`,
+          border: `1px solid ${COLORS.teal}30`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <Building2 size={24} color={COLORS.teal} />
+            <TrendingUp size={16} color={COLORS.teal} />
+          </div>
+          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalClinics}</h4>
+          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Clinics</p>
+        </div>
+
+        <div style={{
+          background: `linear-gradient(135deg, #3b82f620, #3b82f610)`,
+          border: `1px solid #3b82f630`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <Users size={24} color="#3b82f6" />
+            <TrendingUp size={16} color="#3b82f6" />
+          </div>
+          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalUsers.toLocaleString()}</h4>
+          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Users</p>
+        </div>
+
+        <div style={{
+          background: `linear-gradient(135deg, #8b5cf620, #8b5cf610)`,
+          border: `1px solid #8b5cf630`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <Shield size={24} color="#8b5cf6" />
+            <TrendingUp size={16} color="#8b5cf6" />
+          </div>
+          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalDoctors}</h4>
+          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Doctors</p>
+        </div>
+
+        <div style={{
+          background: `linear-gradient(135deg, #10b98120, #10b98110)`,
+          border: `1px solid #10b98130`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <BarChart3 size={24} color="#10b981" />
+            <span style={{ color: "#10b981", fontSize: 12, fontWeight: 600 }}>+{analytics.growth}%</span>
+          </div>
+          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.revenue}</h4>
+          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Revenue</p>
+        </div>
+      </div>
+
+      <div style={{
+        background: "#0f172a",
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: 12,
+        padding: 24
+      }}>
+        <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Recent Activity</h4>
+        <div style={{ display: "grid", gap: 12 }}>
+          {["New clinic registered", "User account created", "Appointment booked", "System update completed"].map((activity, index) => (
+            <div key={index} style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 16px",
+              background: "#111827",
+              borderRadius: 8
+            }}>
+              <CheckCircle size={16} color={COLORS.teal} />
+              <span style={{ color: COLORS.white, fontSize: 14 }}>{activity}</span>
+              <span style={{ color: COLORS.slate, fontSize: 12, marginLeft: "auto" }}>{index + 1}h ago</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderConfigTab = () => (
+    <div style={{ padding: 24 }}>
+      <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>System Configuration</h3>
+      
+      <div style={{ display: "grid", gap: 24 }}>
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 24
+        }}>
+          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>General Settings</h4>
+          <div style={{ display: "grid", gap: 16 }}>
+            {[
+              { label: "System Name", value: "CliniQ Pro", type: "text" },
+              { label: "Default Timezone", value: "UTC+05:30", type: "select" },
+              { label: "Maintenance Mode", value: "Disabled", type: "toggle" },
+              { label: "User Registration", value: "Enabled", type: "toggle" }
+            ].map((setting, index) => (
+              <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: COLORS.white, fontSize: 14 }}>{setting.label}</span>
+                {setting.type === "toggle" ? (
+                  <button style={{
+                    width: 48,
+                    height: 24,
+                    background: setting.value === "Enabled" ? COLORS.teal : "#374151",
+                    border: "none",
+                    borderRadius: 12,
+                    cursor: "pointer",
+                    position: "relative"
+                  }}>
+                    <div style={{
+                      width: 20,
+                      height: 20,
+                      background: COLORS.white,
+                      borderRadius: "50%",
+                      position: "absolute",
+                      top: 2,
+                      left: setting.value === "Enabled" ? 26 : 2,
+                      transition: "all 0.2s"
+                    }} />
+                  </button>
+                ) : (
+                  <input
+                    type={setting.type}
+                    value={setting.value}
+                    readOnly
+                    style={{
+                      background: "#111827",
+                      border: `1px solid ${COLORS.border}`,
+                      borderRadius: 6,
+                      padding: "8px 12px",
+                      color: COLORS.white,
+                      fontSize: 14
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 24
+        }}>
+          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Security Settings</h4>
+          <div style={{ display: "grid", gap: 16 }}>
+            {[
+              { label: "Two-Factor Authentication", value: "Enabled", type: "toggle" },
+              { label: "Session Timeout", value: "30 minutes", type: "text" },
+              { label: "Password Complexity", value: "High", type: "select" },
+              { label: "Login Attempts", value: "5", type: "number" }
+            ].map((setting, index) => (
+              <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: COLORS.white, fontSize: 14 }}>{setting.label}</span>
+                {setting.type === "toggle" ? (
+                  <button style={{
+                    width: 48,
+                    height: 24,
+                    background: setting.value === "Enabled" ? COLORS.teal : "#374151",
+                    border: "none",
+                    borderRadius: 12,
+                    cursor: "pointer",
+                    position: "relative"
+                  }}>
+                    <div style={{
+                      width: 20,
+                      height: 20,
+                      background: COLORS.white,
+                      borderRadius: "50%",
+                      position: "absolute",
+                      top: 2,
+                      left: setting.value === "Enabled" ? 26 : 2,
+                      transition: "all 0.2s"
+                    }} />
+                  </button>
+                ) : (
+                  <input
+                    type={setting.type}
+                    value={setting.value}
+                    readOnly
+                    style={{
+                      background: "#111827",
+                      border: `1px solid ${COLORS.border}`,
+                      borderRadius: 6,
+                      padding: "8px 12px",
+                      color: COLORS.white,
+                      fontSize: 14
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHealthTab = () => (
+    <div style={{ padding: 24 }}>
+      <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>System Health Monitor</h3>
+      
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 32 }}>
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <Cpu size={20} color={COLORS.teal} />
+              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>CPU Usage</span>
+            </div>
+            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.cpu}%</span>
+          </div>
+          <div style={{
+            height: 8,
+            background: "#111827",
+            borderRadius: 4,
+            overflow: "hidden"
+          }}>
+            <div style={{
+              width: `${systemHealth.cpu}%`,
+              height: "100%",
+              background: systemHealth.cpu > 80 ? COLORS.red : systemHealth.cpu > 60 ? "#f59e0b" : COLORS.teal,
+              transition: "all 0.3s"
+            }} />
+          </div>
+        </div>
+
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <Database size={20} color={COLORS.teal} />
+              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>Memory</span>
+            </div>
+            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.memory}%</span>
+          </div>
+          <div style={{
+            height: 8,
+            background: "#111827",
+            borderRadius: 4,
+            overflow: "hidden"
+          }}>
+            <div style={{
+              width: `${systemHealth.memory}%`,
+              height: "100%",
+              background: systemHealth.memory > 80 ? COLORS.red : systemHealth.memory > 60 ? "#f59e0b" : COLORS.teal,
+              transition: "all 0.3s"
+            }} />
+          </div>
+        </div>
+
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <HardDrive size={20} color={COLORS.teal} />
+              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>Storage</span>
+            </div>
+            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.storage}%</span>
+          </div>
+          <div style={{
+            height: 8,
+            background: "#111827",
+            borderRadius: 4,
+            overflow: "hidden"
+          }}>
+            <div style={{
+              width: `${systemHealth.storage}%`,
+              height: "100%",
+              background: systemHealth.storage > 80 ? COLORS.red : systemHealth.storage > 60 ? "#f59e0b" : COLORS.teal,
+              transition: "all 0.3s"
+            }} />
+          </div>
+        </div>
+
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          padding: 20
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <Wifi size={20} color={COLORS.teal} />
+              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>Network</span>
+            </div>
+            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.network}%</span>
+          </div>
+          <div style={{
+            height: 8,
+            background: "#111827",
+            borderRadius: 4,
+            overflow: "hidden"
+          }}>
+            <div style={{
+              width: `${systemHealth.network}%`,
+              height: "100%",
+              background: systemHealth.network > 80 ? COLORS.red : systemHealth.network > 60 ? "#f59e0b" : COLORS.teal,
+              transition: "all 0.3s"
+            }} />
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        background: "#0f172a",
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: 12,
+        padding: 24
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>System Status</h4>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{
+              width: 12,
+              height: 12,
+              background: COLORS.teal,
+              borderRadius: "50%",
+              animation: "pulse 2s infinite"
+            }} />
+            <span style={{ color: COLORS.teal, fontSize: 14, fontWeight: 600 }}>Online</span>
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+          <div>
+            <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Uptime</p>
+            <p style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>{systemHealth.uptime}</p>
+          </div>
+          <div>
+            <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Database</p>
+            <p style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>{systemHealth.database}% Healthy</p>
+          </div>
+          <div>
+            <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Last Check</p>
+            <p style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>2 mins ago</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderBroadcastTab = () => (
+    <div style={{ padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>Broadcast Messages</h3>
+        <button
+          onClick={() => setShowBroadcastModal(true)}
+          style={{
+            background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+            border: "none",
+            borderRadius: 8,
+            padding: "10px 20px",
+            cursor: "pointer",
+            color: COLORS.white,
+            fontSize: 14,
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: 8
+          }}
+        >
+          <Send size={16} /> New Broadcast
+        </button>
+      </div>
+
+      <div style={{ display: "grid", gap: 20 }}>
+        {[
+          { title: "System Maintenance", message: "Scheduled maintenance on Sunday 2AM-4AM", type: "system", time: "2 hours ago", recipients: "All Users" },
+          { title: "New Feature Launch", message: "Video consultations now available!", type: "feature", time: "1 day ago", recipients: "Doctors & Patients" },
+          { title: "Holiday Notice", message: "Clinic closed on upcoming holidays", type: "holiday", time: "3 days ago", recipients: "All Users" }
+        ].map((broadcast, index) => (
+          <div key={index} style={{
+            background: "#0f172a",
+            border: `1px solid ${COLORS.border}`,
+            borderRadius: 12,
+            padding: 20
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 12 }}>
+              <div>
+                <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{broadcast.title}</h4>
+                <p style={{ color: COLORS.slate, fontSize: 14, marginBottom: 8 }}>{broadcast.message}</p>
+                <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                  <span style={{
+                    background: broadcast.type === "system" ? `${COLORS.red}20` : broadcast.type === "feature" ? `${COLORS.teal}20` : `${COLORS.yellow}20`,
+                    color: broadcast.type === "system" ? COLORS.red : broadcast.type === "feature" ? COLORS.teal : COLORS.yellow,
+                    padding: "4px 12px",
+                    borderRadius: 20,
+                    fontSize: 12,
+                    fontWeight: 600
+                  }}>
+                    {broadcast.type}
+                  </span>
+                  <span style={{ color: COLORS.slate, fontSize: 12 }}>Recipients: {broadcast.recipients}</span>
+                  <span style={{ color: COLORS.slate, fontSize: 12 }}>{broadcast.time}</span>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.slate }}>
+                  <Edit size={16} />
+                </button>
+                <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.red }}>
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "clinics": return renderClinicsTab();
+      case "users": return renderUsersTab();
+      case "analytics": return renderAnalyticsTab();
+      case "config": return renderConfigTab();
+      case "health": return renderHealthTab();
+      case "broadcast": return renderBroadcastTab();
+      default: return renderClinicsTab();
+    }
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0a0f1f", paddingTop: 80 }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px" }}>
+        <h2 style={{ color: COLORS.white, fontSize: 32, fontWeight: 700, marginBottom: 8 }}>System Controls</h2>
+        <p style={{ color: COLORS.slate, fontSize: 16, marginBottom: 32 }}>Manage your clinic system efficiently</p>
+
+        {/* Tab Navigation */}
+        <div style={{
+          display: "flex",
+          gap: 16,
+          marginBottom: 32,
+          overflowX: "auto",
+          paddingBottom: 8
+        }}>
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  background: activeTab === tab.id ? `${COLORS.teal}15` : "#0f172a",
+                  border: activeTab === tab.id ? `1px solid ${COLORS.teal}30` : `1px solid ${COLORS.border}`,
+                  borderRadius: 12,
+                  padding: "16px 20px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  minWidth: 200,
+                  transition: "all 0.2s"
+                }}
+              >
+                <div style={{
+                  width: 40,
+                  height: 40,
+                  background: activeTab === tab.id ? `${COLORS.teal}20` : "#111827",
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <Icon size={20} color={activeTab === tab.id ? COLORS.teal : COLORS.slate} />
+                </div>
+                <div style={{ textAlign: "left" }}>
+                  <div style={{ color: activeTab === tab.id ? COLORS.teal : COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 2 }}>
+                    {tab.label}
+                  </div>
+                  <div style={{ color: COLORS.slate, fontSize: 12 }}>
+                    {tab.description}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Content Area */}
+        <div style={{
+          background: "#0f172a",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 16,
+          overflow: "hidden"
+        }}>
+          {renderContent()}
+        </div>
+      </div>
+
+      {/* Add Clinic Modal */}
+      <AnimatePresence>
+        {showAddClinicModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0,0,0,0.8)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000
+            }}
+            onClick={() => setShowAddClinicModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#0f172a",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 16,
+                padding: 32,
+                width: "90%",
+                maxWidth: 500
+              }}
+            >
+              <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Add New Clinic</h3>
+              <div style={{ display: "grid", gap: 16 }}>
+                <input
+                  type="text"
+                  placeholder="Clinic Name"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+                <textarea
+                  placeholder="Address"
+                  rows={3}
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    resize: "vertical"
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                <button
+                  onClick={() => setShowAddClinicModal(false)}
+                  style={{
+                    flex: 1,
+                    background: "none",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px",
+                    cursor: "pointer",
+                    color: COLORS.slate,
+                    fontSize: 14,
+                    fontWeight: 600
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setShowAddClinicModal(false)}
+                  style={{
+                    flex: 1,
+                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    border: "none",
+                    borderRadius: 8,
+                    padding: "12px",
+                    cursor: "pointer",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    fontWeight: 600
+                  }}
+                >
+                  Add Clinic
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add User Modal */}
+      <AnimatePresence>
+        {showAddUserModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0,0,0,0.8)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000
+            }}
+            onClick={() => setShowAddUserModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#0f172a",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 16,
+                padding: 32,
+                width: "90%",
+                maxWidth: 500
+              }}
+            >
+              <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Add New User</h3>
+              <div style={{ display: "grid", gap: 16 }}>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+                <select
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    cursor: "pointer"
+                  }}
+                >
+                  <option value="">Select Role</option>
+                  <option value="admin">Admin</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="patient">Patient</option>
+                  <option value="staff">Staff</option>
+                </select>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                <button
+                  onClick={() => setShowAddUserModal(false)}
+                  style={{
+                    flex: 1,
+                    background: "none",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px",
+                    cursor: "pointer",
+                    color: COLORS.slate,
+                    fontSize: 14,
+                    fontWeight: 600
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setShowAddUserModal(false)}
+                  style={{
+                    flex: 1,
+                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    border: "none",
+                    borderRadius: 8,
+                    padding: "12px",
+                    cursor: "pointer",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    fontWeight: 600
+                  }}
+                >
+                  Add User
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Broadcast Modal */}
+      <AnimatePresence>
+        {showBroadcastModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0,0,0,0.8)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000
+            }}
+            onClick={() => setShowBroadcastModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#0f172a",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 16,
+                padding: 32,
+                width: "90%",
+                maxWidth: 500
+              }}
+            >
+              <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Send Broadcast</h3>
+              <div style={{ display: "grid", gap: 16 }}>
+                <input
+                  type="text"
+                  placeholder="Broadcast Title"
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14
+                  }}
+                />
+                <textarea
+                  placeholder="Message Content"
+                  rows={4}
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    resize: "vertical"
+                  }}
+                />
+                <select
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    cursor: "pointer"
+                  }}
+                >
+                  <option value="">Select Recipients</option>
+                  <option value="all">All Users</option>
+                  <option value="doctors">Doctors Only</option>
+                  <option value="patients">Patients Only</option>
+                  <option value="admins">Admins Only</option>
+                </select>
+                <select
+                  style={{
+                    background: "#111827",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px 16px",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    cursor: "pointer"
+                  }}
+                >
+                  <option value="">Notification Type</option>
+                  <option value="system">System</option>
+                  <option value="feature">Feature</option>
+                  <option value="holiday">Holiday</option>
+                  <option value="maintenance">Maintenance</option>
+                </select>
+                <div style={{ display: "flex", gap: 12 }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.white, fontSize: 14 }}>
+                    <input type="checkbox" style={{ cursor: "pointer" }} />
+                    <Mail size={16} />
+                    Email
+                  </label>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.white, fontSize: 14 }}>
+                    <input type="checkbox" style={{ cursor: "pointer" }} />
+                    <Smartphone size={16} />
+                    SMS
+                  </label>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.white, fontSize: 14 }}>
+                    <input type="checkbox" style={{ cursor: "pointer" }} />
+                    <Bell size={16} />
+                    Push
+                  </label>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                <button
+                  onClick={() => setShowBroadcastModal(false)}
+                  style={{
+                    flex: 1,
+                    background: "none",
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 8,
+                    padding: "12px",
+                    cursor: "pointer",
+                    color: COLORS.slate,
+                    fontSize: 14,
+                    fontWeight: 600
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setShowBroadcastModal(false)}
+                  style={{
+                    flex: 1,
+                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    border: "none",
+                    borderRadius: 8,
+                    padding: "12px",
+                    cursor: "pointer",
+                    color: COLORS.white,
+                    fontSize: 14,
+                    fontWeight: 600
+                  }}
+                >
+                  Send Broadcast
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
+    </div>
+  );
+}

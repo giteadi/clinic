@@ -214,23 +214,49 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             Book Appointment
           </button>
 
-          {/* LOGIN BUTTON - DESKTOP */}
-          <button
-            onClick={() => setView("login")}
-            className="desktop-login-btn"
-            style={{
-              background: "none",
-              border: `1px solid ${COLORS.border}`,
-              borderRadius: 8,
-              padding: "6px 14px",
-              cursor: "pointer",
-              color: COLORS.slate,
-              fontSize: 13,
-              fontWeight: 500
-            }}
-          >
-            Login
-          </button>
+          {/* LOGIN/LOGOUT BUTTON - DESKTOP */}
+          {isAuthenticated && actualUserRole !== "guest" ? (
+            <button
+              onClick={() => {
+                setUserRole("guest");
+                setView("home");
+                // Add logout dispatch here if needed
+              }}
+              className="desktop-logout-btn"
+              style={{
+                background: COLORS.red,
+                border: `1px solid ${COLORS.red}`,
+                borderRadius: 8,
+                padding: "6px 14px",
+                cursor: "pointer",
+                color: COLORS.white,
+                fontSize: 13,
+                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                gap: 6
+              }}
+            >
+              <LogOut size={14} /> Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => setView("login")}
+              className="desktop-login-btn"
+              style={{
+                background: "none",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 8,
+                padding: "6px 14px",
+                cursor: "pointer",
+                color: COLORS.slate,
+                fontSize: 13,
+                fontWeight: 500
+              }}
+            >
+              Login
+            </button>
+          )}
 
           {/* MOBILE MENU BUTTON */}
           <button
