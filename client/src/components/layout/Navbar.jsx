@@ -15,12 +15,10 @@ import { logout, clearPersistedData } from "../../store/authSlice";
 export default function Navbar({ view, setView, userRole, setUserRole }) {
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Get actual user role from Redux state
   const actualUserRole = user?.role || 'guest';
-  const roles = ["guest", "patient", "admin", "superadmin"];
 
   // ✅ Auto close mobile menu when screen becomes desktop
   useEffect(() => {
@@ -40,7 +38,6 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
     dispatch(clearPersistedData());
     setUserRole("guest");
     setView("home");
-    setOpen(false);
   };
 
   return (
@@ -138,74 +135,45 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
 
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
 
-          {/* ROLE SWITCHER */}
-          <div style={{ position: "relative" }}>
+          {/* USER INFO */}
+          {isAuthenticated && actualUserRole !== "guest" && (
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 8,
+              padding: "6px 14px",
+              background: "#111827",
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: 8
+            }}>
+              <User size={14} />
+              <span style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                {user?.name || actualUserRole}
+              </span>
+            </div>
+          )}
+
+          {/* DASHBOARD BUTTON */}
+          {isAuthenticated && actualUserRole !== "guest" && (
             <button
-              onClick={() => setOpen(!open)}
+              onClick={() => setView(`${actualUserRole}-dashboard`)}
               style={{
-                background: "#111827",
-                border: `1px solid ${COLORS.border}`,
+                background: `${COLORS.teal}15`,
+                border: `1px solid ${COLORS.teal}30`,
                 borderRadius: 8,
                 padding: "6px 14px",
                 cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                color: COLORS.white,
+                color: COLORS.teal,
                 fontSize: 13,
                 fontWeight: 600
               }}
             >
-              <User size={14} /> {actualUserRole} <ChevronDown size={12} />
+              {actualUserRole === "admin" || actualUserRole === "superadmin" 
+                ? `${actualUserRole.charAt(0).toUpperCase() + actualUserRole.slice(1)} Dashboard`
+                : "Dashboard"
+              }
             </button>
-
-            <AnimatePresence>
-              {open && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  style={{
-                    position: "absolute",
-                    top: 42,
-                    right: 0,
-                    background: "#0f172a",
-                    border: `1px solid ${COLORS.border}`,
-                    borderRadius: 10,
-                    overflow: "hidden",
-                    minWidth: 140,
-                    boxShadow: "0 10px 30px rgba(0,0,0,0.6)"
-                  }}
-                >
-                  {roles.map((r) => (
-                    <button
-                      key={r}
-                      onClick={() => {
-                        setUserRole(r);
-                        setOpen(false);
-                        setView(r === "guest" ? "home" : `${r}-dashboard`);
-                      }}
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "left",
-                        padding: "10px 16px",
-                        background:
-                          r === actualUserRole ? `${COLORS.teal}18` : "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color:
-                          r === actualUserRole ? COLORS.teal : COLORS.slate,
-                        fontSize: 13
-                      }}
-                    >
-                      {r}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          )}
 
           {/* DESKTOP BOOK APPOINTMENT BUTTON */}
           <button
@@ -369,6 +337,52 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 </button>
               ))}
             </div>
+
+            {/* USER INFO IN MOBILE MENU */}
+            {isAuthenticated && actualUserRole !== "guest" && (
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 16px",
+                background: "#111827",
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 8,
+                marginBottom: 12
+              }}>
+                <User size={16} />
+                <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>
+                  {user?.name || actualUserRole}
+                </span>
+              </div>
+            )}
+
+            {/* DASHBOARD BUTTON IN MOBILE MENU */}
+            {isAuthenticated && actualUserRole !== "guest" && (
+              <button
+                onClick={() => {
+                  setView(`${actualUserRole}-dashboard`);
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  background: `${COLORS.teal}15`,
+                  border: `1px solid ${COLORS.teal}30`,
+                  borderRadius: 8,
+                  padding: "12px 16px",
+                  cursor: "pointer",
+                  color: COLORS.teal,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  width: "100%",
+                  marginBottom: 12
+                }}
+              >
+                {actualUserRole === "admin" || actualUserRole === "superadmin" 
+                  ? `${actualUserRole.charAt(0).toUpperCase() + actualUserRole.slice(1)} Dashboard`
+                  : "Dashboard"
+                }
+              </button>
+            )}
 
             {/* BOOK APPOINTMENT BUTTON IN MOBILE MENU */}
             {isAuthenticated && actualUserRole !== "guest" && (
