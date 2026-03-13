@@ -1,0 +1,95 @@
+/* Mobile Responsive Styles */
+
+/* Hide mobile menu button on desktop */
+@media (min-width: 768px) {
+  .mobile-menu-btn {
+    display: none !important;
+  }
+}
+
+/* Show mobile menu button only on mobile */
+@media (max-width: 767px) {
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+}
+
+/* Hide desktop navigation on mobile */
+@media (max-width: 767px) {
+  .desktop-nav {
+    display: none !important;
+  }
+}
+
+/* Show desktop navigation on desktop */
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex !important;
+  }
+}
+
+/* Hide desktop action buttons on mobile */
+@media (max-width: 767px) {
+  .desktop-actions {
+    display: none !important;
+  }
+}
+
+/* Show desktop action buttons on desktop */
+@media (min-width: 768px) {
+  .desktop-actions {
+    display: flex !important;
+  }
+}
+
+/* Hero section perfect centering */
+.hero-content {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  max-width: 95% !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+/* Mobile specific hero adjustments */
+@media (max-width: 767px) {
+  .hero-content {
+    padding: 20px !important;
+    max-width: 90% !important;
+  }
+  
+  /* Stats section mobile layout */
+  .stats-container {
+    flex-direction: column !important;
+  }
+  
+  .stat-item {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .stat-item:last-child {
+    border-bottom: none !important;
+  }
+}
+
+/* Desktop stats layout */
+@media (min-width: 768px) {
+  .stats-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0 !important;
+  }
+  
+  .stat-item {
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: none !important;
+  }
+  
+  .stat-item:last-child {
+    border-right: none !important;
+  }
+}

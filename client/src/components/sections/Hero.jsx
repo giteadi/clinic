@@ -26,21 +26,23 @@ export default function Hero({ setView }) {
       }} />
 
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+        className="hero-content"
         style={{ 
           textAlign: "center", 
           maxWidth: "min(900px, 95%)", 
           position: "relative",
-          display: "grid",
+          display: "flex",
+          flexDirection: "column",
           gap: "clamp(16px, 4vw, 40px)",
-          justifySelf: "center",
-          alignSelf: "center"
+          margin: "0 auto",
+          width: "100%"
         }}>
 
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8,
           background: `${COLORS.teal}15`, border: `1px solid ${COLORS.teal}30`,
           borderRadius: 30, padding: "clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px)", 
-          justifySelf: "center"
+          margin: "0 auto"
         }}>
           <Zap size={14} color={COLORS.teal} />
           <span style={{ 
@@ -70,16 +72,16 @@ export default function Hero({ setView }) {
           lineHeight: 1.7, 
           fontFamily: "'DM Sans', sans-serif",
           maxWidth: "600px",
-          justifySelf: "center"
+          margin: "0 auto"
         }}>
           Book appointments with top doctors, manage your clinic, and deliver exceptional patient care — all in one elegant platform.
         </p>
 
         <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+          display: "flex", 
+          flexDirection: "column",
           gap: "clamp(12px, 3vw, 14px)", 
-          justifySelf: "center",
+          margin: "0 auto",
           width: "100%",
           maxWidth: "500px"
         }}>
@@ -123,17 +125,18 @@ export default function Hero({ setView }) {
           </motion.button>
         </div>
 
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", 
+        <div className="stats-container" style={{ 
+          display: "flex", 
+          flexDirection: "column",
           gap: 0, 
-          justifySelf: "center",
+          margin: "0 auto",
           width: "100%",
           maxWidth: "600px"
         }}>
           {STATS.map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + i * 0.1 }}
+              className="stat-item"
               style={{
                 textAlign: "center", 
                 padding: "clamp(16px, 3vw, 20px) clamp(20px, 4vw, 36px)",
