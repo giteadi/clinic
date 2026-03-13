@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Clock, FileText, Bell, User, ChevronRight, Heart, Activity, Shield } from "lucide-react";
+import { useSelector } from "react-redux";
 import { COLORS } from "../../constants/colors";
 import { DOCTORS } from "../../constants/data";
 import Avatar from "../common/Avatar";
 import BackButton from "../common/BackButton";
-import { useSelector } from "react-redux";
 
 export default function PatientDashboard({ setView }) {
   const [activeTab, setActiveTab] = useState("upcoming");
+  const { user } = useSelector(state => state.auth);
 
   const appointments = [
     { id: 1, doctor: DOCTORS[0], date: "Today", time: "10:00 AM", status: "confirmed", reason: "Regular checkup" },
@@ -185,7 +186,17 @@ export default function PatientDashboard({ setView }) {
           </div>
 
           <div style={{ marginTop: 32, textAlign: "center" }}>
-            <button onClick={() => setView("doctors")}
+            <button onClick={() => {
+              // Check if patient has a linked clinic
+              if (user?.linkedClinic) {
+                // Set the linked clinic and go directly to doctor selection
+                localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
+                setView("doctor-selection");
+              } else {
+                // For patients without linked clinic, show clinic selection
+                setView("clinic-selection");
+              }
+            }}
               style={{
                 background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
                 border: "none", borderRadius: 12, padding: "14px 28px",
