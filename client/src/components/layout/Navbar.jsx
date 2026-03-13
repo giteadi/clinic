@@ -193,6 +193,26 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </AnimatePresence>
           </div>
 
+          {/* DESKTOP BOOK APPOINTMENT BUTTON */}
+          <button
+            onClick={() => {
+              setUserRole("patient");
+              setView("patient-dashboard");
+            }}
+            className="desktop-book-btn"
+            style={{
+              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              border: "none",
+              borderRadius: 8,
+              padding: "8px 18px",
+              cursor: "pointer",
+              color: COLORS.white,
+              fontSize: 13,
+              fontWeight: 600
+            }}
+          >
+            Book Appointment
+          </button>
 
           {/* MOBILE MENU BUTTON */}
           <button

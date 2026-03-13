@@ -1,3 +1,17 @@
+/* Hide desktop book button on mobile */
+@media (max-width: 767px) {
+  .desktop-book-btn {
+    display: none !important;
+  }
+}
+
+/* Show desktop book button on desktop */
+@media (min-width: 768px) {
+  .desktop-book-btn {
+    display: flex !important;
+  }
+}
+
 /* Mobile Responsive Styles */
 
 /* Hide mobile menu button on desktop */
