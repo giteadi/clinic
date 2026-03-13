@@ -11,6 +11,11 @@ import BookingModal from "./sections/BookingModal";
 import PatientDashboard from "./dashboard/PatientDashboard";
 import AdminDashboard from "./dashboard/AdminDashboard";
 import SuperAdminDashboard from "./dashboard/SuperAdminDashboard";
+import AppointmentPage from "./pages/AppointmentPage";
+import DoctorsPage from "./pages/DoctorsPage";
+import ClinicPage from "./pages/ClinicPage";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function CliniqPro() {
   const [view, setView] = useState("home");
@@ -31,44 +36,52 @@ export default function CliniqPro() {
       <Navbar view={view} setView={setView} userRole={userRole} setUserRole={setUserRole} />
 
       <AnimatePresence mode="wait">
-        {view === "home" && (
-          <div key="home">
-            <Hero setView={setView} />
-            <SearchSection setView={setView} />
-            <ReviewsSection />
-            <InquirySection />
-            <Footer />
-          </div>
-        )}
-        {view === "doctors" && (
-          <div key="doctors">
-            <DoctorsView onBook={handleBook} />
-            <Footer />
-          </div>
-        )}
-        {view === "clinics" && (
-          <div key="clinics">
-            <div style={{ minHeight: "100vh", background: "#F8F5F0", padding: "100px 32px 60px", textAlign: "center" }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: "#0A1628" }}>Clinic Directory</h2>
-              <p style={{ color: "#8892B0", marginTop: 10 }}>500+ clinics across India — coming soon in full view.</p>
+        <ProtectedRoute view={view} setView={setView}>
+          {view === "home" && (
+            <div key="home">
+              <Hero setView={setView} />
+              <SearchSection setView={setView} />
+              <ReviewsSection />
+              <InquirySection />
+              <Footer />
             </div>
-          </div>
-        )}
-        {view === "patient-dashboard" && (
-          <div key="patient">
-            <PatientDashboard setView={setView} />
-          </div>
-        )}
-        {view === "admin-dashboard" && (
-          <div key="admin">
-            <AdminDashboard />
-          </div>
-        )}
-        {view === "superadmin-dashboard" && (
-          <div key="superadmin">
-            <SuperAdminDashboard />
-          </div>
-        )}
+          )}
+          {view === "doctors" && (
+            <div key="doctors">
+              <DoctorsPage setView={setView} />
+            </div>
+          )}
+          {view === "login" && (
+            <div key="login">
+              <LoginPage setView={setView} />
+            </div>
+          )}
+          {view === "clinics" && (
+            <div key="clinics">
+              <ClinicPage setView={setView} />
+            </div>
+          )}
+          {view === "appointment" && (
+            <div key="appointment">
+              <AppointmentPage setView={setView} />
+            </div>
+          )}
+          {view === "patient-dashboard" && (
+            <div key="patient">
+              <PatientDashboard setView={setView} />
+            </div>
+          )}
+          {view === "admin-dashboard" && (
+            <div key="admin">
+              <AdminDashboard />
+            </div>
+          )}
+          {view === "superadmin-dashboard" && (
+            <div key="superadmin">
+              <SuperAdminDashboard />
+            </div>
+          )}
+        </ProtectedRoute>
       </AnimatePresence>
 
       <AnimatePresence>

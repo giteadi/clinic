@@ -12,6 +12,20 @@
   }
 }
 
+/* Hide desktop login button on mobile */
+@media (max-width: 767px) {
+  .desktop-login-btn {
+    display: none !important;
+  }
+}
+
+/* Show desktop login button on desktop */
+@media (min-width: 768px) {
+  .desktop-login-btn {
+    display: flex !important;
+  }
+}
+
 /* Mobile Responsive Styles */
 
 /* Hide mobile menu button on desktop */

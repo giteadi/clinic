@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Stethoscope,
@@ -11,10 +12,12 @@ import {
 import { COLORS } from "../../constants/colors";
 
 export default function Navbar({ view, setView, userRole, setUserRole }) {
-
+  const { user, isAuthenticated } = useSelector(state => state.auth);
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Get actual user role from Redux state
+  const actualUserRole = user?.role || 'guest';
   const roles = ["guest", "patient", "admin", "superadmin"];
 
   // ✅ Auto close mobile menu when screen becomes desktop
@@ -142,7 +145,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 fontWeight: 600
               }}
             >
-              <User size={14} /> {userRole} <ChevronDown size={12} />
+              <User size={14} /> {actualUserRole} <ChevronDown size={12} />
             </button>
 
             <AnimatePresence>
@@ -177,11 +180,11 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                         textAlign: "left",
                         padding: "10px 16px",
                         background:
-                          r === userRole ? `${COLORS.teal}18` : "none",
+                          r === actualUserRole ? `${COLORS.teal}18` : "none",
                         border: "none",
                         cursor: "pointer",
                         color:
-                          r === userRole ? COLORS.teal : COLORS.slate,
+                          r === actualUserRole ? COLORS.teal : COLORS.slate,
                         fontSize: 13
                       }}
                     >
@@ -195,10 +198,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
 
           {/* DESKTOP BOOK APPOINTMENT BUTTON */}
           <button
-            onClick={() => {
-              setUserRole("patient");
-              setView("patient-dashboard");
-            }}
+            onClick={() => setView("appointment")}
             className="desktop-book-btn"
             style={{
               background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
@@ -214,9 +214,28 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             Book Appointment
           </button>
 
+          {/* LOGIN BUTTON - DESKTOP */}
+          <button
+            onClick={() => setView("login")}
+            className="desktop-login-btn"
+            style={{
+              background: "none",
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: 8,
+              padding: "6px 14px",
+              cursor: "pointer",
+              color: COLORS.slate,
+              fontSize: 13,
+              fontWeight: 500
+            }}
+          >
+            Login
+          </button>
+
           {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="mobile-menu-btn"
             style={{
               display: "flex",
               background: "#111827",
@@ -305,7 +324,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </div>
 
             {/* ACTION BUTTON INSIDE MOBILE MENU */}
-            {userRole !== "guest" ? (
+            {isAuthenticated && actualUserRole !== "guest" ? (
               <button
                 onClick={() => {
                   setUserRole("guest");
@@ -332,23 +351,22 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             ) : (
               <button
                 onClick={() => {
-                  setUserRole("patient");
-                  setView("patient-dashboard");
+                  setView("login");
                   setMobileMenuOpen(false);
                 }}
                 style={{
-                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
-                  border: "none",
+                  background: `${COLORS.teal}15`,
+                  border: `1px solid ${COLORS.teal}30`,
                   borderRadius: 8,
                   padding: "12px 16px",
                   cursor: "pointer",
-                  color: COLORS.white,
+                  color: COLORS.teal,
                   fontSize: 14,
                   fontWeight: 600,
                   width: "100%"
                 }}
               >
-                Book Now
+                Login / Register
               </button>
             )}
 
