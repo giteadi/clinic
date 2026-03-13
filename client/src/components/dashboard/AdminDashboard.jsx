@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
 import { Users, Calendar, TrendingUp, DollarSign, Activity, Bell, Settings, ChevronRight, BarChart3 } from "lucide-react";
 import { COLORS } from "../../constants/colors";
 import Avatar from "../common/Avatar";
@@ -7,6 +8,39 @@ import BackButton from "../common/BackButton";
 
 export default function AdminDashboard({ setView }) {
   const [activeTab, setActiveTab] = useState("overview");
+  const dispatch = useDispatch();
+  const { actions: quickActions } = useSelector(state => state.quickActions);
+
+  // Icon mapping
+  const iconMap = {
+    Calendar: Calendar,
+    Users: Users,
+    Activity: Activity,
+    Settings: Settings
+  };
+
+  // Handle quick action click
+  const handleQuickAction = (action) => {
+    if (!action.enabled) return;
+    
+    // Navigate based on action route
+    switch (action.route) {
+      case "schedule-appointment":
+        setView("appointment");
+        break;
+      case "manage-patients":
+        setView("manage-patients");
+        break;
+      case "view-reports":
+        setView("view-reports");
+        break;
+      case "clinic-settings":
+        setView("clinic-settings");
+        break;
+      default:
+        console.log("Unknown action route:", action.route);
+    }
+  };
 
   const stats = [
     { icon: Users, label: "Total Patients", value: "2,456", change: "+12%", trend: "up" },
@@ -172,32 +206,49 @@ export default function AdminDashboard({ setView }) {
                 <BarChart3 size={18} color={COLORS.slate} />
               </div>
               <div style={{ padding: 20, display: "grid", gap: 12 }}>
-                {[
-                  { icon: Calendar, label: "Schedule Appointment", color: COLORS.teal },
-                  { icon: Users, label: "Manage Patients", color: COLORS.gold },
-                  { icon: Activity, label: "View Reports", color: "#9C27B0" },
-                  { icon: Settings, label: "Clinic Settings", color: COLORS.slate },
-                ].map((action, i) => (
-                  <motion.button key={action.label} whileHover={{ scale: 1.02 }}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 12,
-                      padding: 16, background: COLORS.cream, borderRadius: 12,
-                      border: "none", cursor: "pointer", width: "100%",
-                      transition: "all 0.2s"
-                    }}>
-                    <div style={{ 
-                      width: 40, height: 40, borderRadius: 10, 
-                      background: `${action.color}18`, 
-                      display: "flex", alignItems: "center", justifyContent: "center" 
-                    }}>
-                      <action.icon size={20} color={action.color} />
-                    </div>
-                    <div style={{ textAlign: "left", flex: 1 }}>
-                      <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 14 }}>{action.label}</div>
-                    </div>
-                    <ChevronRight size={16} color={COLORS.slate} />
-                  </motion.button>
-                ))}
+                {quickActions.filter(action => action.enabled).map((action, i) => {
+                  const IconComponent = iconMap[action.icon];
+                  return (
+                    <motion.button 
+                      key={action.id} 
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleQuickAction(action)}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 12,
+                        padding: 16, background: COLORS.cream, borderRadius: 12,
+                        border: "none", cursor: "pointer", width: "100%",
+                        transition: "all 0.2s",
+                        opacity: action.enabled ? 1 : 0.5
+                      }}
+                      onMouseEnter={(e) => {
+                        if (action.enabled) {
+                          e.target.style.transform = "translateY(-2px)";
+                          e.target.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (action.enabled) {
+                          e.target.style.transform = "translateY(0)";
+                          e.target.style.boxShadow = "none";
+                        }
+                      }}
+                    >
+                      <div style={{ 
+                        width: 40, height: 40, borderRadius: 10, 
+                        background: `${action.color}18`, 
+                        display: "flex", alignItems: "center", justifyContent: "center" 
+                      }}>
+                        {IconComponent && <IconComponent size={20} color={action.color} />}
+                      </div>
+                      <div style={{ textAlign: "left", flex: 1 }}>
+                        <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 14 }}>{action.label}</div>
+                        <div style={{ color: COLORS.slate, fontSize: 11, marginTop: 2 }}>{action.description}</div>
+                      </div>
+                      <ChevronRight size={16} color={COLORS.slate} />
+                    </motion.button>
+                  );
+                })}
               </div>
             </div>
           </div>

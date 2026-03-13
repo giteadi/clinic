@@ -4,6 +4,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import authSlice from './authSlice';
 import clinicSlice from './clinicSlice';
 import superAdminSlice from './superAdminSlice';
+import quickActionsSlice from './quickActionsSlice';
 
 // Create custom storage using localStorage directly
 const createLocalStorageStorage = () => {
@@ -64,7 +65,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSlice,
   clinic: clinicSlice,
-  superAdmin: superAdminSlice
+  superAdmin: superAdminSlice,
+  quickActions: quickActionsSlice
 });
 
 // Create persisted reducer

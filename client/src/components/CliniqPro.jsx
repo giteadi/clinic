@@ -21,13 +21,27 @@ import Hero from "./sections/Hero";
 import SearchSection from "./sections/SearchSection";
 import ReviewsSection from "./sections/ReviewsSection";
 import InquirySection from "./sections/InquirySection";
+import ManagePatientsPage from "./pages/ManagePatientsPage";
+import ViewReportsPage from "./pages/ViewReportsPage";
+import ClinicSettingsPage from "./pages/ClinicSettingsPage";
+import AdminAppointmentPage from "./pages/AdminAppointmentPage";
+import AdminBookAppointmentPage from "./pages/AdminBookAppointmentPage";
+import BookingModal from "./sections/BookingModal";
 
 export default function CliniqPro() {
   const [view, setView] = useState("home");
   const [userRole, setUserRole] = useState("guest");
   const [booking, setBooking] = useState(null);
 
-  const handleBook = (doctor, slot) => setBooking({ doctor, slot });
+  const handleBook = (doctor, slot) => {
+    console.log('CliniqPro Debug - handleBook called:', { doctor, slot });
+    setBooking({ doctor, slot });
+  };
+
+  const wrappedSetView = (newView) => {
+    console.log('CliniqPro Debug - View changing from', view, 'to', newView);
+    setView(newView);
+  };
 
   useEffect(() => {
     const link1 = document.createElement("link");
@@ -38,7 +52,7 @@ export default function CliniqPro() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#F8F5F0", minHeight: "100vh" }}>
-      <Navbar view={view} setView={setView} userRole={userRole} setUserRole={setUserRole} />
+      <Navbar view={view} setView={wrappedSetView} userRole={userRole} setUserRole={setUserRole} />
 
       <AnimatePresence mode="wait">
         <ProtectedRoute view={view} setView={setView}>
@@ -141,12 +155,40 @@ export default function CliniqPro() {
               <BookingConfirmationPage setView={setView} />
             </div>
           )}
+          {view === "manage-patients" && (
+            <div key="manage-patients">
+              <ManagePatientsPage setView={setView} />
+            </div>
+          )}
+          {view === "view-reports" && (
+            <div key="view-reports">
+              <ViewReportsPage setView={setView} />
+            </div>
+          )}
+          {view === "clinic-settings" && (
+            <div key="clinic-settings">
+              <ClinicSettingsPage setView={setView} />
+            </div>
+          )}
+          {view === "admin-appointment" && (
+            <div key="admin-appointment">
+              <AdminAppointmentPage setView={setView} />
+            </div>
+          )}
+          {view === "admin-book-appointment" && (
+            <div key="admin-book-appointment">
+              <AdminBookAppointmentPage setView={setView} />
+            </div>
+          )}
         </ProtectedRoute>
       </AnimatePresence>
 
       <AnimatePresence>
         {booking && (
-          <BookingModal doctor={booking.doctor} slot={booking.slot} onClose={() => setBooking(null)} />
+          <>
+            {console.log('CliniqPro Debug - Rendering BookingModal:', { booking })}
+            <BookingModal doctor={booking.doctor} slot={booking.slot} onClose={() => setBooking(null)} />
+          </>
         )}
       </AnimatePresence>
     </div>

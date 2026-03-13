@@ -184,6 +184,9 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                   // Set the linked clinic and go directly to doctor selection
                   localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
                   setView("doctor-selection");
+                } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
+                  // For admin/superadmin, go to appointment management
+                  setView("admin-appointment");
                 } else {
                   // For other users or patients without linked clinic, show clinic selection
                   setView("clinic-selection");
@@ -393,6 +396,9 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     // Set the linked clinic and go directly to doctor selection
                     localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
                     setView("doctor-selection");
+                  } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
+                    // For admin/superadmin, go to appointment management
+                    setView("admin-appointment");
                   } else {
                     // For other users or patients without linked clinic, show clinic selection
                     setView("clinic-selection");

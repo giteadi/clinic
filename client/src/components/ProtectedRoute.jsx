@@ -6,8 +6,8 @@ import LoginPage from './pages/LoginPage';
 const ROLE_ACCESS = {
   guest: ['home', 'doctors', 'clinics', 'appointment', 'login'],
   patient: ['home', 'doctors', 'clinics', 'appointment', 'patient-dashboard', 'login', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation'],
-  admin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'login', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation'],
-  superadmin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'superadmin-dashboard', 'login', 'add-clinic', 'manage-users', 'analytics', 'system-config', 'system-health', 'broadcast', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation']
+  admin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'login', 'doctor-selection', 'doctor-booking', 'booking-confirmation', 'manage-patients', 'view-reports', 'clinic-settings', 'admin-appointment', 'admin-book-appointment'],
+  superadmin: ['home', 'doctors', 'clinics', 'appointment', 'admin-dashboard', 'superadmin-dashboard', 'login', 'add-clinic', 'manage-users', 'analytics', 'system-config', 'system-health', 'broadcast', 'clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation', 'manage-patients', 'view-reports', 'clinic-settings', 'admin-appointment', 'admin-book-appointment']
 };
 
 export default function ProtectedRoute({ children, view, setView }) {
@@ -22,39 +22,38 @@ export default function ProtectedRoute({ children, view, setView }) {
   // Public routes that don't require authentication
   const publicRoutes = ['home', 'doctors', 'clinics', 'appointment', 'login'];
   
+  // Dashboard mapping for redirects
+  const dashboardMap = {
+    patient: 'patient-dashboard',
+    admin: 'admin-dashboard',
+    superadmin: 'superadmin-dashboard'
+  };
+  
+  // Determine if redirect is needed
+  const needsAuthRedirect = !isAuthenticated && !publicRoutes.includes(view);
+  const needsRoleRedirect = isAuthenticated && !hasAccess;
+  const needsLoginRedirect = isAuthenticated && view === 'login';
+  
+  // Handle redirects with useEffect
+  useEffect(() => {
+    if (needsAuthRedirect) {
+      // Will render LoginPage component, no redirect needed
+      return;
+    }
+    
+    if (needsRoleRedirect || needsLoginRedirect) {
+      const redirectView = dashboardMap[userRole] || 'home';
+      setView(redirectView);
+    }
+  }, [needsAuthRedirect, needsRoleRedirect, needsLoginRedirect, userRole, setView]);
+  
   // If trying to access protected route without authentication
-  if (!isAuthenticated && !publicRoutes.includes(view)) {
+  if (needsAuthRedirect) {
     return <LoginPage setView={setView} />;
   }
   
-  // If user doesn't have role-based access
-  if (isAuthenticated && !hasAccess) {
-    // Redirect to appropriate dashboard based on role
-    const dashboardMap = {
-      patient: 'patient-dashboard',
-      admin: 'admin-dashboard',
-      superadmin: 'superadmin-dashboard'
-    };
-    
-    const redirectView = dashboardMap[userRole] || 'home';
-    useEffect(() => {
-      setView(redirectView);
-    }, [redirectView, setView]);
-    return null;
-  }
-  
-  // If user is authenticated but trying to access login, redirect to dashboard
-  if (isAuthenticated && view === 'login') {
-    const dashboardMap = {
-      patient: 'patient-dashboard',
-      admin: 'admin-dashboard',
-      superadmin: 'superadmin-dashboard'
-    };
-    
-    const redirectView = dashboardMap[userRole] || 'home';
-    useEffect(() => {
-      setView(redirectView);
-    }, [redirectView, setView]);
+  // If user doesn't have role-based access or is authenticated but trying to access login
+  if (needsRoleRedirect || needsLoginRedirect) {
     return null;
   }
   

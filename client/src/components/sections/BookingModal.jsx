@@ -5,6 +5,8 @@ import { COLORS } from "../../constants/colors";
 import Avatar from "../common/Avatar";
 
 export default function BookingModal({ doctor, slot, onClose }) {
+  console.log('BookingModal Debug - Props received:', { doctor, slot, onClose });
+  
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ name: "", phone: "", email: "", reason: "" });
   const [done, setDone] = useState(false);
@@ -78,7 +80,9 @@ export default function BookingModal({ doctor, slot, onClose }) {
                   display: "flex", alignItems: "center", gap: 8, marginTop: 4 
                 }}>
                   <Calendar size={14} color={COLORS.teal} />
-                  <span style={{ color: COLORS.teal, fontSize: 13 }}>{slot}</span>
+                  <span style={{ color: COLORS.teal, fontSize: 13 }}>
+                    {typeof slot === 'object' ? JSON.stringify(slot) : slot}
+                  </span>
                 </div>
               </div>
             </div>

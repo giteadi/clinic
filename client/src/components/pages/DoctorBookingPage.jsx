@@ -24,13 +24,21 @@ export default function DoctorBookingPage({ setView }) {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
   useEffect(() => {
+    console.log('DoctorBookingPage Debug - Component mounted');
     // Get selected doctor and clinic from localStorage
     const doctorData = localStorage.getItem('selectedDoctor');
     const clinicData = localStorage.getItem('selectedClinic');
     
+    console.log('DoctorBookingPage Debug - Data from localStorage:', { doctorData, clinicData });
+    
     if (doctorData && clinicData) {
-      setSelectedDoctor(JSON.parse(doctorData));
-      setSelectedClinic(JSON.parse(clinicData));
+      const parsedDoctor = JSON.parse(doctorData);
+      const parsedClinic = JSON.parse(clinicData);
+      console.log('DoctorBookingPage Debug - Parsed data:', { parsedDoctor, parsedClinic });
+      setSelectedDoctor(parsedDoctor);
+      setSelectedClinic(parsedClinic);
+    } else {
+      console.log('DoctorBookingPage Debug - No data found in localStorage');
     }
   }, []);
 
@@ -69,11 +77,22 @@ export default function DoctorBookingPage({ setView }) {
     }, 2000);
   };
 
-  const timeSlots = selectedDate === "today" 
-    ? selectedDoctor?.availability.today || []
-    : selectedDoctor?.availability.tomorrow || [];
+  const timeSlots = selectedDoctor?.availability && typeof selectedDoctor.availability === 'object'
+    ? (selectedDate === "today" ? (selectedDoctor.availability.today || []) : (selectedDoctor.availability.tomorrow || []))
+    : [];
+  
+  // Debug logs
+  console.log('DoctorBookingPage Debug:', {
+    selectedDoctor,
+    selectedClinic,
+    selectedDate,
+    timeSlots,
+    availability: selectedDoctor?.availability,
+    availabilityType: typeof selectedDoctor?.availability
+  });
 
   if (!selectedDoctor || !selectedClinic) {
+    console.log('DoctorBookingPage Debug - Rendering loading state:', { selectedDoctor, selectedClinic });
     return (
       <div style={{ minHeight: "100vh", background: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
