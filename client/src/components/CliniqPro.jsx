@@ -55,11 +55,11 @@ export default function CliniqPro() {
       <Navbar view={view} setView={wrappedSetView} userRole={userRole} setUserRole={setUserRole} />
 
       <AnimatePresence mode="wait">
-        <ProtectedRoute view={view} setView={setView}>
+        <ProtectedRoute view={view} setView={wrappedSetView}>
           {view === "home" && (
             <div key="home">
-              <Hero setView={setView} />
-              <SearchSection setView={setView} />
+              <Hero setView={wrappedSetView} />
+              <SearchSection setView={wrappedSetView} />
               <ReviewsSection />
               <InquirySection />
               <Footer />
@@ -67,117 +67,117 @@ export default function CliniqPro() {
           )}
           {view === "doctors" && (
             <div key="doctors">
-              <DoctorsPage setView={setView} />
+              <DoctorsPage setView={wrappedSetView} />
             </div>
           )}
           {view === "login" && (
             <div key="login">
-              <LoginPage setView={setView} />
+              <LoginPage setView={wrappedSetView} />
             </div>
           )}
           {view === "clinics" && (
             <div key="clinics">
-              <ClinicPage setView={setView} />
+              <ClinicPage setView={wrappedSetView} />
             </div>
           )}
           {view === "appointment" && (
             <div key="appointment">
-              <AppointmentPage setView={setView} />
+              <AppointmentPage setView={wrappedSetView} />
             </div>
           )}
           {view === "patient-dashboard" && (
             <div key="patient">
-              <PatientDashboard setView={setView} />
+              <PatientDashboard setView={wrappedSetView} />
             </div>
           )}
           {view === "admin-dashboard" && (
             <div key="admin">
-              <AdminDashboard setView={setView} />
+              <AdminDashboard setView={wrappedSetView} />
             </div>
           )}
           {view === "superadmin-dashboard" && (
             <div key="superadmin">
-              <SuperAdminDashboard setView={setView} />
+              <SuperAdminDashboard setView={wrappedSetView} />
             </div>
           )}
           {view === "system-controls" && (
             <div key="system-controls">
-              <SystemControls activeTab="clinics" setView={setView} />
+              <SystemControls activeTab="clinics" setView={wrappedSetView} />
             </div>
           )}
           {view === "add-clinic" && (
             <div key="add-clinic">
-              <SystemControls activeTab="clinics" setView={setView} />
+              <SystemControls activeTab="clinics" setView={wrappedSetView} />
             </div>
           )}
           {view === "manage-users" && (
             <div key="manage-users">
-              <SystemControls activeTab="users" setView={setView} />
+              <SystemControls activeTab="users" setView={wrappedSetView} />
             </div>
           )}
           {view === "analytics" && (
             <div key="analytics">
-              <SystemControls activeTab="analytics" setView={setView} />
+              <SystemControls activeTab="analytics" setView={wrappedSetView} />
             </div>
           )}
           {view === "system-config" && (
             <div key="system-config">
-              <SystemControls activeTab="config" setView={setView} />
+              <SystemControls activeTab="config" setView={wrappedSetView} />
             </div>
           )}
           {view === "system-health" && (
             <div key="system-health">
-              <SystemControls activeTab="health" setView={setView} />
+              <SystemControls activeTab="health" setView={wrappedSetView} />
             </div>
           )}
           {view === "broadcast" && (
             <div key="broadcast">
-              <SystemControls activeTab="broadcast" setView={setView} />
+              <SystemControls activeTab="broadcast" setView={wrappedSetView} />
             </div>
           )}
           {view === "clinic-selection" && (
             <div key="clinic-selection">
-              <ClinicSelectionPage setView={setView} />
+              <ClinicSelectionPage setView={wrappedSetView} />
             </div>
           )}
           {view === "doctor-selection" && (
             <div key="doctor-selection">
-              <DoctorSelectionPage setView={setView} />
+              <DoctorSelectionPage setView={wrappedSetView} />
             </div>
           )}
           {view === "doctor-booking" && (
             <div key="doctor-booking">
-              <DoctorBookingPage setView={setView} />
+              <DoctorBookingPage setView={wrappedSetView} />
             </div>
           )}
           {view === "booking-confirmation" && (
             <div key="booking-confirmation">
-              <BookingConfirmationPage setView={setView} />
+              <BookingConfirmationPage setView={wrappedSetView} />
             </div>
           )}
           {view === "manage-patients" && (
             <div key="manage-patients">
-              <ManagePatientsPage setView={setView} />
+              <ManagePatientsPage setView={wrappedSetView} />
             </div>
           )}
           {view === "view-reports" && (
             <div key="view-reports">
-              <ViewReportsPage setView={setView} />
+              <ViewReportsPage setView={wrappedSetView} />
             </div>
           )}
           {view === "clinic-settings" && (
             <div key="clinic-settings">
-              <ClinicSettingsPage setView={setView} />
+              <ClinicSettingsPage setView={wrappedSetView} />
             </div>
           )}
           {view === "admin-appointment" && (
             <div key="admin-appointment">
-              <AdminAppointmentPage setView={setView} />
+              <AdminAppointmentPage setView={wrappedSetView} />
             </div>
           )}
           {view === "admin-book-appointment" && (
             <div key="admin-book-appointment">
-              <AdminBookAppointmentPage setView={setView} />
+              <AdminBookAppointmentPage setView={wrappedSetView} />
             </div>
           )}
         </ProtectedRoute>
