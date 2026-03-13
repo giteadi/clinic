@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, User, Phone, Mail, ArrowLeft, CheckCircle } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 
 export default function AppointmentPage({ setView }) {
+  const { colors } = useTheme();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -67,7 +68,7 @@ export default function AppointmentPage({ setView }) {
   return (
     <div style={{
       minHeight: "100vh",
-      background: COLORS.navy,
+      background: colors.navy,
       padding: "clamp(80px, 10vw, 100px) clamp(20px, 5vw, 32px)",
       position: "relative"
     }}>
@@ -76,14 +77,14 @@ export default function AppointmentPage({ setView }) {
         position: "absolute", top: -100, right: -100,
         width: "clamp(300px, 40vw, 400px)", height: "clamp(300px, 40vw, 400px)",
         borderRadius: "50%",
-        background: `radial-gradient(circle, ${COLORS.teal}12, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.teal}12, transparent 70%)`,
         pointerEvents: "none"
       }} />
       <div style={{
         position: "absolute", bottom: -80, left: -80,
         width: "clamp(250px, 35vw, 350px)", height: "clamp(250px, 35vw, 350px)",
         borderRadius: "50%",
-        background: `radial-gradient(circle, ${COLORS.gold}10, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.gold}10, transparent 70%)`,
         pointerEvents: "none"
       }} />
 
@@ -101,12 +102,12 @@ export default function AppointmentPage({ setView }) {
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: "clamp(32px, 5vw, 48px)",
-            color: COLORS.white, fontWeight: 700,
+            color: colors.white, fontWeight: 700,
             marginBottom: 8
           }}>
             Book Your Appointment
           </h1>
-          <p style={{ color: COLORS.slate, fontSize: "clamp(16px, 2.5vw, 18px)", lineHeight: 1.6 }}>
+          <p style={{ color: colors.slate, fontSize: "clamp(16px, 2.5vw, 18px)", lineHeight: 1.6 }}>
             Schedule your visit with our expert doctors in simple steps
           </p>
         </div>
@@ -120,12 +121,12 @@ export default function AppointmentPage({ setView }) {
         }}>
           <div style={{
             position: "absolute", top: 20, left: 0, right: 0,
-            height: 2, background: COLORS.border,
+            height: 2, background: colors.border,
             zIndex: 0
           }} />
           <div style={{
             position: "absolute", top: 20, left: 0,
-            height: 2, background: COLORS.teal,
+            height: 2, background: colors.teal,
             zIndex: 0,
             width: step === 1 ? "0%" : step === 2 ? "50%" : "100%",
             transition: "width 0.3s ease"
@@ -142,16 +143,16 @@ export default function AppointmentPage({ setView }) {
             }}>
               <div style={{
                 width: 40, height: 40, borderRadius: "50%",
-                background: step >= item.num ? COLORS.teal : COLORS.navyLight,
-                border: `2px solid ${COLORS.border}`,
+                background: step >= item.num ? colors.teal : colors.navyLight,
+                border: `2px solid ${colors.border}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                color: COLORS.white, fontWeight: 600,
+                color: colors.white, fontWeight: 600,
                 marginBottom: 8
               }}>
                 {item.num}
               </div>
               <span style={{
-                color: step >= item.num ? COLORS.white : COLORS.slate,
+                color: step >= item.num ? colors.white : colors.slate,
                 fontSize: 12, fontWeight: 500, textAlign: "center"
               }}>
                 {item.label}
@@ -166,7 +167,7 @@ export default function AppointmentPage({ setView }) {
             <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
               <h2 style={{
                 fontSize: "clamp(20px, 3vw, 24px)",
-                color: COLORS.white, fontWeight: 600, marginBottom: 24
+                color: colors.white, fontWeight: 600, marginBottom: 24
               }}>
                 Choose a Doctor
               </h2>
@@ -182,8 +183,8 @@ export default function AppointmentPage({ setView }) {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleDoctorSelect(doctor)}
                     style={{
-                      background: `${COLORS.navy}F0`,
-                      border: `1px solid ${COLORS.border}`,
+                      background: `${colors.navy}F0`,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 16, padding: 20,
                       cursor: "pointer", transition: "all 0.2s ease"
                     }}
@@ -191,25 +192,25 @@ export default function AppointmentPage({ setView }) {
                     <div style={{ display: "flex", alignItems: "start", gap: 16 }}>
                       <div style={{
                         width: 48, height: 48, borderRadius: "50%",
-                        background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                        background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         flexShrink: 0
                       }}>
                         <User size={24} color="#fff" />
                       </div>
                       <div style={{ flex: 1 }}>
-                        <h3 style={{ color: COLORS.white, fontWeight: 600, marginBottom: 4 }}>
+                        <h3 style={{ color: colors.white, fontWeight: 600, marginBottom: 4 }}>
                           {doctor.name}
                         </h3>
-                        <p style={{ color: COLORS.teal, fontSize: 14, marginBottom: 2 }}>
+                        <p style={{ color: colors.teal, fontSize: 14, marginBottom: 2 }}>
                           {doctor.specialty}
                         </p>
-                        <p style={{ color: COLORS.slate, fontSize: 13, marginBottom: 8 }}>
+                        <p style={{ color: colors.slate, fontSize: 13, marginBottom: 8 }}>
                           {doctor.clinic}
                         </p>
                         <div style={{ display: "flex", gap: 12, fontSize: 12 }}>
-                          <span style={{ color: COLORS.gold }}>⭐ {doctor.rating}</span>
-                          <span style={{ color: COLORS.slate }}>{doctor.experience}</span>
+                          <span style={{ color: colors.gold }}>⭐ {doctor.rating}</span>
+                          <span style={{ color: colors.slate }}>{doctor.experience}</span>
                         </div>
                       </div>
                     </div>
@@ -223,17 +224,17 @@ export default function AppointmentPage({ setView }) {
             <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
               {/* Selected Doctor Info */}
               <div style={{
-                background: `${COLORS.teal}15`,
-                border: `1px solid ${COLORS.teal}30`,
+                background: `${colors.teal}15`,
+                border: `1px solid ${colors.teal}30`,
                 borderRadius: 12, padding: 20, marginBottom: 32
               }}>
-                <h3 style={{ color: COLORS.teal, fontWeight: 600, marginBottom: 8 }}>
+                <h3 style={{ color: colors.teal, fontWeight: 600, marginBottom: 8 }}>
                   Selected Doctor
                 </h3>
-                <p style={{ color: COLORS.white, fontWeight: 500 }}>
+                <p style={{ color: colors.white, fontWeight: 500 }}>
                   {selectedDoctor?.name} - {selectedDoctor?.specialty}
                 </p>
-                <p style={{ color: COLORS.slate, fontSize: 14 }}>
+                <p style={{ color: colors.slate, fontSize: 14 }}>
                   {selectedDoctor?.clinic}
                 </p>
               </div>
@@ -246,7 +247,7 @@ export default function AppointmentPage({ setView }) {
                 }}>
                   <div>
                     <label style={{ 
-                      display: "block", color: COLORS.white, 
+                      display: "block", color: colors.white, 
                       fontSize: 14, fontWeight: 500, marginBottom: 8 
                     }}>
                       Full Name
@@ -260,9 +261,9 @@ export default function AppointmentPage({ setView }) {
                       placeholder="Enter your full name"
                       style={{
                         width: "100%", padding: "12px 16px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 8, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     />
@@ -270,7 +271,7 @@ export default function AppointmentPage({ setView }) {
 
                   <div>
                     <label style={{ 
-                      display: "block", color: COLORS.white, 
+                      display: "block", color: colors.white, 
                       fontSize: 14, fontWeight: 500, marginBottom: 8 
                     }}>
                       Email Address
@@ -284,9 +285,9 @@ export default function AppointmentPage({ setView }) {
                       placeholder="your@email.com"
                       style={{
                         width: "100%", padding: "12px 16px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 8, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     />
@@ -294,7 +295,7 @@ export default function AppointmentPage({ setView }) {
 
                   <div>
                     <label style={{ 
-                      display: "block", color: COLORS.white, 
+                      display: "block", color: colors.white, 
                       fontSize: 14, fontWeight: 500, marginBottom: 8 
                     }}>
                       Phone Number
@@ -308,9 +309,9 @@ export default function AppointmentPage({ setView }) {
                       placeholder="+91 98765 43210"
                       style={{
                         width: "100%", padding: "12px 16px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 8, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     />
@@ -318,7 +319,7 @@ export default function AppointmentPage({ setView }) {
 
                   <div>
                     <label style={{ 
-                      display: "block", color: COLORS.white, 
+                      display: "block", color: colors.white, 
                       fontSize: 14, fontWeight: 500, marginBottom: 8 
                     }}>
                       Appointment Date
@@ -332,9 +333,9 @@ export default function AppointmentPage({ setView }) {
                       onChange={handleChange}
                       style={{
                         width: "100%", padding: "12px 16px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 8, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     />
@@ -342,7 +343,7 @@ export default function AppointmentPage({ setView }) {
 
                   <div>
                     <label style={{ 
-                      display: "block", color: COLORS.white, 
+                      display: "block", color: colors.white, 
                       fontSize: 14, fontWeight: 500, marginBottom: 8 
                     }}>
                       Preferred Time
@@ -354,15 +355,15 @@ export default function AppointmentPage({ setView }) {
                       onChange={handleChange}
                       style={{
                         width: "100%", padding: "12px 16px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 8, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     >
-                      <option value="" style={{ background: COLORS.navy }}>Select time</option>
+                      <option value="" style={{ background: colors.navy }}>Select time</option>
                       {timeSlots.map(slot => (
-                        <option key={slot} value={slot} style={{ background: COLORS.navy }}>
+                        <option key={slot} value={slot} style={{ background: colors.navy }}>
                           {slot}
                         </option>
                       ))}
@@ -371,7 +372,7 @@ export default function AppointmentPage({ setView }) {
 
                   <div>
                     <label style={{ 
-                      display: "block", color: COLORS.white, 
+                      display: "block", color: colors.white, 
                       fontSize: 14, fontWeight: 500, marginBottom: 8 
                     }}>
                       Clinic
@@ -383,15 +384,15 @@ export default function AppointmentPage({ setView }) {
                       onChange={handleChange}
                       style={{
                         width: "100%", padding: "12px 16px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 8, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     >
-                      <option value="" style={{ background: COLORS.navy }}>Select clinic</option>
+                      <option value="" style={{ background: colors.navy }}>Select clinic</option>
                       {clinics.map(clinic => (
-                        <option key={clinic.id} value={clinic.name} style={{ background: COLORS.navy }}>
+                        <option key={clinic.id} value={clinic.name} style={{ background: colors.navy }}>
                           {clinic.name}
                         </option>
                       ))}
@@ -401,7 +402,7 @@ export default function AppointmentPage({ setView }) {
 
                 <div>
                   <label style={{ 
-                    display: "block", color: COLORS.white, 
+                    display: "block", color: colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Reason for Visit
@@ -414,9 +415,9 @@ export default function AppointmentPage({ setView }) {
                     placeholder="Please describe your symptoms or reason for visit..."
                     style={{
                       width: "100%", padding: "12px 16px",
-                      background: `${COLORS.navy}F0`,
-                      border: `1px solid ${COLORS.border}`,
-                      borderRadius: 8, color: COLORS.white,
+                      background: `${colors.navy}F0`,
+                      border: `1px solid ${colors.border}`,
+                      borderRadius: 8, color: colors.white,
                       fontSize: 14, outline: "none",
                       resize: "vertical"
                     }}
@@ -430,9 +431,9 @@ export default function AppointmentPage({ setView }) {
                     style={{
                       padding: "12px 24px",
                       background: "none",
-                      border: `1px solid ${COLORS.border}`,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
-                      color: COLORS.slate,
+                      color: colors.slate,
                       fontSize: 14, fontWeight: 500,
                       cursor: "pointer"
                     }}
@@ -443,10 +444,10 @@ export default function AppointmentPage({ setView }) {
                     type="submit"
                     style={{
                       padding: "12px 32px",
-                      background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                      background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                       border: "none",
                       borderRadius: 8,
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14, fontWeight: 600,
                       cursor: "pointer"
                     }}
@@ -463,13 +464,13 @@ export default function AppointmentPage({ setView }) {
               <div style={{
                 textAlign: "center",
                 padding: "clamp(40px, 5vw, 60px)",
-                background: `${COLORS.navy}F0`,
-                border: `1px solid ${COLORS.border}`,
+                background: `${colors.navy}F0`,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 20
               }}>
                 <div style={{
                   width: 80, height: 80, borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   margin: "0 auto 24px"
                 }}>
@@ -478,44 +479,44 @@ export default function AppointmentPage({ setView }) {
                 
                 <h2 style={{
                   fontSize: "clamp(24px, 4vw, 32px)",
-                  color: COLORS.white, fontWeight: 700, marginBottom: 16
+                  color: colors.white, fontWeight: 700, marginBottom: 16
                 }}>
                   Appointment Booked Successfully!
                 </h2>
                 
-                <p style={{ color: COLORS.slate, fontSize: 16, marginBottom: 32, lineHeight: 1.6 }}>
+                <p style={{ color: colors.slate, fontSize: 16, marginBottom: 32, lineHeight: 1.6 }}>
                   Your appointment has been scheduled. You will receive a confirmation email shortly with all the details.
                 </p>
 
                 <div style={{
-                  background: `${COLORS.teal}15`,
-                  border: `1px solid ${COLORS.teal}30`,
+                  background: `${colors.teal}15`,
+                  border: `1px solid ${colors.teal}30`,
                   borderRadius: 12, padding: 24,
                   textAlign: "left", marginBottom: 32
                 }}>
-                  <h3 style={{ color: COLORS.teal, fontWeight: 600, marginBottom: 16 }}>
+                  <h3 style={{ color: colors.teal, fontWeight: 600, marginBottom: 16 }}>
                     Appointment Details
                   </h3>
                   <div style={{ display: "grid", gap: 12, fontSize: 14 }}>
                     <div style={{ display: "flex", gap: 8 }}>
-                      <User size={16} color={COLORS.teal} />
-                      <span style={{ color: COLORS.slate }}>Doctor:</span>
-                      <span style={{ color: COLORS.white }}>{formData.doctor}</span>
+                      <User size={16} color={colors.teal} />
+                      <span style={{ color: colors.slate }}>Doctor:</span>
+                      <span style={{ color: colors.white }}>{formData.doctor}</span>
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
-                      <Calendar size={16} color={COLORS.teal} />
-                      <span style={{ color: COLORS.slate }}>Date:</span>
-                      <span style={{ color: COLORS.white }}>{formData.date}</span>
+                      <Calendar size={16} color={colors.teal} />
+                      <span style={{ color: colors.slate }}>Date:</span>
+                      <span style={{ color: colors.white }}>{formData.date}</span>
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
-                      <Clock size={16} color={COLORS.teal} />
-                      <span style={{ color: COLORS.slate }}>Time:</span>
-                      <span style={{ color: COLORS.white }}>{formData.time}</span>
+                      <Clock size={16} color={colors.teal} />
+                      <span style={{ color: colors.slate }}>Time:</span>
+                      <span style={{ color: colors.white }}>{formData.time}</span>
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
-                      <Mail size={16} color={COLORS.teal} />
-                      <span style={{ color: COLORS.slate }}>Email:</span>
-                      <span style={{ color: COLORS.white }}>{formData.email}</span>
+                      <Mail size={16} color={colors.teal} />
+                      <span style={{ color: colors.slate }}>Email:</span>
+                      <span style={{ color: colors.white }}>{formData.email}</span>
                     </div>
                   </div>
                 </div>
@@ -524,10 +525,10 @@ export default function AppointmentPage({ setView }) {
                   onClick={() => setView("home")}
                   style={{
                     padding: "12px 32px",
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 8,
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14, fontWeight: 600,
                     cursor: "pointer"
                   }}

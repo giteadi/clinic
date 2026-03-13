@@ -29,11 +29,12 @@ import {
   Smartphone,
   Globe
 } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import Link from "../common/Link";
 import BackButton from "../common/BackButton";
 
 export default function SystemControls({ activeTab: initialTab = "clinics", setView }) {
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showAddClinicModal, setShowAddClinicModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -198,16 +199,16 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
   const renderClinicsTab = () => (
     <div style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>Clinic Management</h3>
+        <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600 }}>Clinic Management</h3>
         <button
           onClick={() => setShowAddClinicModal(true)}
           style={{
-            background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+            background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
             border: "none",
             borderRadius: 8,
             padding: "10px 20px",
             cursor: "pointer",
-            color: COLORS.white,
+            color: colors.white,
             fontSize: 14,
             fontWeight: 600,
             display: "flex",
@@ -221,7 +222,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
       <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
         <div style={{ flex: 1, position: "relative" }}>
-          <Search size={18} color={COLORS.slate} style={{ position: "absolute", left: 12, top: 12 }} />
+          <Search size={18} color={colors.slate} style={{ position: "absolute", left: 12, top: 12 }} />
           <input
             type="text"
             placeholder="Search clinics..."
@@ -229,11 +230,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
               width: "100%",
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 8,
               padding: "12px 16px 12px 44px",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14
             }}
           />
@@ -242,11 +243,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 8,
             padding: "12px 16px",
-            color: COLORS.white,
+            color: colors.white,
             fontSize: 14,
             cursor: "pointer"
           }}
@@ -257,26 +258,26 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
         </select>
       </div>
 
-      <div style={{ background: "#0f172a", borderRadius: 12, overflow: "hidden", border: `1px solid ${COLORS.border}` }}>
+      <div style={{ background: colors.background || colors.navyLight, borderRadius: 12, overflow: "hidden", border: `1px solid ${colors.border}` }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ background: "#111827", borderBottom: `1px solid ${COLORS.border}` }}>
-              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Clinic Name</th>
-              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Status</th>
-              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Doctors</th>
-              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Patients</th>
-              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Revenue</th>
-              <th style={{ padding: 16, textAlign: "left", color: COLORS.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Actions</th>
+            <tr style={{ background: colors.background || colors.navyLight, borderBottom: `1px solid ${colors.border}` }}>
+              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Clinic Name</th>
+              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Status</th>
+              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Doctors</th>
+              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Patients</th>
+              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Revenue</th>
+              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {clinics.map((clinic) => (
-              <tr key={clinic.id} style={{ borderBottom: `1px solid ${COLORS.border}` }}>
-                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.name}</td>
+              <tr key={clinic.id} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                <td style={{ padding: 16, color: colors.white, fontSize: 14 }}>{clinic.name}</td>
                 <td style={{ padding: 16 }}>
                   <span style={{
-                    background: clinic.status === "active" ? `${COLORS.teal}20` : `${COLORS.red}20`,
-                    color: clinic.status === "active" ? COLORS.teal : COLORS.red,
+                    background: clinic.status === "active" ? `${colors.teal}20` : `${colors.red}20`,
+                    color: clinic.status === "active" ? colors.teal : colors.red,
                     padding: "4px 12px",
                     borderRadius: 20,
                     fontSize: 12,
@@ -285,18 +286,18 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                     {clinic.status}
                   </span>
                 </td>
-                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.doctors}</td>
-                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.patients}</td>
-                <td style={{ padding: 16, color: COLORS.white, fontSize: 14 }}>{clinic.revenue}</td>
+                <td style={{ padding: 16, color: colors.white, fontSize: 14 }}>{clinic.doctors}</td>
+                <td style={{ padding: 16, color: colors.white, fontSize: 14 }}>{clinic.patients}</td>
+                <td style={{ padding: 16, color: colors.white, fontSize: 14 }}>{clinic.revenue}</td>
                 <td style={{ padding: 16 }}>
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.slate }}>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.slate }}>
                       <Eye size={16} />
                     </button>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.slate }}>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.slate }}>
                       <Edit size={16} />
                     </button>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.red }}>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.red }}>
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -312,16 +313,16 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
   const renderUsersTab = () => (
     <div style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>User Management</h3>
+        <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600 }}>User Management</h3>
         <button
           onClick={() => setShowAddUserModal(true)}
           style={{
-            background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+            background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
             border: "none",
             borderRadius: 8,
             padding: "10px 20px",
             cursor: "pointer",
-            color: COLORS.white,
+            color: colors.white,
             fontSize: 14,
             fontWeight: 600,
             display: "flex",
@@ -336,19 +337,19 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
         {users.map((user) => (
           <div key={user.id} style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 12,
             padding: 20
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
               <div>
-                <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{user.name}</h4>
-                <p style={{ color: COLORS.slate, fontSize: 14 }}>{user.email}</p>
+                <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{user.name}</h4>
+                <p style={{ color: colors.slate, fontSize: 14 }}>{user.email}</p>
               </div>
               <span style={{
-                background: user.status === "active" ? `${COLORS.teal}20` : `${COLORS.red}20`,
-                color: user.status === "active" ? COLORS.teal : COLORS.red,
+                background: user.status === "active" ? `${colors.teal}20` : `${colors.red}20`,
+                color: user.status === "active" ? colors.teal : colors.red,
                 padding: "4px 12px",
                 borderRadius: 20,
                 fontSize: 12,
@@ -359,8 +360,8 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{
-                background: "#111827",
-                color: COLORS.slate,
+                background: colors.background || colors.navyLight,
+                color: colors.slate,
                 padding: "4px 12px",
                 borderRadius: 6,
                 fontSize: 12,
@@ -368,7 +369,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               }}>
                 {user.role}
               </span>
-              <span style={{ color: COLORS.slate, fontSize: 12 }}>Last login: {user.lastLogin}</span>
+              <span style={{ color: colors.slate, fontSize: 12 }}>Last login: {user.lastLogin}</span>
             </div>
           </div>
         ))}
@@ -378,21 +379,21 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
   const renderAnalyticsTab = () => (
     <div style={{ padding: 24 }}>
-      <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Analytics Dashboard</h3>
+      <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Analytics Dashboard</h3>
       
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20, marginBottom: 32 }}>
         <div style={{
-          background: `linear-gradient(135deg, ${COLORS.teal}20, ${COLORS.teal}10)`,
-          border: `1px solid ${COLORS.teal}30`,
+          background: `linear-gradient(135deg, ${colors.teal}20, ${colors.teal}10)`,
+          border: `1px solid ${colors.teal}30`,
           borderRadius: 12,
           padding: 20
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <Building2 size={24} color={COLORS.teal} />
-            <TrendingUp size={16} color={COLORS.teal} />
+            <Building2 size={24} color={colors.teal} />
+            <TrendingUp size={16} color={colors.teal} />
           </div>
-          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalClinics}</h4>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Clinics</p>
+          <h4 style={{ color: colors.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalClinics}</h4>
+          <p style={{ color: colors.slate, fontSize: 14 }}>Total Clinics</p>
         </div>
 
         <div style={{
@@ -405,8 +406,8 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             <Users size={24} color="#3b82f6" />
             <TrendingUp size={16} color="#3b82f6" />
           </div>
-          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalUsers.toLocaleString()}</h4>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Users</p>
+          <h4 style={{ color: colors.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalUsers.toLocaleString()}</h4>
+          <p style={{ color: colors.slate, fontSize: 14 }}>Total Users</p>
         </div>
 
         <div style={{
@@ -419,8 +420,8 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             <Shield size={24} color="#8b5cf6" />
             <TrendingUp size={16} color="#8b5cf6" />
           </div>
-          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalDoctors}</h4>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Doctors</p>
+          <h4 style={{ color: colors.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.totalDoctors}</h4>
+          <p style={{ color: colors.slate, fontSize: 14 }}>Total Doctors</p>
         </div>
 
         <div style={{
@@ -433,18 +434,18 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             <BarChart3 size={24} color="#10b981" />
             <span style={{ color: "#10b981", fontSize: 12, fontWeight: 600 }}>+{analytics.growth}%</span>
           </div>
-          <h4 style={{ color: COLORS.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.revenue}</h4>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>Total Revenue</p>
+          <h4 style={{ color: colors.white, fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{analytics.revenue}</h4>
+          <p style={{ color: colors.slate, fontSize: 14 }}>Total Revenue</p>
         </div>
       </div>
 
       <div style={{
-        background: "#0f172a",
-        border: `1px solid ${COLORS.border}`,
+        background: colors.background || colors.navyLight,
+        border: `1px solid ${colors.border}`,
         borderRadius: 12,
         padding: 24
       }}>
-        <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Recent Activity</h4>
+        <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Recent Activity</h4>
         <div style={{ display: "grid", gap: 12 }}>
           {["New clinic registered", "User account created", "Appointment booked", "System update completed"].map((activity, index) => (
             <div key={index} style={{
@@ -452,12 +453,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               alignItems: "center",
               gap: 12,
               padding: "12px 16px",
-              background: "#111827",
+              background: colors.background || colors.navyLight,
               borderRadius: 8
             }}>
-              <CheckCircle size={16} color={COLORS.teal} />
-              <span style={{ color: COLORS.white, fontSize: 14 }}>{activity}</span>
-              <span style={{ color: COLORS.slate, fontSize: 12, marginLeft: "auto" }}>{index + 1}h ago</span>
+              <CheckCircle size={16} color={colors.teal} />
+              <span style={{ color: colors.white, fontSize: 14 }}>{activity}</span>
+              <span style={{ color: colors.slate, fontSize: 12, marginLeft: "auto" }}>{index + 1}h ago</span>
             </div>
           ))}
         </div>
@@ -468,17 +469,17 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
   const renderConfigTab = () => (
     <div style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>System Configuration</h3>
+        <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600 }}>System Configuration</h3>
         <div style={{ display: "flex", gap: 12 }}>
           <button
             onClick={handleResetConfig}
             style={{
               background: "none",
-              border: `1px solid ${COLORS.border}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: 8,
               padding: "8px 16px",
               cursor: "pointer",
-              color: COLORS.slate,
+              color: colors.slate,
               fontSize: 14,
               fontWeight: 600
             }}
@@ -489,12 +490,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             onClick={handleSaveConfig}
             disabled={saving}
             style={{
-              background: configSaved ? COLORS.teal : `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: configSaved ? colors.teal : `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none",
               borderRadius: 8,
               padding: "8px 20px",
               cursor: saving ? "not-allowed" : "pointer",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -508,7 +509,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <div style={{
                   width: 16,
                   height: 16,
-                  border: `2px solid ${COLORS.white}`,
+                  border: `2px solid ${colors.white}`,
                   borderTop: "2px solid transparent",
                   borderRadius: "50%",
                   animation: "spin 1s linear infinite"
@@ -530,41 +531,41 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
       <div style={{ display: "grid", gap: 24 }}>
         {/* General Settings */}
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 24
         }}>
-          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>General Settings</h4>
+          <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>General Settings</h4>
           <div style={{ display: "grid", gap: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>System Name</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>System Name</span>
               <input
                 type="text"
                 value={systemConfig.general.systemName}
                 onChange={(e) => handleConfigChange('general', 'systemName', e.target.value)}
                 style={{
-                  background: "#111827",
-                  border: `1px solid ${COLORS.border}`,
+                  background: colors.background || colors.navyLight,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 6,
                   padding: "8px 12px",
-                  color: COLORS.white,
+                  color: colors.white,
                   fontSize: 14,
                   width: "200px"
                 }}
               />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Default Timezone</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Default Timezone</span>
               <select
                 value={systemConfig.general.defaultTimezone}
                 onChange={(e) => handleConfigChange('general', 'defaultTimezone', e.target.value)}
                 style={{
-                  background: "#111827",
-                  border: `1px solid ${COLORS.border}`,
+                  background: colors.background || colors.navyLight,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 6,
                   padding: "8px 12px",
-                  color: COLORS.white,
+                  color: colors.white,
                   fontSize: 14,
                   width: "200px",
                   cursor: "pointer"
@@ -577,13 +578,13 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               </select>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Maintenance Mode</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Maintenance Mode</span>
               <button
                 onClick={() => handleConfigChange('general', 'maintenanceMode', !systemConfig.general.maintenanceMode)}
                 style={{
                   width: 48,
                   height: 24,
-                  background: systemConfig.general.maintenanceMode ? COLORS.teal : "#374151",
+                  background: systemConfig.general.maintenanceMode ? colors.teal : "#374151",
                   border: "none",
                   borderRadius: 12,
                   cursor: "pointer",
@@ -593,7 +594,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <div style={{
                   width: 20,
                   height: 20,
-                  background: COLORS.white,
+                  background: colors.white,
                   borderRadius: "50%",
                   position: "absolute",
                   top: 2,
@@ -603,13 +604,13 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               </button>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>User Registration</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>User Registration</span>
               <button
                 onClick={() => handleConfigChange('general', 'userRegistration', !systemConfig.general.userRegistration)}
                 style={{
                   width: 48,
                   height: 24,
-                  background: systemConfig.general.userRegistration ? COLORS.teal : "#374151",
+                  background: systemConfig.general.userRegistration ? colors.teal : "#374151",
                   border: "none",
                   borderRadius: 12,
                   cursor: "pointer",
@@ -619,7 +620,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <div style={{
                   width: 20,
                   height: 20,
-                  background: COLORS.white,
+                  background: colors.white,
                   borderRadius: "50%",
                   position: "absolute",
                   top: 2,
@@ -629,17 +630,17 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               </button>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Session Timeout (minutes)</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Session Timeout (minutes)</span>
               <input
                 type="number"
                 value={systemConfig.general.sessionTimeout}
                 onChange={(e) => handleConfigChange('general', 'sessionTimeout', e.target.value)}
                 style={{
-                  background: "#111827",
-                  border: `1px solid ${COLORS.border}`,
+                  background: colors.background || colors.navyLight,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 6,
                   padding: "8px 12px",
-                  color: COLORS.white,
+                  color: colors.white,
                   fontSize: 14,
                   width: "200px"
                 }}
@@ -650,21 +651,21 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
         {/* Security Settings */}
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 24
         }}>
-          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Security Settings</h4>
+          <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Security Settings</h4>
           <div style={{ display: "grid", gap: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Two-Factor Authentication</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Two-Factor Authentication</span>
               <button
                 onClick={() => handleConfigChange('security', 'twoFactorAuth', !systemConfig.security.twoFactorAuth)}
                 style={{
                   width: 48,
                   height: 24,
-                  background: systemConfig.security.twoFactorAuth ? COLORS.teal : "#374151",
+                  background: systemConfig.security.twoFactorAuth ? colors.teal : "#374151",
                   border: "none",
                   borderRadius: 12,
                   cursor: "pointer",
@@ -674,7 +675,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <div style={{
                   width: 20,
                   height: 20,
-                  background: COLORS.white,
+                  background: colors.white,
                   borderRadius: "50%",
                   position: "absolute",
                   top: 2,
@@ -684,16 +685,16 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               </button>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Password Complexity</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Password Complexity</span>
               <select
                 value={systemConfig.security.passwordComplexity}
                 onChange={(e) => handleConfigChange('security', 'passwordComplexity', e.target.value)}
                 style={{
-                  background: "#111827",
-                  border: `1px solid ${COLORS.border}`,
+                  background: colors.background || colors.navyLight,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 6,
                   padding: "8px 12px",
-                  color: COLORS.white,
+                  color: colors.white,
                   fontSize: 14,
                   width: "200px",
                   cursor: "pointer"
@@ -705,30 +706,30 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               </select>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Login Attempts</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Login Attempts</span>
               <input
                 type="number"
                 value={systemConfig.security.loginAttempts}
                 onChange={(e) => handleConfigChange('security', 'loginAttempts', e.target.value)}
                 style={{
-                  background: "#111827",
-                  border: `1px solid ${COLORS.border}`,
+                  background: colors.background || colors.navyLight,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 6,
                   padding: "8px 12px",
-                  color: COLORS.white,
+                  color: colors.white,
                   fontSize: 14,
                   width: "200px"
                 }}
               />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: COLORS.white, fontSize: 14 }}>Session Encryption</span>
+              <span style={{ color: colors.white, fontSize: 14 }}>Session Encryption</span>
               <button
                 onClick={() => handleConfigChange('security', 'sessionEncryption', !systemConfig.security.sessionEncryption)}
                 style={{
                   width: 48,
                   height: 24,
-                  background: systemConfig.security.sessionEncryption ? COLORS.teal : "#374151",
+                  background: systemConfig.security.sessionEncryption ? colors.teal : "#374151",
                   border: "none",
                   borderRadius: 12,
                   cursor: "pointer",
@@ -738,7 +739,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <div style={{
                   width: 20,
                   height: 20,
-                  background: COLORS.white,
+                  background: colors.white,
                   borderRadius: "50%",
                   position: "absolute",
                   top: 2,
@@ -752,12 +753,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
         {/* Notification Settings */}
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 24
         }}>
-          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Notification Settings</h4>
+          <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Notification Settings</h4>
           <div style={{ display: "grid", gap: 16 }}>
             {[
               { key: 'emailNotifications', label: 'Email Notifications' },
@@ -768,13 +769,13 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               { key: 'weeklyReports', label: 'Weekly Reports' }
             ].map(({ key, label }) => (
               <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: COLORS.white, fontSize: 14 }}>{label}</span>
+                <span style={{ color: colors.white, fontSize: 14 }}>{label}</span>
                 <button
                   onClick={() => handleConfigChange('notifications', key, !systemConfig.notifications[key])}
                   style={{
                     width: 48,
                     height: 24,
-                    background: systemConfig.notifications[key] ? COLORS.teal : "#374151",
+                    background: systemConfig.notifications[key] ? colors.teal : "#374151",
                     border: "none",
                     borderRadius: 12,
                     cursor: "pointer",
@@ -784,7 +785,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   <div style={{
                     width: 20,
                     height: 20,
-                    background: COLORS.white,
+                    background: colors.white,
                     borderRadius: "50%",
                     position: "absolute",
                     top: 2,
@@ -799,12 +800,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
         {/* Feature Settings */}
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 24
         }}>
-          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Feature Settings</h4>
+          <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Feature Settings</h4>
           <div style={{ display: "grid", gap: 16 }}>
             {[
               { key: 'onlineBooking', label: 'Online Booking' },
@@ -817,13 +818,13 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               { key: 'multiLanguageSupport', label: 'Multi-Language Support' }
             ].map(({ key, label }) => (
               <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: COLORS.white, fontSize: 14 }}>{label}</span>
+                <span style={{ color: colors.white, fontSize: 14 }}>{label}</span>
                 <button
                   onClick={() => handleConfigChange('features', key, !systemConfig.features[key])}
                   style={{
                     width: 48,
                     height: 24,
-                    background: systemConfig.features[key] ? COLORS.teal : "#374151",
+                    background: systemConfig.features[key] ? colors.teal : "#374151",
                     border: "none",
                     borderRadius: 12,
                     cursor: "pointer",
@@ -833,7 +834,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   <div style={{
                     width: 20,
                     height: 20,
-                    background: COLORS.white,
+                    background: colors.white,
                     borderRadius: "50%",
                     position: "absolute",
                     top: 2,
@@ -858,116 +859,116 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
   const renderHealthTab = () => (
     <div style={{ padding: 24 }}>
-      <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>System Health Monitor</h3>
+      <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>System Health Monitor</h3>
       
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginBottom: 32 }}>
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 20
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Cpu size={20} color={COLORS.teal} />
-              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>CPU Usage</span>
+              <Cpu size={20} color={colors.teal} />
+              <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>CPU Usage</span>
             </div>
-            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.cpu}%</span>
+            <span style={{ color: colors.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.cpu}%</span>
           </div>
           <div style={{
             height: 8,
-            background: "#111827",
+            background: colors.background || colors.navyLight,
             borderRadius: 4,
             overflow: "hidden"
           }}>
             <div style={{
               width: `${systemHealth.cpu}%`,
               height: "100%",
-              background: systemHealth.cpu > 80 ? COLORS.red : systemHealth.cpu > 60 ? "#f59e0b" : COLORS.teal,
+              background: systemHealth.cpu > 80 ? colors.red : systemHealth.cpu > 60 ? "#f59e0b" : colors.teal,
               transition: "all 0.3s"
             }} />
           </div>
         </div>
 
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 20
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Database size={20} color={COLORS.teal} />
-              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>Memory</span>
+              <Database size={20} color={colors.teal} />
+              <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>Memory</span>
             </div>
-            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.memory}%</span>
+            <span style={{ color: colors.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.memory}%</span>
           </div>
           <div style={{
             height: 8,
-            background: "#111827",
+            background: colors.background || colors.navyLight,
             borderRadius: 4,
             overflow: "hidden"
           }}>
             <div style={{
               width: `${systemHealth.memory}%`,
               height: "100%",
-              background: systemHealth.memory > 80 ? COLORS.red : systemHealth.memory > 60 ? "#f59e0b" : COLORS.teal,
+              background: systemHealth.memory > 80 ? colors.red : systemHealth.memory > 60 ? "#f59e0b" : colors.teal,
               transition: "all 0.3s"
             }} />
           </div>
         </div>
 
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 20
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <HardDrive size={20} color={COLORS.teal} />
-              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>Storage</span>
+              <HardDrive size={20} color={colors.teal} />
+              <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>Storage</span>
             </div>
-            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.storage}%</span>
+            <span style={{ color: colors.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.storage}%</span>
           </div>
           <div style={{
             height: 8,
-            background: "#111827",
+            background: colors.background || colors.navyLight,
             borderRadius: 4,
             overflow: "hidden"
           }}>
             <div style={{
               width: `${systemHealth.storage}%`,
               height: "100%",
-              background: systemHealth.storage > 80 ? COLORS.red : systemHealth.storage > 60 ? "#f59e0b" : COLORS.teal,
+              background: systemHealth.storage > 80 ? colors.red : systemHealth.storage > 60 ? "#f59e0b" : colors.teal,
               transition: "all 0.3s"
             }} />
           </div>
         </div>
 
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 12,
           padding: 20
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Wifi size={20} color={COLORS.teal} />
-              <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>Network</span>
+              <Wifi size={20} color={colors.teal} />
+              <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>Network</span>
             </div>
-            <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.network}%</span>
+            <span style={{ color: colors.white, fontSize: 16, fontWeight: 700 }}>{systemHealth.network}%</span>
           </div>
           <div style={{
             height: 8,
-            background: "#111827",
+            background: colors.background || colors.navyLight,
             borderRadius: 4,
             overflow: "hidden"
           }}>
             <div style={{
               width: `${systemHealth.network}%`,
               height: "100%",
-              background: systemHealth.network > 80 ? COLORS.red : systemHealth.network > 60 ? "#f59e0b" : COLORS.teal,
+              background: systemHealth.network > 80 ? colors.red : systemHealth.network > 60 ? "#f59e0b" : colors.teal,
               transition: "all 0.3s"
             }} />
           </div>
@@ -975,36 +976,36 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
       </div>
 
       <div style={{
-        background: "#0f172a",
-        border: `1px solid ${COLORS.border}`,
+        background: colors.background || colors.navyLight,
+        border: `1px solid ${colors.border}`,
         borderRadius: 12,
         padding: 24
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>System Status</h4>
+          <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600 }}>System Status</h4>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{
               width: 12,
               height: 12,
-              background: COLORS.teal,
+              background: colors.teal,
               borderRadius: "50%",
               animation: "pulse 2s infinite"
             }} />
-            <span style={{ color: COLORS.teal, fontSize: 14, fontWeight: 600 }}>Online</span>
+            <span style={{ color: colors.teal, fontSize: 14, fontWeight: 600 }}>Online</span>
           </div>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
           <div>
-            <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Uptime</p>
-            <p style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>{systemHealth.uptime}</p>
+            <p style={{ color: colors.slate, fontSize: 12, marginBottom: 4 }}>Uptime</p>
+            <p style={{ color: colors.white, fontSize: 16, fontWeight: 600 }}>{systemHealth.uptime}</p>
           </div>
           <div>
-            <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Database</p>
-            <p style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>{systemHealth.database}% Healthy</p>
+            <p style={{ color: colors.slate, fontSize: 12, marginBottom: 4 }}>Database</p>
+            <p style={{ color: colors.white, fontSize: 16, fontWeight: 600 }}>{systemHealth.database}% Healthy</p>
           </div>
           <div>
-            <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Last Check</p>
-            <p style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>2 mins ago</p>
+            <p style={{ color: colors.slate, fontSize: 12, marginBottom: 4 }}>Last Check</p>
+            <p style={{ color: colors.white, fontSize: 16, fontWeight: 600 }}>2 mins ago</p>
           </div>
         </div>
       </div>
@@ -1014,16 +1015,16 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
   const renderBroadcastTab = () => (
     <div style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600 }}>Broadcast Messages</h3>
+        <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600 }}>Broadcast Messages</h3>
         <button
           onClick={() => setShowBroadcastModal(true)}
           style={{
-            background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+            background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
             border: "none",
             borderRadius: 8,
             padding: "10px 20px",
             cursor: "pointer",
-            color: COLORS.white,
+            color: colors.white,
             fontSize: 14,
             fontWeight: 600,
             display: "flex",
@@ -1042,19 +1043,19 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
           { title: "Holiday Notice", message: "Clinic closed on upcoming holidays", type: "holiday", time: "3 days ago", recipients: "All Users" }
         ].map((broadcast, index) => (
           <div key={index} style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 12,
             padding: 20
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 12 }}>
               <div>
-                <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{broadcast.title}</h4>
-                <p style={{ color: COLORS.slate, fontSize: 14, marginBottom: 8 }}>{broadcast.message}</p>
+                <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{broadcast.title}</h4>
+                <p style={{ color: colors.slate, fontSize: 14, marginBottom: 8 }}>{broadcast.message}</p>
                 <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                   <span style={{
-                    background: broadcast.type === "system" ? `${COLORS.red}20` : broadcast.type === "feature" ? `${COLORS.teal}20` : `${COLORS.yellow}20`,
-                    color: broadcast.type === "system" ? COLORS.red : broadcast.type === "feature" ? COLORS.teal : COLORS.yellow,
+                    background: broadcast.type === "system" ? `${colors.red}20` : broadcast.type === "feature" ? `${colors.teal}20` : `${colors.yellow}20`,
+                    color: broadcast.type === "system" ? colors.red : broadcast.type === "feature" ? colors.teal : colors.yellow,
                     padding: "4px 12px",
                     borderRadius: 20,
                     fontSize: 12,
@@ -1062,15 +1063,15 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   }}>
                     {broadcast.type}
                   </span>
-                  <span style={{ color: COLORS.slate, fontSize: 12 }}>Recipients: {broadcast.recipients}</span>
-                  <span style={{ color: COLORS.slate, fontSize: 12 }}>{broadcast.time}</span>
+                  <span style={{ color: colors.slate, fontSize: 12 }}>Recipients: {broadcast.recipients}</span>
+                  <span style={{ color: colors.slate, fontSize: 12 }}>{broadcast.time}</span>
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
-                <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.slate }}>
+                <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.slate }}>
                   <Edit size={16} />
                 </button>
-                <button style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.red }}>
+                <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.red }}>
                   <Trash2 size={16} />
                 </button>
               </div>
@@ -1094,7 +1095,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0f1f", paddingTop: 80 }}>
+    <div style={{ minHeight: "100vh", background: colors.background || colors.navyLight, paddingTop: 80 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px" }}>
         {/* Header with Back Button */}
         <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 24 }}>
@@ -1103,8 +1104,8 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
             text="Back to Dashboard"
           />
           <div>
-            <h2 style={{ color: COLORS.white, fontSize: 32, fontWeight: 700, marginBottom: 8 }}>System Controls</h2>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage your clinic system efficiently</p>
+            <h2 style={{ color: colors.white, fontSize: 32, fontWeight: 700, marginBottom: 8 }}>System Controls</h2>
+            <p style={{ color: colors.slate, fontSize: 16 }}>Manage your clinic system efficiently</p>
           </div>
         </div>
 
@@ -1123,8 +1124,8 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  background: activeTab === tab.id ? `${COLORS.teal}15` : "#0f172a",
-                  border: activeTab === tab.id ? `1px solid ${COLORS.teal}30` : `1px solid ${COLORS.border}`,
+                  background: activeTab === tab.id ? `${colors.teal}15` : "#0f172a",
+                  border: activeTab === tab.id ? `1px solid ${colors.teal}30` : `1px solid ${colors.border}`,
                   borderRadius: 12,
                   padding: "16px 20px",
                   cursor: "pointer",
@@ -1138,19 +1139,19 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <div style={{
                   width: 40,
                   height: 40,
-                  background: activeTab === tab.id ? `${COLORS.teal}20` : "#111827",
+                  background: activeTab === tab.id ? `${colors.teal}20` : "#111827",
                   borderRadius: 8,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center"
                 }}>
-                  <Icon size={20} color={activeTab === tab.id ? COLORS.teal : COLORS.slate} />
+                  <Icon size={20} color={activeTab === tab.id ? colors.teal : colors.slate} />
                 </div>
                 <div style={{ textAlign: "left" }}>
-                  <div style={{ color: activeTab === tab.id ? COLORS.teal : COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 2 }}>
+                  <div style={{ color: activeTab === tab.id ? colors.teal : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 2 }}>
                     {tab.label}
                   </div>
-                  <div style={{ color: COLORS.slate, fontSize: 12 }}>
+                  <div style={{ color: colors.slate, fontSize: 12 }}>
                     {tab.description}
                   </div>
                 </div>
@@ -1161,8 +1162,8 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
         {/* Content Area */}
         <div style={{
-          background: "#0f172a",
-          border: `1px solid ${COLORS.border}`,
+          background: colors.background || colors.navyLight,
+          border: `1px solid ${colors.border}`,
           borderRadius: 16,
           overflow: "hidden"
         }}>
@@ -1197,25 +1198,25 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 32,
                 width: "90%",
                 maxWidth: 500
               }}
             >
-              <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Add New Clinic</h3>
+              <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Add New Clinic</h3>
               <div style={{ display: "grid", gap: 16 }}>
                 <input
                   type="text"
                   placeholder="Clinic Name"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
@@ -1223,11 +1224,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   type="email"
                   placeholder="Email Address"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
@@ -1235,11 +1236,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   type="tel"
                   placeholder="Phone Number"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
@@ -1247,11 +1248,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   placeholder="Address"
                   rows={3}
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     resize: "vertical"
                   }}
@@ -1263,11 +1264,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   style={{
                     flex: 1,
                     background: "none",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px",
                     cursor: "pointer",
-                    color: COLORS.slate,
+                    color: colors.slate,
                     fontSize: 14,
                     fontWeight: 600
                   }}
@@ -1278,12 +1279,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   onClick={() => setShowAddClinicModal(false)}
                   style={{
                     flex: 1,
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 8,
                     padding: "12px",
                     cursor: "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     fontWeight: 600
                   }}
@@ -1323,25 +1324,25 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 32,
                 width: "90%",
                 maxWidth: 500
               }}
             >
-              <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Add New User</h3>
+              <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Add New User</h3>
               <div style={{ display: "grid", gap: 16 }}>
                 <input
                   type="text"
                   placeholder="Full Name"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
@@ -1349,21 +1350,21 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   type="email"
                   placeholder="Email Address"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
                 <select
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     cursor: "pointer"
                   }}
@@ -1378,11 +1379,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   type="password"
                   placeholder="Password"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
@@ -1393,11 +1394,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   style={{
                     flex: 1,
                     background: "none",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px",
                     cursor: "pointer",
-                    color: COLORS.slate,
+                    color: colors.slate,
                     fontSize: 14,
                     fontWeight: 600
                   }}
@@ -1408,12 +1409,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   onClick={() => setShowAddUserModal(false)}
                   style={{
                     flex: 1,
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 8,
                     padding: "12px",
                     cursor: "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     fontWeight: 600
                   }}
@@ -1453,25 +1454,25 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 32,
                 width: "90%",
                 maxWidth: 500
               }}
             >
-              <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Send Broadcast</h3>
+              <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Send Broadcast</h3>
               <div style={{ display: "grid", gap: 16 }}>
                 <input
                   type="text"
                   placeholder="Broadcast Title"
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14
                   }}
                 />
@@ -1479,22 +1480,22 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   placeholder="Message Content"
                   rows={4}
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     resize: "vertical"
                   }}
                 />
                 <select
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     cursor: "pointer"
                   }}
@@ -1507,11 +1508,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 </select>
                 <select
                   style={{
-                    background: "#111827",
-                    border: `1px solid ${COLORS.border}`,
+                    background: colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     cursor: "pointer"
                   }}
@@ -1523,17 +1524,17 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   <option value="maintenance">Maintenance</option>
                 </select>
                 <div style={{ display: "flex", gap: 12 }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.white, fontSize: 14 }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: colors.white, fontSize: 14 }}>
                     <input type="checkbox" style={{ cursor: "pointer" }} />
                     <Mail size={16} />
                     Email
                   </label>
-                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.white, fontSize: 14 }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: colors.white, fontSize: 14 }}>
                     <input type="checkbox" style={{ cursor: "pointer" }} />
                     <Smartphone size={16} />
                     SMS
                   </label>
-                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.white, fontSize: 14 }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, color: colors.white, fontSize: 14 }}>
                     <input type="checkbox" style={{ cursor: "pointer" }} />
                     <Bell size={16} />
                     Push
@@ -1546,11 +1547,11 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   style={{
                     flex: 1,
                     background: "none",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px",
                     cursor: "pointer",
-                    color: COLORS.slate,
+                    color: colors.slate,
                     fontSize: 14,
                     fontWeight: 600
                   }}
@@ -1561,12 +1562,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                   onClick={() => setShowBroadcastModal(false)}
                   style={{
                     flex: 1,
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 8,
                     padding: "12px",
                     cursor: "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     fontWeight: 600
                   }}

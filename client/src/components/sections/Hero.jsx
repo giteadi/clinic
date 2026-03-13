@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import { Calendar, Building2, Zap } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import { STATS } from "../../constants/data";
 
 export default function Hero({ setView }) {
+  const { colors } = useTheme();
+  
   return (
     <section style={{
       minHeight: "100vh", 
-      background: COLORS.navy,
+      background: colors.navy,
       display: "grid",
       placeItems: "center",
       padding: "clamp(60px, 10vw, 100px) clamp(20px, 5vw, 32px) clamp(40px, 8vw, 60px)", 
@@ -16,12 +18,12 @@ export default function Hero({ setView }) {
     }}>
       <div style={{
         position: "absolute", top: -120, right: -120, width: "clamp(300px, 40vw, 500px)", height: "clamp(300px, 40vw, 500px)",
-        borderRadius: "50%", background: `radial-gradient(circle, ${COLORS.teal}12, transparent 70%)`,
+        borderRadius: "50%", background: `radial-gradient(circle, ${colors.teal}12, transparent 70%)`,
         pointerEvents: "none"
       }} />
       <div style={{
         position: "absolute", bottom: -80, left: -80, width: "clamp(250px, 35vw, 400px)", height: "clamp(250px, 35vw, 400px)",
-        borderRadius: "50%", background: `radial-gradient(circle, ${COLORS.gold}10, transparent 70%)`,
+        borderRadius: "50%", background: `radial-gradient(circle, ${colors.gold}10, transparent 70%)`,
         pointerEvents: "none"
       }} />
 
@@ -40,13 +42,13 @@ export default function Hero({ setView }) {
 
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8,
-          background: `${COLORS.teal}15`, border: `1px solid ${COLORS.teal}30`,
+          background: `${colors.teal}15`, border: `1px solid ${colors.teal}30`,
           borderRadius: 30, padding: "clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px)", 
           margin: "0 auto"
         }}>
-          <Zap size={14} color={COLORS.teal} />
+          <Zap size={14} color={colors.teal} />
           <span style={{ 
-            color: COLORS.teal, 
+            color: colors.teal, 
             fontSize: "clamp(11px, 2vw, 13px)", 
             fontWeight: 600, 
             letterSpacing: 0.5 
@@ -59,15 +61,15 @@ export default function Hero({ setView }) {
           fontFamily: "'Playfair Display', serif",
           fontSize: "clamp(32px, 6vw, 72px)", 
           lineHeight: 1.1,
-          color: COLORS.white, 
+          color: colors.white, 
           fontWeight: 700
         }}>
           Your Health,<br />
-          <span style={{ color: COLORS.teal }}>Beautifully</span> Managed
+          <span style={{ color: colors.teal }}>Beautifully</span> Managed
         </h1>
 
         <p style={{
-          color: COLORS.slate, 
+          color: colors.slate, 
           fontSize: "clamp(14px, 2.5vw, 18px)", 
           lineHeight: 1.7, 
           fontFamily: "'DM Sans', sans-serif",
@@ -88,10 +90,10 @@ export default function Hero({ setView }) {
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
             onClick={() => setView("doctors")}
             style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none", borderRadius: 12, 
               padding: "clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 32px)",
-              color: COLORS.white, 
+              color: colors.white, 
               fontSize: "clamp(14px, 2.5vw, 16px)", 
               fontWeight: 600, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif", 
@@ -99,7 +101,7 @@ export default function Hero({ setView }) {
               alignItems: "center", 
               justifyContent: "center",
               gap: 8,
-              boxShadow: `0 8px 30px ${COLORS.teal}40`,
+              boxShadow: `0 8px 30px ${colors.teal}40`,
               width: "100%"
             }}>
             <Calendar size={18} /> Book Appointment
@@ -108,10 +110,10 @@ export default function Hero({ setView }) {
             onClick={() => setView("clinics")}
             style={{
               background: "transparent", 
-              border: `1.5px solid ${COLORS.border}`,
+              border: `1.5px solid ${colors.border}`,
               borderRadius: 12, 
               padding: "clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 32px)",
-              color: COLORS.white, 
+              color: colors.white, 
               fontSize: "clamp(14px, 2.5vw, 16px)", 
               fontWeight: 600, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif", 
@@ -140,7 +142,7 @@ export default function Hero({ setView }) {
               style={{
                 textAlign: "center", 
                 padding: "clamp(16px, 3vw, 20px) clamp(20px, 4vw, 36px)",
-                borderRight: i < STATS.length - 1 ? `1px solid ${COLORS.border}` : "none",
+                borderRight: i < STATS.length - 1 ? `1px solid ${colors.border}` : "none",
                 display: "grid",
                 gap: "clamp(4px, 1vw, 8px)"
               }}>
@@ -148,10 +150,10 @@ export default function Hero({ setView }) {
                 fontFamily: "'Playfair Display', serif", 
                 fontSize: "clamp(24px, 4vw, 32px)", 
                 fontWeight: 700, 
-                color: COLORS.teal 
+                color: colors.teal 
               }}>{s.value}</div>
               <div style={{ 
-                color: COLORS.slate, 
+                color: colors.slate, 
                 fontSize: "clamp(11px, 2vw, 13px)", 
                 fontWeight: 500 
               }}>{s.label}</div>

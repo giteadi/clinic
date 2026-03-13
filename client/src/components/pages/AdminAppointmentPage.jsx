@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, Calendar, Users, Clock, Plus, Edit, Trash2, Filter, ChevronRight } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function AdminAppointmentPage({ setView }) {
+  const { colors } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -86,11 +87,11 @@ export default function AdminAppointmentPage({ setView }) {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "confirmed": return COLORS.teal;
-      case "pending": return COLORS.gold;
+      case "confirmed": return colors.teal;
+      case "pending": return colors.gold;
       case "completed": return "#10B981";
-      case "cancelled": return COLORS.red;
-      default: return COLORS.slate;
+      case "cancelled": return colors.red;
+      default: return colors.slate;
     }
   };
 
@@ -121,7 +122,7 @@ export default function AdminAppointmentPage({ setView }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -135,12 +136,12 @@ export default function AdminAppointmentPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: COLORS.white, 
+              color: colors.white, 
               marginBottom: 12 
             }}>
               Manage Appointments
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>
+            <p style={{ color: colors.slate, fontSize: 16 }}>
               Book and manage patient appointments
             </p>
           </motion.div>
@@ -158,12 +159,12 @@ export default function AdminAppointmentPage({ setView }) {
             whileTap={{ scale: 0.98 }}
             onClick={handleBookNewAppointment}
             style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none",
               borderRadius: 12,
               padding: "14px 20px",
               cursor: "pointer",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -181,18 +182,18 @@ export default function AdminAppointmentPage({ setView }) {
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               outline: "none"
             }}
           />
 
           <div style={{ position: "relative" }}>
-            <Search size={20} color={COLORS.slate} style={{ position: "absolute", left: 16, top: 14 }} />
+            <Search size={20} color={colors.slate} style={{ position: "absolute", left: 16, top: 14 }} />
             <input
               type="text"
               placeholder="Search appointments..."
@@ -200,11 +201,11 @@ export default function AdminAppointmentPage({ setView }) {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 width: "100%",
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 12,
                 padding: "12px 16px 12px 48px",
-                color: COLORS.white,
+                color: colors.white,
                 fontSize: 14,
                 outline: "none"
               }}
@@ -215,11 +216,11 @@ export default function AdminAppointmentPage({ setView }) {
             value={selectedFilter}
             onChange={(e) => setSelectedFilter(e.target.value)}
             style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -235,7 +236,7 @@ export default function AdminAppointmentPage({ setView }) {
 
         {/* Results Count */}
         <div style={{ marginBottom: 24 }}>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>
+          <p style={{ color: colors.slate, fontSize: 14 }}>
             Found {filteredAppointments.length} appointments
           </p>
         </div>
@@ -249,8 +250,8 @@ export default function AdminAppointmentPage({ setView }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               style={{
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 24,
                 transition: "all 0.2s"
@@ -258,12 +259,12 @@ export default function AdminAppointmentPage({ setView }) {
               onMouseEnter={(e) => {
                 e.target.style.transform = "translateY(-2px)";
                 e.target.style.boxShadow = "0 8px 25px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = COLORS.teal;
+                e.target.style.borderColor = colors.teal;
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = "translateY(0)";
                 e.target.style.boxShadow = "none";
-                e.target.style.borderColor = COLORS.border;
+                e.target.style.borderColor = colors.border;
               }}
             >
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
@@ -272,17 +273,17 @@ export default function AdminAppointmentPage({ setView }) {
                 <div style={{ textAlign: "center" }}>
                   <div style={{
                     width: 60, height: 60, borderRadius: 12,
-                    background: `${COLORS.teal}18`,
+                    background: `${colors.teal}18`,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     marginBottom: 8
                   }}>
-                    <Calendar size={24} color={COLORS.teal} />
+                    <Calendar size={24} color={colors.teal} />
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ color: COLORS.white, fontSize: 12, fontWeight: 600 }}>
+                    <div style={{ color: colors.white, fontSize: 12, fontWeight: 600 }}>
                       {new Date(appointment.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
-                    <div style={{ color: COLORS.slate, fontSize: 11 }}>
+                    <div style={{ color: colors.slate, fontSize: 11 }}>
                       {appointment.time}
                     </div>
                   </div>
@@ -291,10 +292,10 @@ export default function AdminAppointmentPage({ setView }) {
                 {/* Appointment Details */}
                 <div style={{ flex: 1 }}>
                   <div style={{ marginBottom: 12 }}>
-                    <h3 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                    <h3 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
                       {appointment.reason}
                     </h3>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: COLORS.slate, fontSize: 12 }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: colors.slate, fontSize: 12 }}>
                       <span>{appointment.doctorName}</span>
                       <span>•</span>
                       <span>{appointment.specialty}</span>
@@ -305,20 +306,20 @@ export default function AdminAppointmentPage({ setView }) {
 
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Patient</p>
-                      <p style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Patient</p>
+                      <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
                         {appointment.patientName}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Contact</p>
-                      <p style={{ color: COLORS.white, fontSize: 12 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Contact</p>
+                      <p style={{ color: colors.white, fontSize: 12 }}>
                         {appointment.patientPhone}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Type</p>
-                      <p style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Type</p>
+                      <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
                         {appointment.type}
                       </p>
                     </div>
@@ -346,12 +347,12 @@ export default function AdminAppointmentPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleAppointmentAction("view", appointment.id)}
                       style={{
-                        background: `${COLORS.teal}15`,
-                        border: `1px solid ${COLORS.teal}30`,
+                        background: `${colors.teal}15`,
+                        border: `1px solid ${colors.teal}30`,
                         borderRadius: 8,
                         padding: "8px",
                         cursor: "pointer",
-                        color: COLORS.teal
+                        color: colors.teal
                       }}
                     >
                       <ChevronRight size={16} />
@@ -361,12 +362,12 @@ export default function AdminAppointmentPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleAppointmentAction("edit", appointment.id)}
                       style={{
-                        background: `${COLORS.gold}15`,
-                        border: `1px solid ${COLORS.gold}30`,
+                        background: `${colors.gold}15`,
+                        border: `1px solid ${colors.gold}30`,
                         borderRadius: 8,
                         padding: "8px",
                         cursor: "pointer",
-                        color: COLORS.gold
+                        color: colors.gold
                       }}
                     >
                       <Edit size={16} />
@@ -376,12 +377,12 @@ export default function AdminAppointmentPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleAppointmentAction("delete", appointment.id)}
                       style={{
-                        background: `${COLORS.red}15`,
-                        border: `1px solid ${COLORS.red}30`,
+                        background: `${colors.red}15`,
+                        border: `1px solid ${colors.red}30`,
                         borderRadius: 8,
                         padding: "8px",
                         cursor: "pointer",
-                        color: COLORS.red
+                        color: colors.red
                       }}
                     >
                       <Trash2 size={16} />
@@ -398,15 +399,15 @@ export default function AdminAppointmentPage({ setView }) {
           <div style={{
             textAlign: "center",
             padding: "60px 20px",
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>📅</div>
-            <h3 style={{ color: COLORS.white, fontSize: 20, marginBottom: 8 }}>
+            <h3 style={{ color: colors.white, fontSize: 20, marginBottom: 8 }}>
               No appointments found
             </h3>
-            <p style={{ color: COLORS.slate, fontSize: 14 }}>
+            <p style={{ color: colors.slate, fontSize: 14 }}>
               Try adjusting your search criteria or filters
             </p>
           </div>

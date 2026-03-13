@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
+import { ThemeProvider, useTheme } from "../contexts/ThemeContext";
 import Navbar from "./layout/Navbar";
 import Footer from "./layout/Footer";
 import ProtectedRoute from "./ProtectedRoute";
@@ -28,7 +29,8 @@ import AdminAppointmentPage from "./pages/AdminAppointmentPage";
 import AdminBookAppointmentPage from "./pages/AdminBookAppointmentPage";
 import BookingModal from "./sections/BookingModal";
 
-export default function CliniqPro() {
+function CliniqProContent() {
+  const { colors } = useTheme();
   const [view, setView] = useState("home");
   const [userRole, setUserRole] = useState("guest");
   const [booking, setBooking] = useState(null);
@@ -51,7 +53,7 @@ export default function CliniqPro() {
   }, []);
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#F8F5F0", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: colors.cream, minHeight: "100vh" }}>
       <Navbar view={view} setView={wrappedSetView} userRole={userRole} setUserRole={setUserRole} />
 
       <AnimatePresence mode="wait">
@@ -192,5 +194,13 @@ export default function CliniqPro() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function CliniqPro() {
+  return (
+    <ThemeProvider>
+      <CliniqProContent />
+    </ThemeProvider>
   );
 }

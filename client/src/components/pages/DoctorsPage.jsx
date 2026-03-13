@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Clock, MapPin, Search, Filter, User } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function DoctorsPage({ setView }) {
+  const { colors } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
 
@@ -37,7 +38,7 @@ export default function DoctorsPage({ setView }) {
   return (
     <div style={{
       minHeight: "100vh",
-      background: COLORS.navy,
+      background: colors.navy,
       padding: "clamp(80px, 10vw, 100px) clamp(20px, 5vw, 32px)",
       position: "relative"
     }}>
@@ -46,7 +47,7 @@ export default function DoctorsPage({ setView }) {
         position: "absolute", top: -100, right: -100,
         width: "clamp(300px, 40vw, 400px)", height: "clamp(300px, 40vw, 400px)",
         borderRadius: "50%",
-        background: `radial-gradient(circle, ${COLORS.teal}12, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.teal}12, transparent 70%)`,
         pointerEvents: "none"
       }} />
 
@@ -60,7 +61,7 @@ export default function DoctorsPage({ setView }) {
             style={{
               display: "flex", alignItems: "center", gap: 8,
               background: "none", border: "none", cursor: "pointer",
-              color: COLORS.slate, marginBottom: 16,
+              color: colors.slate, marginBottom: 16,
               fontSize: 14, fontWeight: 500
             }}
           >
@@ -70,12 +71,12 @@ export default function DoctorsPage({ setView }) {
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: "clamp(32px, 5vw, 48px)",
-            color: COLORS.white, fontWeight: 700,
+            color: colors.white, fontWeight: 700,
             marginBottom: 8
           }}>
             Find Your Doctor
           </h1>
-          <p style={{ color: COLORS.slate, fontSize: "clamp(16px, 2.5vw, 18px)", lineHeight: 1.6 }}>
+          <p style={{ color: colors.slate, fontSize: "clamp(16px, 2.5vw, 18px)", lineHeight: 1.6 }}>
             Connect with {doctors.length}+ expert doctors across all specialties
           </p>
         </div>
@@ -88,7 +89,7 @@ export default function DoctorsPage({ setView }) {
           marginBottom: "clamp(32px, 5vw, 48px)"
         }}>
           <div style={{ position: "relative" }}>
-            <Search size={20} color={COLORS.slate} style={{
+            <Search size={20} color={colors.slate} style={{
               position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)"
             }} />
             <input
@@ -98,9 +99,9 @@ export default function DoctorsPage({ setView }) {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 width: "100%", padding: "12px 16px 12px 48px",
-                background: `${COLORS.navy}F0`,
-                border: `1px solid ${COLORS.border}`,
-                borderRadius: 12, color: COLORS.white,
+                background: `${colors.navy}F0`,
+                border: `1px solid ${colors.border}`,
+                borderRadius: 12, color: colors.white,
                 fontSize: 14, outline: "none"
               }}
             />
@@ -111,15 +112,15 @@ export default function DoctorsPage({ setView }) {
             onChange={(e) => setSelectedSpecialty(e.target.value)}
             style={{
               padding: "12px 16px",
-              background: `${COLORS.navy}F0`,
-              border: `1px solid ${COLORS.border}`,
-              borderRadius: 12, color: COLORS.white,
+              background: `${colors.navy}F0`,
+              border: `1px solid ${colors.border}`,
+              borderRadius: 12, color: colors.white,
               fontSize: 14, outline: "none",
               minWidth: 200
             }}
           >
             {specialties.map(specialty => (
-              <option key={specialty} value={specialty} style={{ background: COLORS.navy }}>
+              <option key={specialty} value={specialty} style={{ background: colors.navy }}>
                 {specialty === "all" ? "All Specialties" : specialty}
               </option>
             ))}
@@ -128,7 +129,7 @@ export default function DoctorsPage({ setView }) {
 
         {/* Results Count */}
         <div style={{ marginBottom: 24 }}>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>
+          <p style={{ color: colors.slate, fontSize: 14 }}>
             {filteredDoctors.length} doctors found
           </p>
         </div>
@@ -147,8 +148,8 @@ export default function DoctorsPage({ setView }) {
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -4, scale: 1.02 }}
               style={{
-                background: `${COLORS.navy}F0`,
-                border: `1px solid ${COLORS.border}`,
+                background: `${colors.navy}F0`,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16, padding: 24,
                 cursor: "pointer", transition: "all 0.3s ease",
                 position: "relative"
@@ -159,9 +160,9 @@ export default function DoctorsPage({ setView }) {
                 position: "absolute", top: 16, right: 16,
                 padding: "4px 8px", borderRadius: 6,
                 fontSize: 11, fontWeight: 600,
-                background: doctor.available ? `${COLORS.teal}20` : `${COLORS.gold}20`,
-                color: doctor.available ? COLORS.teal : COLORS.gold,
-                border: `1px solid ${doctor.available ? COLORS.teal : COLORS.gold}40`
+                background: doctor.available ? `${colors.teal}20` : `${colors.gold}20`,
+                color: doctor.available ? colors.teal : colors.gold,
+                border: `1px solid ${doctor.available ? colors.teal : colors.gold}40`
               }}>
                 {doctor.available ? "Available" : "Busy"}
               </div>
@@ -170,27 +171,27 @@ export default function DoctorsPage({ setView }) {
               <div style={{ display: "flex", alignItems: "start", gap: 16, marginBottom: 16 }}>
                 <div style={{
                   width: 56, height: 56, borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   flexShrink: 0
                 }}>
                   <User size={28} color="#fff" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ color: COLORS.white, fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
+                  <h3 style={{ color: colors.white, fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
                     {doctor.name}
                   </h3>
-                  <p style={{ color: COLORS.teal, fontSize: 13, fontWeight: 500, marginBottom: 2 }}>
+                  <p style={{ color: colors.teal, fontSize: 13, fontWeight: 500, marginBottom: 2 }}>
                     {doctor.specialty}
                   </p>
-                  <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 8 }}>
+                  <p style={{ color: colors.slate, fontSize: 12, marginBottom: 8 }}>
                     {doctor.clinic}
                   </p>
                   <div style={{ display: "flex", gap: 16, fontSize: 11 }}>
-                    <span style={{ color: COLORS.gold, display: "flex", alignItems: "center", gap: 4 }}>
-                      <Star size={12} fill={COLORS.gold} /> {doctor.rating}
+                    <span style={{ color: colors.gold, display: "flex", alignItems: "center", gap: 4 }}>
+                      <Star size={12} fill={colors.gold} /> {doctor.rating}
                     </span>
-                    <span style={{ color: COLORS.slate }}>{doctor.experience}</span>
+                    <span style={{ color: colors.slate }}>{doctor.experience}</span>
                   </div>
                 </div>
               </div>
@@ -198,20 +199,20 @@ export default function DoctorsPage({ setView }) {
               {/* Stats */}
               <div style={{
                 display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
-                padding: "12px 0", borderTop: `1px solid ${COLORS.border}`,
+                padding: "12px 0", borderTop: `1px solid ${colors.border}`,
                 marginBottom: 16
               }}>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ color: COLORS.white, fontWeight: 600, fontSize: 16 }}>
+                  <div style={{ color: colors.white, fontWeight: 600, fontSize: 16 }}>
                     {doctor.patients.toLocaleString()}
                   </div>
-                  <div style={{ color: COLORS.slate, fontSize: 11 }}>Patients</div>
+                  <div style={{ color: colors.slate, fontSize: 11 }}>Patients</div>
                 </div>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ color: COLORS.white, fontWeight: 600, fontSize: 16 }}>
+                  <div style={{ color: colors.white, fontWeight: 600, fontSize: 16 }}>
                     {doctor.experience.split('+')[0]}
                   </div>
-                  <div style={{ color: COLORS.slate, fontSize: 11 }}>Years</div>
+                  <div style={{ color: colors.slate, fontSize: 11 }}>Years</div>
                 </div>
               </div>
 
@@ -222,11 +223,11 @@ export default function DoctorsPage({ setView }) {
                 style={{
                   width: "100%", padding: "12px",
                   background: doctor.available 
-                    ? `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`
-                    : `${COLORS.navy}F0`,
-                  border: `1px solid ${doctor.available ? COLORS.teal : COLORS.border}`,
+                    ? `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`
+                    : `${colors.navy}F0`,
+                  border: `1px solid ${doctor.available ? colors.teal : colors.border}`,
                   borderRadius: 8,
-                  color: doctor.available ? COLORS.white : COLORS.slate,
+                  color: doctor.available ? colors.white : colors.slate,
                   fontSize: 14, fontWeight: 600,
                   cursor: doctor.available ? "pointer" : "not-allowed",
                   transition: "all 0.2s ease"
@@ -242,23 +243,23 @@ export default function DoctorsPage({ setView }) {
         {filteredDoctors.length === 0 && (
           <div style={{
             textAlign: "center", padding: "60px 20px",
-            background: `${COLORS.navy}F0`,
-            border: `1px solid ${COLORS.border}`,
+            background: `${colors.navy}F0`,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16
           }}>
             <div style={{
               width: 80, height: 80, borderRadius: "50%",
-              background: `${COLORS.navy}F0`,
-              border: `1px solid ${COLORS.border}`,
+              background: `${colors.navy}F0`,
+              border: `1px solid ${colors.border}`,
               display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 20px"
             }}>
-              <Search size={32} color={COLORS.slate} />
+              <Search size={32} color={colors.slate} />
             </div>
-            <h3 style={{ color: COLORS.white, fontSize: 20, marginBottom: 8 }}>
+            <h3 style={{ color: colors.white, fontSize: 20, marginBottom: 8 }}>
               No doctors found
             </h3>
-            <p style={{ color: COLORS.slate, fontSize: 14 }}>
+            <p style={{ color: colors.slate, fontSize: 14 }}>
               Try adjusting your search or filter criteria
             </p>
           </div>

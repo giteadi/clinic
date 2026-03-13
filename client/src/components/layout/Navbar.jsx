@@ -9,12 +9,14 @@ import {
   Menu,
   X
 } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
+import ThemeToggle from "../common/ThemeToggle";
 import { logout, clearPersistedData } from "../../store/authSlice";
 
 export default function Navbar({ view, setView, userRole, setUserRole }) {
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
+  const { colors } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Get actual user role from Redux state
@@ -49,8 +51,8 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           left: 0,
           right: 0,
           zIndex: 100,
-          background: `linear-gradient(180deg, ${COLORS.navy}, #0b162c)`,
-          borderBottom: `1px solid ${COLORS.border}`,
+          background: colors.white,
+          borderBottom: `1px solid ${colors.border}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -77,7 +79,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               width: 36,
               height: 36,
               borderRadius: 10,
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center"
@@ -91,10 +93,10 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(16px, 3vw, 20px)",
               fontWeight: 700,
-              color: COLORS.white
+              color: colors.slate
             }}
           >
-            Cliniq<span style={{ color: COLORS.teal }}>Pro</span>
+            Cliniq<span style={{ color: colors.teal }}>Pro</span>
           </span>
         </motion.div>
 
@@ -103,7 +105,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
         <div
           className="desktop-nav"
           style={{
-            display: "flex",
+            display: window.innerWidth > 768 ? "flex" : "none",
             gap: 28,
             alignItems: "center"
           }}
@@ -116,13 +118,13 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: view === v ? COLORS.teal : COLORS.slate,
+                color: view === v ? colors.teal : colors.slate,
                 fontSize: 14,
                 fontWeight: 500,
                 textTransform: "capitalize",
                 borderBottom:
                   view === v
-                    ? `2px solid ${COLORS.teal}`
+                    ? `2px solid ${colors.teal}`
                     : "2px solid transparent",
                 paddingBottom: 2
               }}
@@ -130,40 +132,41 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               {v}
             </button>
           ))}
+          
         </div>
 
 
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
 
-          {/* USER INFO */}
-          {isAuthenticated && actualUserRole !== "guest" && (
+          {/* USER INFO - DESKTOP ONLY */}
+          {isAuthenticated && actualUserRole !== "guest" && window.innerWidth > 768 && (
             <div style={{ 
               display: "flex", 
               alignItems: "center", 
               gap: 8,
               padding: "6px 14px",
-              background: "#111827",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 8
             }}>
               <User size={14} />
-              <span style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+              <span style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
                 {user?.name || actualUserRole}
               </span>
             </div>
           )}
 
-          {/* DASHBOARD BUTTON */}
-          {isAuthenticated && actualUserRole !== "guest" && (
+          {/* DASHBOARD BUTTON - DESKTOP ONLY */}
+          {isAuthenticated && actualUserRole !== "guest" && window.innerWidth > 768 && (
             <button
               onClick={() => setView(`${actualUserRole}-dashboard`)}
               style={{
-                background: `${COLORS.teal}15`,
-                border: `1px solid ${COLORS.teal}30`,
+                background: `${colors.teal}15`,
+                border: `1px solid ${colors.teal}30`,
                 borderRadius: 8,
                 padding: "6px 14px",
                 cursor: "pointer",
-                color: COLORS.teal,
+                color: colors.teal,
                 fontSize: 13,
                 fontWeight: 600
               }}
@@ -175,79 +178,83 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </button>
           )}
 
-          {/* DESKTOP BOOK APPOINTMENT BUTTON */}
-          <button
-            onClick={() => {
-              if (isAuthenticated && actualUserRole !== "guest") {
-                // Check if user is a patient and has a linked clinic
-                if (actualUserRole === "patient" && user?.linkedClinic) {
-                  // Set the linked clinic and go directly to doctor selection
-                  localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
-                  setView("doctor-selection");
-                } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
-                  // For admin/superadmin, go to appointment management
-                  setView("admin-appointment");
+          {/* BOOK APPOINTMENT BUTTON - DESKTOP ONLY */}
+          {window.innerWidth > 768 && (
+            <button
+              onClick={() => {
+                if (isAuthenticated && actualUserRole !== "guest") {
+                  // Check if user is a patient and has a linked clinic
+                  if (actualUserRole === "patient" && user?.linkedClinic) {
+                    // Set the linked clinic and go directly to doctor selection
+                    localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
+                    setView("doctor-selection");
+                  } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
+                    // For admin/superadmin, go to appointment management
+                    setView("admin-appointment");
+                  } else {
+                    // For other users or patients without linked clinic, show clinic selection
+                    setView("clinic-selection");
+                  }
                 } else {
-                  // For other users or patients without linked clinic, show clinic selection
-                  setView("clinic-selection");
+                  setView("login");
                 }
-              } else {
-                setView("login");
-              }
-            }}
-            className="desktop-book-btn"
-            style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
-              border: "none",
-              borderRadius: 8,
-              padding: "8px 18px",
-              cursor: "pointer",
-              color: COLORS.white,
-              fontSize: 13,
-              fontWeight: 600
-            }}
-          >
-            Book Appointment
-          </button>
+              }}
+              className="desktop-book-btn"
+              style={{
+                background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+                border: "none",
+                borderRadius: 8,
+                padding: "8px 18px",
+                cursor: "pointer",
+                color: colors.white,
+                fontSize: 13,
+                fontWeight: 600
+              }}
+            >
+              Book Appointment
+            </button>
+          )}
 
-          {/* LOGIN/LOGOUT BUTTON - DESKTOP */}
-          {isAuthenticated && actualUserRole !== "guest" ? (
-            <button
-              onClick={handleLogout}
-              className="desktop-logout-btn"
-              style={{
-                background: COLORS.red,
-                border: `1px solid ${COLORS.red}`,
-                borderRadius: 8,
-                padding: "6px 14px",
-                cursor: "pointer",
-                color: COLORS.white,
-                fontSize: 13,
-                fontWeight: 500,
-                display: "flex",
-                alignItems: "center",
-                gap: 6
-              }}
-            >
-              <LogOut size={14} /> Logout
-            </button>
-          ) : (
-            <button
-              onClick={() => setView("login")}
-              className="desktop-login-btn"
-              style={{
-                background: "none",
-                border: `1px solid ${COLORS.border}`,
-                borderRadius: 8,
-                padding: "6px 14px",
-                cursor: "pointer",
-                color: COLORS.slate,
-                fontSize: 13,
-                fontWeight: 500
-              }}
-            >
-              Login
-            </button>
+          {/* LOGIN/LOGOUT BUTTON - DESKTOP ONLY */}
+          {window.innerWidth > 768 && (
+            isAuthenticated && actualUserRole !== "guest" ? (
+              <button
+                onClick={handleLogout}
+                className="desktop-logout-btn"
+                style={{
+                  background: colors.red,
+                  border: `1px solid ${colors.red}`,
+                  borderRadius: 8,
+                  padding: "6px 14px",
+                  cursor: "pointer",
+                  color: colors.white,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6
+                }}
+              >
+                <LogOut size={14} /> Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => setView("login")}
+                className="desktop-login-btn"
+                style={{
+                  background: "none",
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: 8,
+                  padding: "6px 14px",
+                  cursor: "pointer",
+                  color: colors.slate,
+                  fontSize: 13,
+                  fontWeight: 500
+                }}
+              >
+                Login
+              </button>
+            )
           )}
 
           {/* MOBILE MENU BUTTON */}
@@ -255,19 +262,19 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-menu-btn"
             style={{
-              display: "flex",
-              background: "#111827",
-              border: `1px solid ${COLORS.border}`,
+              display: window.innerWidth <= 768 ? "flex" : "none",
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               cursor: "pointer",
               padding: 8,
               borderRadius: 8
             }}
           >
             {mobileMenuOpen
-              ? <X size={20} color={COLORS.white}/>
-              : <Menu size={20} color={COLORS.white}/>}
+              ? <X size={20} color={colors.slate}/>
+              : <Menu size={20} color={colors.slate}/>}
           </button>
-
+          
         </div>
       </nav>
 
@@ -308,8 +315,8 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               right: 0,
               bottom: 0,
               width: 280,
-              background: `linear-gradient(180deg, ${COLORS.navy}, #0b162c)`,
-              borderLeft: `1px solid ${COLORS.border}`,
+              background: `linear-gradient(180deg, ${colors.navy}, ${colors.navyLight})`,
+              borderLeft: `1px solid ${colors.border}`,
               padding: 20,
               zIndex: 99,
               boxShadow: "-10px 0 40px rgba(0,0,0,0.7)"
@@ -325,11 +332,10 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     setMobileMenuOpen(false);
                   }}
                   style={{
-                    background:
-                      view === v ? `${COLORS.teal}20` : "#0f172a",
-                    border: `1px solid ${COLORS.border}`,
+                    background: view === v ? `${colors.teal}20` : colors.background || colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     cursor: "pointer",
-                    color: view === v ? COLORS.teal : COLORS.white,
+                    color: view === v ? colors.teal : colors.white,
                     fontSize: 15,
                     padding: "12px 16px",
                     borderRadius: 8,
@@ -341,20 +347,25 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               ))}
             </div>
 
-            {/* USER INFO IN MOBILE MENU */}
+            {/* THEME TOGGLE - MOBILE */}
+            <div style={{ marginBottom: 12 }}>
+              <ThemeToggle />
+            </div>
+
+            {/* USER INFO DISPLAY - MOBILE */}
             {isAuthenticated && actualUserRole !== "guest" && (
               <div style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
                 padding: "12px 16px",
-                background: "#111827",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 8,
                 marginBottom: 12
               }}>
                 <User size={16} />
-                <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>
+                <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
                   {user?.name || actualUserRole}
                 </span>
               </div>
@@ -368,12 +379,12 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                   setMobileMenuOpen(false);
                 }}
                 style={{
-                  background: `${COLORS.teal}15`,
-                  border: `1px solid ${COLORS.teal}30`,
+                  background: `${colors.teal}15`,
+                  border: `1px solid ${colors.teal}30`,
                   borderRadius: 8,
                   padding: "12px 16px",
                   cursor: "pointer",
-                  color: COLORS.teal,
+                  color: colors.teal,
                   fontSize: 14,
                   fontWeight: 600,
                   width: "100%",
@@ -406,12 +417,12 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                   setMobileMenuOpen(false);
                 }}
                 style={{
-                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   border: "none",
                   borderRadius: 8,
                   padding: "12px 16px",
                   cursor: "pointer",
-                  color: COLORS.white,
+                  color: colors.white,
                   fontSize: 14,
                   fontWeight: 600,
                   width: "100%",
@@ -431,11 +442,11 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 }}
                 style={{
                   background: "none",
-                  border: `1px solid ${COLORS.border}`,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 8,
                   padding: "12px 16px",
                   cursor: "pointer",
-                  color: COLORS.red,
+                  color: colors.red,
                   fontSize: 14,
                   fontWeight: 600,
                   display: "flex",
@@ -453,12 +464,12 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                   setMobileMenuOpen(false);
                 }}
                 style={{
-                  background: `${COLORS.teal}15`,
-                  border: `1px solid ${COLORS.teal}30`,
+                  background: `${colors.teal}15`,
+                  border: `1px solid ${colors.teal}30`,
                   borderRadius: 8,
                   padding: "12px 16px",
                   cursor: "pointer",
-                  color: COLORS.teal,
+                  color: colors.teal,
                   fontSize: 14,
                   fontWeight: 600,
                   width: "100%"

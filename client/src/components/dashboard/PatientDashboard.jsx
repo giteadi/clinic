@@ -2,12 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Clock, FileText, Bell, User, ChevronRight, Heart, Activity, Shield } from "lucide-react";
 import { useSelector } from "react-redux";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import { DOCTORS } from "../../constants/data";
 import Avatar from "../common/Avatar";
 import BackButton from "../common/BackButton";
 
 export default function PatientDashboard({ setView }) {
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState("upcoming");
   const { user } = useSelector(state => state.auth);
 
@@ -24,7 +25,7 @@ export default function PatientDashboard({ setView }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.cream, paddingTop: 80 }}>
+    <div style={{ minHeight: "100vh", background: colors.cream, paddingTop: 80 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
@@ -34,26 +35,26 @@ export default function PatientDashboard({ setView }) {
                 text="Back to Home"
               />
               <div>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: COLORS.navy, marginBottom: 8, fontWeight: 700 }}>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: colors.navy, marginBottom: 8, fontWeight: 700 }}>
                   Patient Dashboard
                 </h1>
-                <p style={{ color: COLORS.slate, fontSize: 16 }}>Manage your appointments and medical records</p>
+                <p style={{ color: colors.slate, fontSize: 16 }}>Manage your appointments and medical records</p>
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <button style={{
-                background: `${COLORS.teal}18`, border: `1px solid ${COLORS.border}`,
+                background: `${colors.teal}18`, border: `1px solid ${colors.border}`,
                 borderRadius: 10, padding: "8px 16px", cursor: "pointer",
                 display: "flex", alignItems: "center", gap: 8,
-                color: COLORS.teal, fontSize: 14, fontWeight: 600
+                color: colors.teal, fontSize: 14, fontWeight: 600
               }}>
                 <Bell size={16} /> Notifications
               </button>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <Avatar initials="PA" color={COLORS.teal} size={40} />
+                <Avatar initials="PA" color={colors.teal} size={40} />
                 <div>
-                  <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 15 }}>Patient Account</div>
-                  <div style={{ color: COLORS.slate, fontSize: 12 }}>patient@example.com</div>
+                  <div style={{ color: colors.navy, fontWeight: 600, fontSize: 15 }}>Patient Account</div>
+                  <div style={{ color: colors.slate, fontSize: 12 }}>patient@example.com</div>
                 </div>
               </div>
             </div>

@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { ArrowLeft, User, Mail, Lock, Eye, EyeOff, Stethoscope, LogIn, UserPlus } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import { loginSuccess, loginFailure, clearError } from "../../store/authSlice";
 
 export default function LoginPage({ setView }) {
+  const { colors } = useTheme();
   const dispatch = useDispatch();
   const { loading, error } = useSelector(state => state.auth);
   
@@ -131,7 +132,7 @@ export default function LoginPage({ setView }) {
   return (
     <div style={{
       minHeight: "100vh",
-      background: COLORS.navy,
+      background: colors.navy,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -143,14 +144,14 @@ export default function LoginPage({ setView }) {
         position: "absolute", top: -100, left: -100,
         width: "clamp(300px, 40vw, 400px)", height: "clamp(300px, 40vw, 400px)",
         borderRadius: "50%",
-        background: `radial-gradient(circle, ${COLORS.teal}12, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.teal}12, transparent 70%)`,
         pointerEvents: "none"
       }} />
       <div style={{
         position: "absolute", bottom: -80, right: -80,
         width: "clamp(250px, 35vw, 350px)", height: "clamp(250px, 35vw, 350px)",
         borderRadius: "50%",
-        background: `radial-gradient(circle, ${COLORS.gold}10, transparent 70%)`,
+        background: `radial-gradient(circle, ${colors.gold}10, transparent 70%)`,
         pointerEvents: "none"
       }} />
 
@@ -171,7 +172,7 @@ export default function LoginPage({ setView }) {
           style={{
             display: "flex", alignItems: "center", gap: 8,
             background: "none", border: "none", cursor: "pointer",
-            color: COLORS.slate, marginBottom: 24,
+            color: colors.slate, marginBottom: 24,
             fontSize: 14, fontWeight: 500
           }}
         >
@@ -180,8 +181,8 @@ export default function LoginPage({ setView }) {
 
         {/* Login Card */}
         <div style={{
-          background: `${COLORS.navy}F0`,
-          border: `1px solid ${COLORS.border}`,
+          background: `${colors.navy}F0`,
+          border: `1px solid ${colors.border}`,
           borderRadius: 24, padding: "clamp(32px, 5vw, 40px)",
           backdropFilter: "blur(20px)"
         }}>
@@ -189,7 +190,7 @@ export default function LoginPage({ setView }) {
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <div style={{
               width: 64, height: 64, borderRadius: 16,
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 16px"
             }}>
@@ -199,11 +200,11 @@ export default function LoginPage({ setView }) {
             <h1 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(24px, 4vw, 32px)",
-              color: COLORS.white, fontWeight: 700, marginBottom: 8
+              color: colors.white, fontWeight: 700, marginBottom: 8
             }}>
               {isLogin ? "Welcome Back" : "Create Account"}
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 14, lineHeight: 1.5 }}>
+            <p style={{ color: colors.slate, fontSize: 14, lineHeight: 1.5 }}>
               {isLogin 
                 ? "Sign in to access your healthcare dashboard"
                 : "Join us to manage your healthcare journey"
@@ -213,16 +214,16 @@ export default function LoginPage({ setView }) {
 
           {/* Toggle Login/Register */}
           <div style={{
-            display: "flex", background: `${COLORS.navy}F0`,
-            border: `1px solid ${COLORS.border}`, borderRadius: 12,
+            display: "flex", background: `${colors.navy}F0`,
+            border: `1px solid ${colors.border}`, borderRadius: 12,
             padding: 4, marginBottom: 32
           }}>
             <button
               onClick={() => setIsLogin(true)}
               style={{
                 flex: 1, padding: "8px 16px", border: "none",
-                borderRadius: 8, background: isLogin ? COLORS.teal : "none",
-                color: COLORS.white, fontSize: 14, fontWeight: 600,
+                borderRadius: 8, background: isLogin ? colors.teal : "none",
+                color: colors.white, fontSize: 14, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.2s ease"
               }}
             >
@@ -232,8 +233,8 @@ export default function LoginPage({ setView }) {
               onClick={() => setIsLogin(false)}
               style={{
                 flex: 1, padding: "8px 16px", border: "none",
-                borderRadius: 8, background: !isLogin ? COLORS.teal : "none",
-                color: COLORS.white, fontSize: 14, fontWeight: 600,
+                borderRadius: 8, background: !isLogin ? colors.teal : "none",
+                color: colors.white, fontSize: 14, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.2s ease"
               }}
             >
@@ -248,13 +249,13 @@ export default function LoginPage({ setView }) {
               <>
                 <div>
                   <label style={{ 
-                    display: "block", color: COLORS.white, 
+                    display: "block", color: colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Full Name
                   </label>
                   <div style={{ position: "relative" }}>
-                    <User size={20} color={COLORS.slate} style={{
+                    <User size={20} color={colors.slate} style={{
                       position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)"
                     }} />
                     <input
@@ -266,9 +267,9 @@ export default function LoginPage({ setView }) {
                       placeholder="Enter your full name"
                       style={{
                         width: "100%", padding: "12px 16px 12px 48px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 12, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 12, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     />
@@ -277,13 +278,13 @@ export default function LoginPage({ setView }) {
 
                 <div>
                   <label style={{ 
-                    display: "block", color: COLORS.white, 
+                    display: "block", color: colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Phone Number
                   </label>
                   <div style={{ position: "relative" }}>
-                    <Mail size={20} color={COLORS.slate} style={{
+                    <Mail size={20} color={colors.slate} style={{
                       position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)"
                     }} />
                     <input
@@ -294,9 +295,9 @@ export default function LoginPage({ setView }) {
                       placeholder="+91 98765 43210"
                       style={{
                         width: "100%", padding: "12px 16px 12px 48px",
-                        background: `${COLORS.navy}F0`,
-                        border: `1px solid ${COLORS.border}`,
-                        borderRadius: 12, color: COLORS.white,
+                        background: `${colors.navy}F0`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 12, color: colors.white,
                         fontSize: 14, outline: "none"
                       }}
                     />
@@ -305,7 +306,7 @@ export default function LoginPage({ setView }) {
 
                 <div>
                   <label style={{ 
-                    display: "block", color: COLORS.white, 
+                    display: "block", color: colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Role
@@ -316,15 +317,15 @@ export default function LoginPage({ setView }) {
                     onChange={handleChange}
                     style={{
                       width: "100%", padding: "12px 16px",
-                      background: `${COLORS.navy}F0`,
-                      border: `1px solid ${COLORS.border}`,
-                      borderRadius: 12, color: COLORS.white,
+                      background: `${colors.navy}F0`,
+                      border: `1px solid ${colors.border}`,
+                      borderRadius: 12, color: colors.white,
                       fontSize: 14, outline: "none"
                     }}
                   >
-                    <option value="patient" style={{ background: COLORS.navy }}>Patient</option>
-                    <option value="admin" style={{ background: COLORS.navy }}>Clinic Admin</option>
-                    <option value="superadmin" style={{ background: COLORS.navy }}>Super Admin</option>
+                    <option value="patient" style={{ background: colors.navy }}>Patient</option>
+                    <option value="admin" style={{ background: colors.navy }}>Clinic Admin</option>
+                    <option value="superadmin" style={{ background: colors.navy }}>Super Admin</option>
                   </select>
                 </div>
               </>
@@ -333,13 +334,13 @@ export default function LoginPage({ setView }) {
             {/* Email */}
             <div>
               <label style={{ 
-                display: "block", color: COLORS.white, 
+                display: "block", color: colors.white, 
                 fontSize: 14, fontWeight: 500, marginBottom: 8 
               }}>
                 Email Address
               </label>
               <div style={{ position: "relative" }}>
-                <Mail size={20} color={COLORS.slate} style={{
+                <Mail size={20} color={colors.slate} style={{
                   position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)"
                 }} />
                 <input
@@ -351,9 +352,9 @@ export default function LoginPage({ setView }) {
                   placeholder="your@email.com"
                   style={{
                     width: "100%", padding: "12px 16px 12px 48px",
-                    background: `${COLORS.navy}F0`,
-                    border: `1px solid ${COLORS.border}`,
-                    borderRadius: 12, color: COLORS.white,
+                    background: `${colors.navy}F0`,
+                    border: `1px solid ${colors.border}`,
+                    borderRadius: 12, color: colors.white,
                     fontSize: 14, outline: "none"
                   }}
                 />
@@ -363,13 +364,13 @@ export default function LoginPage({ setView }) {
             {/* Password */}
             <div>
               <label style={{ 
-                display: "block", color: COLORS.white, 
+                display: "block", color: colors.white, 
                 fontSize: 14, fontWeight: 500, marginBottom: 8 
               }}>
                 Password
               </label>
               <div style={{ position: "relative" }}>
-                <Lock size={20} color={COLORS.slate} style={{
+                <Lock size={20} color={colors.slate} style={{
                   position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)"
                 }} />
                 <input
@@ -381,9 +382,9 @@ export default function LoginPage({ setView }) {
                   placeholder="Enter your password"
                   style={{
                     width: "100%", padding: "12px 16px 12px 48px",
-                    background: `${COLORS.navy}F0`,
-                    border: `1px solid ${COLORS.border}`,
-                    borderRadius: 12, color: COLORS.white,
+                    background: `${colors.navy}F0`,
+                    border: `1px solid ${colors.border}`,
+                    borderRadius: 12, color: colors.white,
                     fontSize: 14, outline: "none"
                   }}
                 />
@@ -393,7 +394,7 @@ export default function LoginPage({ setView }) {
                   style={{
                     position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)",
                     background: "none", border: "none", cursor: "pointer",
-                    color: COLORS.slate
+                    color: colors.slate
                   }}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -404,10 +405,10 @@ export default function LoginPage({ setView }) {
             {/* Error Message */}
             {error && (
               <div style={{
-                background: `${COLORS.gold}15`,
-                border: `1px solid ${COLORS.gold}30`,
+                background: `${colors.gold}15`,
+                border: `1px solid ${colors.gold}30`,
                 borderRadius: 8, padding: 12,
-                color: COLORS.gold, fontSize: 13
+                color: colors.gold, fontSize: 13
               }}>
                 {error}
               </div>
@@ -419,9 +420,9 @@ export default function LoginPage({ setView }) {
               disabled={loading}
               style={{
                 padding: "14px",
-                background: loading ? `${COLORS.teal}50` : `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                background: loading ? `${colors.teal}50` : `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                 border: "none", borderRadius: 12,
-                color: COLORS.white, fontSize: 16, fontWeight: 600,
+                color: colors.white, fontSize: 16, fontWeight: 600,
                 cursor: loading ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 transition: "all 0.2s ease"
@@ -442,14 +443,14 @@ export default function LoginPage({ setView }) {
           {isLogin && (
             <div style={{
               marginTop: 24, padding: 16,
-              background: `${COLORS.teal}10`,
-              border: `1px solid ${COLORS.teal}30`,
+              background: `${colors.teal}10`,
+              border: `1px solid ${colors.teal}30`,
               borderRadius: 12
             }}>
-              <h4 style={{ color: COLORS.teal, fontSize: 12, fontWeight: 600, marginBottom: 8 }}>
+              <h4 style={{ color: colors.teal, fontSize: 12, fontWeight: 600, marginBottom: 8 }}>
                 Demo Credentials
               </h4>
-              <div style={{ fontSize: 11, color: COLORS.slate, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 11, color: colors.slate, lineHeight: 1.6 }}>
                 <div><strong>Patient:</strong> patient@clinic.com / patient123</div>
                 <div><strong>Admin:</strong> admin@clinic.com / admin123</div>
                 <div><strong>Super Admin:</strong> superadmin@clinic.com / super123</div>

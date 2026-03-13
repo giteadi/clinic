@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
-import { COLORS } from '../../constants/colors';
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeContext";
 
-export default function BackButton({ onClick, style = {}, text = "Back" }) {
+export default function BackButton({ onClick, text = "Back", style = {} }) {
+  const { colors } = useTheme();
+  
   return (
     <motion.button
       onClick={onClick}
@@ -10,18 +12,18 @@ export default function BackButton({ onClick, style = {}, text = "Back" }) {
         display: "flex",
         alignItems: "center",
         gap: 8,
-        background: `${COLORS.teal}15`,
-        border: `1px solid ${COLORS.teal}30`,
+        background: `${colors.teal}15`,
+        border: `1px solid ${colors.teal}30`,
         borderRadius: 8,
         padding: "8px 16px",
         cursor: "pointer",
-        color: COLORS.teal,
+        color: colors.teal,
         fontSize: 14,
         fontWeight: 600,
         transition: "all 0.2s",
         ...style
       }}
-      whileHover={{ scale: 1.05, backgroundColor: `${COLORS.teal}25` }}
+      whileHover={{ scale: 1.05, backgroundColor: `${colors.teal}25` }}
       whileTap={{ scale: 0.95 }}
     >
       <ArrowLeft size={16} />

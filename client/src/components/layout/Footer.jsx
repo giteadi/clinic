@@ -17,10 +17,11 @@ import {
   Award,
   ChevronRight
 } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import Link from "../common/Link";
 
 export default function Footer() {
+  const { colors } = useTheme();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e) => {
@@ -89,7 +90,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{ background: COLORS.navy, borderTop: `1px solid ${COLORS.border}` }}>
+    <footer style={{ background: colors.navy, borderTop: `1px solid ${colors.border}` }}>
       {/* Main Footer Content */}
       <div style={{ padding: "60px 32px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -109,7 +110,7 @@ export default function Footer() {
                   width: 40, 
                   height: 40, 
                   borderRadius: 10, 
-                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`, 
+                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`, 
                   display: "flex", 
                   alignItems: "center", 
                   justifyContent: "center" 
@@ -121,16 +122,16 @@ export default function Footer() {
                     fontFamily: "'Playfair Display', serif", 
                     fontSize: 22, 
                     fontWeight: 700, 
-                    color: COLORS.white,
+                    color: colors.white,
                     marginBottom: 2
                   }}>
-                    Cliniq<span style={{ color: COLORS.teal }}>Pro</span>
+                    Cliniq<span style={{ color: colors.teal }}>Pro</span>
                   </h3>
-                  <p style={{ color: COLORS.slate, fontSize: 12 }}>Modern Healthcare Solution</p>
+                  <p style={{ color: colors.slate, fontSize: 12 }}>Modern Healthcare Solution</p>
                 </div>
               </div>
               
-              <p style={{ color: COLORS.slate, fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>
+              <p style={{ color: colors.slate, fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>
                 Your trusted partner for comprehensive healthcare services. 
                 Connecting patients with qualified doctors across India.
               </p>
@@ -144,17 +145,17 @@ export default function Footer() {
                       <div style={{
                         width: 32,
                         height: 32,
-                        background: `${COLORS.teal}15`,
+                        background: `${colors.teal}15`,
                         borderRadius: 6,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center"
                       }}>
-                        <Icon size={16} color={COLORS.teal} />
+                        <Icon size={16} color={colors.teal} />
                       </div>
                       <div>
-                        <p style={{ color: COLORS.white, fontSize: 14, margin: 0 }}>{info.text}</p>
-                        <p style={{ color: COLORS.slate, fontSize: 11, margin: 0 }}>{info.label}</p>
+                        <p style={{ color: colors.white, fontSize: 14, margin: 0 }}>{info.text}</p>
+                        <p style={{ color: colors.slate, fontSize: 11, margin: 0 }}>{info.label}</p>
                       </div>
                     </div>
                   );
@@ -169,13 +170,13 @@ export default function Footer() {
                     <motion.a
                       key={index}
                       href={social.href}
-                      whileHover={{ scale: 1.1, backgroundColor: `${COLORS.teal}20` }}
+                      whileHover={{ scale: 1.1, backgroundColor: `${colors.teal}20` }}
                       whileTap={{ scale: 0.95 }}
                       style={{
                         width: 36,
                         height: 36,
                         background: "#0f172a",
-                        border: `1px solid ${COLORS.border}`,
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         display: "flex",
                         alignItems: "center",
@@ -185,7 +186,7 @@ export default function Footer() {
                       }}
                       aria-label={social.label}
                     >
-                      <Icon size={16} color={COLORS.slate} />
+                      <Icon size={16} color={colors.slate} />
                     </motion.a>
                   );
                 })}
@@ -196,7 +197,7 @@ export default function Footer() {
             {footerSections.map((section, index) => (
               <div key={index}>
                 <h4 style={{ 
-                  color: COLORS.white, 
+                  color: colors.white, 
                   fontSize: 16, 
                   fontWeight: 600, 
                   marginBottom: 20,
@@ -210,7 +211,7 @@ export default function Footer() {
                       key={linkIndex}
                       href={link.href}
                       style={{
-                        color: COLORS.slate,
+                        color: colors.slate,
                         fontSize: 14,
                         textDecoration: "none",
                         display: "flex",
@@ -219,11 +220,11 @@ export default function Footer() {
                         transition: "all 0.2s"
                       }}
                       onMouseEnter={(e) => {
-                        e.target.style.color = COLORS.teal;
+                        e.target.style.color = colors.teal;
                         e.target.style.transform = "translateX(4px)";
                       }}
                       onMouseLeave={(e) => {
-                        e.target.style.color = COLORS.slate;
+                        e.target.style.color = colors.slate;
                         e.target.style.transform = "translateX(0)";
                       }}
                     >
@@ -238,7 +239,7 @@ export default function Footer() {
             {/* Newsletter Column */}
             <div>
               <h4 style={{ 
-                color: COLORS.white, 
+                color: colors.white, 
                 fontSize: 16, 
                 fontWeight: 600, 
                 marginBottom: 20,
@@ -246,7 +247,7 @@ export default function Footer() {
               }}>
                 Stay Updated
               </h4>
-              <p style={{ color: COLORS.slate, fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
+              <p style={{ color: colors.slate, fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
                 Subscribe to our newsletter for health tips and exclusive offers.
               </p>
               
@@ -259,10 +260,10 @@ export default function Footer() {
                   required
                   style={{
                     background: "#0f172a",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     outline: "none"
                   }}
@@ -272,12 +273,12 @@ export default function Footer() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   style={{
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 8,
                     padding: "12px 20px",
                     cursor: "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     fontWeight: 600,
                     display: "flex",
@@ -307,14 +308,14 @@ export default function Footer() {
                         display: "flex",
                         alignItems: "center",
                         gap: 6,
-                        background: `${COLORS.teal}15`,
+                        background: `${colors.teal}15`,
                         padding: "6px 12px",
                         borderRadius: 20,
-                        border: `1px solid ${COLORS.teal}30`
+                        border: `1px solid ${colors.teal}30`
                       }}
                     >
-                      <Icon size={12} color={COLORS.teal} />
-                      <span style={{ color: COLORS.teal, fontSize: 11, fontWeight: 600 }}>
+                      <Icon size={12} color={colors.teal} />
+                      <span style={{ color: colors.teal, fontSize: 11, fontWeight: 600 }}>
                         {badge.text}
                       </span>
                     </div>
@@ -327,7 +328,7 @@ export default function Footer() {
           {/* Features Row */}
           <div style={{
             background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            border: `1px solid ${colors.border}`,
             borderRadius: 12,
             padding: 24,
             marginBottom: 40
@@ -349,20 +350,20 @@ export default function Footer() {
                     <div style={{
                       width: 40,
                       height: 40,
-                      background: `${COLORS.teal}15`,
+                      background: `${colors.teal}15`,
                       borderRadius: 8,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       flexShrink: 0
                     }}>
-                      <Icon size={20} color={COLORS.teal} />
+                      <Icon size={20} color={colors.teal} />
                     </div>
                     <div>
-                      <h4 style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
+                      <h4 style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
                         {feature.title}
                       </h4>
-                      <p style={{ color: COLORS.slate, fontSize: 12, margin: 0 }}>
+                      <p style={{ color: colors.slate, fontSize: 12, margin: 0 }}>
                         {feature.desc}
                       </p>
                     </div>
@@ -377,7 +378,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div style={{
         background: "#0a0f1f",
-        borderTop: `1px solid ${COLORS.border}`,
+        borderTop: `1px solid ${colors.border}`,
         padding: "20px 32px"
       }}>
         <div style={{
@@ -389,8 +390,8 @@ export default function Footer() {
           flexWrap: "wrap",
           gap: 20
         }}>
-          <div style={{ color: COLORS.slate, fontSize: 13 }}>
-            © 2025 CliniqPro. All rights reserved. Built with <Heart size={12} color={COLORS.teal} /> for modern healthcare.
+          <div style={{ color: colors.slate, fontSize: 13 }}>
+            © 2025 CliniqPro. All rights reserved. Built with <Heart size={12} color={colors.teal} /> for modern healthcare.
           </div>
           
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
@@ -400,10 +401,10 @@ export default function Footer() {
               "GDPR Ready"
             ].map((cert, index) => (
               <span key={index} style={{
-                color: COLORS.teal,
+                color: colors.teal,
                 fontSize: 11,
                 fontWeight: 600,
-                background: `${COLORS.teal}15`,
+                background: `${colors.teal}15`,
                 padding: "4px 8px",
                 borderRadius: 4
               }}>

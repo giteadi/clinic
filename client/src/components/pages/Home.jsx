@@ -16,10 +16,11 @@ import {
   Award,
   TrendingUp
 } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import Avatar from "../common/Avatar";
 
 export default function Home({ setView }) {
+  const { colors } = useTheme();
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   const features = [
@@ -27,13 +28,13 @@ export default function Home({ setView }) {
       icon: Stethoscope,
       title: "Expert Doctors",
       description: "Qualified and experienced healthcare professionals",
-      color: COLORS.teal
+      color: colors.teal
     },
     {
       icon: Calendar,
       title: "Easy Booking",
       description: "Book appointments online in just a few clicks",
-      color: COLORS.gold
+      color: colors.gold
     },
     {
       icon: Shield,
@@ -87,7 +88,7 @@ export default function Home({ setView }) {
       experience: "10+ years",
       rating: 4.8,
       image: "SJ",
-      color: COLORS.teal
+      color: colors.teal
     },
     {
       name: "Dr. Rahul Mehta",
@@ -108,7 +109,7 @@ export default function Home({ setView }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy }}>
+    <div style={{ minHeight: "100vh", background: colors.navy }}>
       
       {/* Hero Section */}
       <section style={{
@@ -127,7 +128,7 @@ export default function Home({ setView }) {
           width: 400,
           height: 400,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${COLORS.teal}12, transparent 70%)`,
+          background: `radial-gradient(circle, ${colors.teal}12, transparent 70%)`,
           pointerEvents: "none"
         }} />
         <div style={{
@@ -137,7 +138,7 @@ export default function Home({ setView }) {
           width: 350,
           height: 350,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${COLORS.gold}10, transparent 70%)`,
+          background: `radial-gradient(circle, ${colors.gold}10, transparent 70%)`,
           pointerEvents: "none"
         }} />
 
@@ -154,14 +155,14 @@ export default function Home({ setView }) {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                background: `${COLORS.teal}18`,
-                border: `1px solid ${COLORS.teal}30`,
+                background: `${colors.teal}18`,
+                border: `1px solid ${colors.teal}30`,
                 borderRadius: 30,
                 padding: "6px 16px",
                 marginBottom: 24
               }}>
-                <TrendingUp size={16} color={COLORS.teal} />
-                <span style={{ color: COLORS.teal, fontSize: 12, fontWeight: 600 }}>
+                <TrendingUp size={16} color={colors.teal} />
+                <span style={{ color: colors.teal, fontSize: 12, fontWeight: 600 }}>
                   TRUSTED BY 50,000+ PATIENTS
                 </span>
               </div>
@@ -169,18 +170,18 @@ export default function Home({ setView }) {
               <h1 style={{
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(36px, 5vw, 56px)",
-                color: COLORS.white,
+                color: colors.white,
                 fontWeight: 700,
                 lineHeight: 1.2,
                 marginBottom: 24
               }}>
                 Your Health,
                 <br />
-                <span style={{ color: COLORS.teal }}>Our Priority</span>
+                <span style={{ color: colors.teal }}>Our Priority</span>
               </h1>
 
               <p style={{
-                color: COLORS.slate,
+                color: colors.slate,
                 fontSize: 18,
                 lineHeight: 1.6,
                 marginBottom: 40
@@ -194,12 +195,12 @@ export default function Home({ setView }) {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setView("clinic-selection")}
                   style={{
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 12,
                     padding: "16px 32px",
                     cursor: "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 16,
                     fontWeight: 600,
                     display: "flex",
@@ -217,11 +218,11 @@ export default function Home({ setView }) {
                   onClick={() => setView("doctors")}
                   style={{
                     background: "none",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 12,
                     padding: "16px 32px",
                     cursor: "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 16,
                     fontWeight: 600,
                     display: "flex",
@@ -243,12 +244,12 @@ export default function Home({ setView }) {
                 {stats.slice(0, 3).map((stat, index) => (
                   <div key={index}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-                      <stat.icon size={20} color={COLORS.teal} />
-                      <span style={{ color: COLORS.white, fontSize: 28, fontWeight: 700 }}>
+                      <stat.icon size={20} color={colors.teal} />
+                      <span style={{ color: colors.white, fontSize: 28, fontWeight: 700 }}>
                         {stat.value}
                       </span>
                     </div>
-                    <p style={{ color: COLORS.slate, fontSize: 14, margin: 0 }}>
+                    <p style={{ color: colors.slate, fontSize: 14, margin: 0 }}>
                       {stat.label}
                     </p>
                   </div>
@@ -286,7 +287,7 @@ export default function Home({ setView }) {
                   <div style={{
                     width: 120,
                     height: 120,
-                    background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     borderRadius: "50%",
                     display: "flex",
                     alignItems: "center",
@@ -296,10 +297,10 @@ export default function Home({ setView }) {
                   }}>
                     💙
                   </div>
-                  <h3 style={{ color: COLORS.white, fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
+                  <h3 style={{ color: colors.white, fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
                     CliniQ Pro
                   </h3>
-                  <p style={{ color: COLORS.slate, fontSize: 16 }}>
+                  <p style={{ color: colors.slate, fontSize: 16 }}>
                     Modern Healthcare Solution
                   </p>
                 </div>
@@ -347,7 +348,7 @@ export default function Home({ setView }) {
                   transition={{ delay: index * 0.1 }}
                   style={{
                     background: "#0f172a",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 16,
                     padding: 32,
                     textAlign: "center"
@@ -365,10 +366,10 @@ export default function Home({ setView }) {
                   }}>
                     <Icon size={28} color={feature.color} />
                   </div>
-                  <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
+                  <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
                     {feature.title}
                   </h3>
-                  <p style={{ color: COLORS.slate, fontSize: 14, lineHeight: 1.6 }}>
+                  <p style={{ color: colors.slate, fontSize: 14, lineHeight: 1.6 }}>
                     {feature.description}
                   </p>
                 </motion.div>
@@ -414,7 +415,7 @@ export default function Home({ setView }) {
                 transition={{ delay: index * 0.1 }}
                 style={{
                   background: "#0f172a",
-                  border: `1px solid ${COLORS.border}`,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 16,
                   padding: 24,
                   cursor: "pointer",
@@ -428,19 +429,19 @@ export default function Home({ setView }) {
                 onMouseLeave={(e) => {
                   e.target.style.transform = "translateY(0)";
                   e.target.style.boxShadow = "none";
-                  e.target.style.borderColor = COLORS.border;
+                  e.target.style.borderColor = colors.border;
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
                   <Avatar initials={doctor.image} color={doctor.color} size={60} />
                   <div>
-                    <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
+                    <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
                       {doctor.name}
                     </h3>
-                    <p style={{ color: COLORS.teal, fontSize: 14, marginBottom: 2 }}>
+                    <p style={{ color: colors.teal, fontSize: 14, marginBottom: 2 }}>
                       {doctor.specialty}
                     </p>
-                    <p style={{ color: COLORS.slate, fontSize: 12 }}>
+                    <p style={{ color: colors.slate, fontSize: 12 }}>
                       {doctor.experience}
                     </p>
                   </div>
@@ -448,8 +449,8 @@ export default function Home({ setView }) {
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Star size={16} color={COLORS.gold} />
-                    <span style={{ color: COLORS.white, fontSize: 16, fontWeight: 600 }}>
+                    <Star size={16} color={colors.gold} />
+                    <span style={{ color: colors.white, fontSize: 16, fontWeight: 600 }}>
                       {doctor.rating}
                     </span>
                   </div>
@@ -458,12 +459,12 @@ export default function Home({ setView }) {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setView("doctors")}
                     style={{
-                      background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                      background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                       border: "none",
                       borderRadius: 8,
                       padding: "8px 16px",
                       cursor: "pointer",
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14,
                       fontWeight: 600
                     }}
@@ -513,26 +514,26 @@ export default function Home({ setView }) {
                 transition={{ delay: index * 0.1 }}
                 style={{
                   background: "#0f172a",
-                  border: `1px solid ${COLORS.border}`,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 16,
                   padding: 32
                 }}
               >
                 <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={16} color={COLORS.gold} />
+                    <Star key={i} size={16} color={colors.gold} />
                   ))}
                 </div>
-                <p style={{ color: COLORS.white, fontSize: 16, lineHeight: 1.6, marginBottom: 24, fontStyle: "italic" }}>
+                <p style={{ color: colors.white, fontSize: 16, lineHeight: 1.6, marginBottom: 24, fontStyle: "italic" }}>
                   "{testimonial.content}"
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <Avatar initials={testimonial.avatar} color={COLORS.teal} size={40} />
+                  <Avatar initials={testimonial.avatar} color={colors.teal} size={40} />
                   <div>
-                    <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 2 }}>
+                    <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 2 }}>
                       {testimonial.name}
                     </h4>
-                    <p style={{ color: COLORS.slate, fontSize: 14, margin: 0 }}>
+                    <p style={{ color: colors.slate, fontSize: 14, margin: 0 }}>
                       {testimonial.role}
                     </p>
                   </div>
@@ -544,7 +545,7 @@ export default function Home({ setView }) {
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: "80px 20px", background: COLORS.navy }}>
+      <section style={{ padding: "80px 20px", background: colors.navy }}>
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -554,12 +555,12 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: COLORS.white,
+              color: colors.white,
               marginBottom: 24
             }}>
               Ready to Take Control of Your Health?
             </h2>
-            <p style={{ color: COLORS.slate, fontSize: 18, marginBottom: 40 }}>
+            <p style={{ color: colors.slate, fontSize: 18, marginBottom: 40 }}>
               Join thousands of satisfied patients who trust CliniQ Pro for their healthcare needs
             </p>
             <motion.button
@@ -567,12 +568,12 @@ export default function Home({ setView }) {
               whileTap={{ scale: 0.95 }}
               onClick={() => setView("clinic-selection")}
               style={{
-                background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                 border: "none",
                 borderRadius: 12,
                 padding: "16px 40px",
                 cursor: "pointer",
-                color: COLORS.white,
+                color: colors.white,
                 fontSize: 18,
                 fontWeight: 600,
                 display: "inline-flex",

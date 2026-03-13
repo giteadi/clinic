@@ -1,9 +1,10 @@
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 
-export default function Badge({ children, color = COLORS.teal }) {
+export default function Badge({ children, variant = 'default', size = 'medium' }) {
+  const { colors } = useTheme();
   return (
     <span style={{
-      background: `${color}18`, color,
+      background: `${colors.teal}18`, color: colors.teal,
       padding: "2px 10px", borderRadius: 20,
       fontSize: 11, fontWeight: 600, letterSpacing: 0.5
     }}>

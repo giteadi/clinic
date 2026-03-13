@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { BarChart3, TrendingUp, TrendingDown, Calendar, Download, Filter, FileText, Users, DollarSign, Activity, Clock } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 
 export default function ViewReportsPage({ setView }) {
+  const { colors } = useTheme();
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedReport, setSelectedReport] = useState("overview");
 
@@ -47,7 +48,7 @@ export default function ViewReportsPage({ setView }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -61,12 +62,12 @@ export default function ViewReportsPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: COLORS.white, 
+              color: colors.white, 
               marginBottom: 12 
             }}>
               View Reports
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>
+            <p style={{ color: colors.slate, fontSize: 16 }}>
               Access clinic reports and analytics
             </p>
           </motion.div>
@@ -78,11 +79,11 @@ export default function ViewReportsPage({ setView }) {
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
             style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -98,11 +99,11 @@ export default function ViewReportsPage({ setView }) {
             value={selectedReport}
             onChange={(e) => setSelectedReport(e.target.value)}
             style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -118,12 +119,12 @@ export default function ViewReportsPage({ setView }) {
             whileTap={{ scale: 0.98 }}
             onClick={() => handleDownloadReport(selectedReport)}
             style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none",
               borderRadius: 12,
               padding: "12px 20px",
               cursor: "pointer",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -145,7 +146,7 @@ export default function ViewReportsPage({ setView }) {
           <h2 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: 24, 
-            color: COLORS.white, 
+            color: colors.white, 
             marginBottom: 24,
             fontWeight: 700
           }}>
@@ -164,8 +165,8 @@ export default function ViewReportsPage({ setView }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 style={{
-                  background: "#0f172a",
-                  border: `1px solid ${COLORS.border}`,
+                  background: colors.background || colors.navyLight,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 16,
                   padding: 24,
                   position: "relative",
@@ -174,42 +175,42 @@ export default function ViewReportsPage({ setView }) {
                 onMouseEnter={(e) => {
                   e.target.style.transform = "translateY(-4px)";
                   e.target.style.boxShadow = "0 8px 25px rgba(0,0,0,0.3)";
-                  e.target.style.borderColor = COLORS.teal;
+                  e.target.style.borderColor = colors.teal;
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.transform = "translateY(0)";
                   e.target.style.boxShadow = "none";
-                  e.target.style.borderColor = COLORS.border;
+                  e.target.style.borderColor = colors.border;
                 }}
               >
                 <div style={{ 
                   position: "absolute", top: 0, right: 0, 
                   width: 60, height: 60, 
-                  background: `linear-gradient(135deg, ${COLORS.teal}08, transparent)`,
+                  background: `linear-gradient(135deg, ${colors.teal}08, transparent)`,
                   borderRadius: "0 16px 0 60px"
                 }} />
                 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
                   <div style={{ 
                     width: 48, height: 48, borderRadius: 12, 
-                    background: `${COLORS.teal}18`, 
+                    background: `${colors.teal}18`, 
                     display: "flex", alignItems: "center", justifyContent: "center" 
                   }}>
-                    <stat.icon size={24} color={COLORS.teal} />
+                    <stat.icon size={24} color={colors.teal} />
                   </div>
                   <div style={{
                     padding: "4px 8px", borderRadius: 20, fontSize: 11, fontWeight: 600,
-                    background: stat.trend === "up" ? `${COLORS.teal}18` : `${COLORS.gold}18`,
-                    color: stat.trend === "up" ? COLORS.teal : COLORS.gold
+                    background: stat.trend === "up" ? `${colors.teal}18` : `${colors.gold}18`,
+                    color: stat.trend === "up" ? colors.teal : colors.gold
                   }}>
                     {stat.change}
                   </div>
                 </div>
                 
-                <div style={{ color: COLORS.white, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
+                <div style={{ color: colors.white, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
                   {stat.value}
                 </div>
-                <div style={{ color: COLORS.slate, fontSize: 14 }}>
+                <div style={{ color: colors.slate, fontSize: 14 }}>
                   {stat.label}
                 </div>
               </motion.div>
@@ -229,14 +230,14 @@ export default function ViewReportsPage({ setView }) {
           }}
         >
           <div style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16,
             padding: 24,
             minHeight: 300
           }}>
             <h3 style={{ 
-              color: COLORS.white, 
+              color: colors.white, 
               fontSize: 18, 
               fontWeight: 600, 
               marginBottom: 20 
@@ -248,13 +249,13 @@ export default function ViewReportsPage({ setView }) {
               alignItems: "center",
               justifyContent: "center",
               height: 200,
-              background: `${COLORS.teal}08`,
+              background: `${colors.teal}08`,
               borderRadius: 12,
-              border: `2px dashed ${COLORS.teal}30`
+              border: `2px dashed ${colors.teal}30`
             }}>
               <div style={{ textAlign: "center" }}>
-                <BarChart3 size={48} color={COLORS.teal} />
-                <p style={{ color: COLORS.slate, fontSize: 14, marginTop: 12 }}>
+                <BarChart3 size={48} color={colors.teal} />
+                <p style={{ color: colors.slate, fontSize: 14, marginTop: 12 }}>
                   Chart visualization would go here
                 </p>
               </div>
@@ -262,14 +263,14 @@ export default function ViewReportsPage({ setView }) {
           </div>
 
           <div style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16,
             padding: 24,
             minHeight: 300
           }}>
             <h3 style={{ 
-              color: COLORS.white, 
+              color: colors.white, 
               fontSize: 18, 
               fontWeight: 600, 
               marginBottom: 20 
@@ -281,13 +282,13 @@ export default function ViewReportsPage({ setView }) {
               alignItems: "center",
               justifyContent: "center",
               height: 200,
-              background: `${COLORS.gold}08`,
+              background: `${colors.gold}08`,
               borderRadius: 12,
-              border: `2px dashed ${COLORS.gold}30`
+              border: `2px dashed ${colors.gold}30`
             }}>
               <div style={{ textAlign: "center" }}>
-                <Users size={48} color={COLORS.gold} />
-                <p style={{ color: COLORS.slate, fontSize: 14, marginTop: 12 }}>
+                <Users size={48} color={colors.gold} />
+                <p style={{ color: colors.slate, fontSize: 14, marginTop: 12 }}>
                   Patient demographics chart
                 </p>
               </div>
