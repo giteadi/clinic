@@ -34,7 +34,7 @@ import Link from "../common/Link";
 import BackButton from "../common/BackButton";
 
 export default function SystemControls({ activeTab: initialTab = "clinics", setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showAddClinicModal, setShowAddClinicModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -222,7 +222,7 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
 
       <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
         <div style={{ flex: 1, position: "relative" }}>
-          <Search size={18} color={colors.slate} style={{ position: "absolute", left: 12, top: 12 }} />
+          <Search size={18} color={theme === 'white' ? '#4a5568' : colors.slate} style={{ position: "absolute", left: 12, top: 12 }} />
           <input
             type="text"
             placeholder="Search clinics..."
@@ -262,12 +262,12 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: colors.background || colors.navyLight, borderBottom: `1px solid ${colors.border}` }}>
-              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Clinic Name</th>
-              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Status</th>
-              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Doctors</th>
-              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Patients</th>
-              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Revenue</th>
-              <th style={{ padding: 16, textAlign: "left", color: colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Actions</th>
+              <th style={{ padding: 16, textAlign: "left", color: theme === 'white' ? '#1a202c' : colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Clinic Name</th>
+              <th style={{ padding: 16, textAlign: "left", color: theme === 'white' ? '#1a202c' : colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Status</th>
+              <th style={{ padding: 16, textAlign: "left", color: theme === 'white' ? '#1a202c' : colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Doctors</th>
+              <th style={{ padding: 16, textAlign: "left", color: theme === 'white' ? '#1a202c' : colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Patients</th>
+              <th style={{ padding: 16, textAlign: "left", color: theme === 'white' ? '#1a202c' : colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Revenue</th>
+              <th style={{ padding: 16, textAlign: "left", color: theme === 'white' ? '#1a202c' : colors.slate, fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -291,10 +291,10 @@ export default function SystemControls({ activeTab: initialTab = "clinics", setV
                 <td style={{ padding: 16, color: colors.white, fontSize: 14 }}>{clinic.revenue}</td>
                 <td style={{ padding: 16 }}>
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.slate }}>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: theme === 'white' ? '#4a5568' : colors.slate }}>
                       <Eye size={16} />
                     </button>
-                    <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.slate }}>
+                    <button style={{ background: "none", border: "none", cursor: "pointer", color: theme === 'white' ? '#4a5568' : colors.slate }}>
                       <Edit size={16} />
                     </button>
                     <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.red }}>

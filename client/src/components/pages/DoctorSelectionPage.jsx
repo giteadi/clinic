@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, Star, Users, Clock, Calendar, Phone, Mail, ArrowLeft, Filter, Heart, MapPin } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function DoctorSelectionPage({ setView }) {
+  const { colors, theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
   const [selectedClinic, setSelectedClinic] = useState(null);
@@ -34,7 +35,7 @@ export default function DoctorSelectionPage({ setView }) {
             tomorrow: ["9:00 AM", "11:00 AM", "2:00 PM", "3:00 PM", "5:00 PM"]
           },
           image: "SJ",
-          color: COLORS.teal,
+          color: colors.teal,
           languages: ["English", "Hindi"],
           nextAvailable: "Today, 9:00 AM"
         },
@@ -115,16 +116,16 @@ export default function DoctorSelectionPage({ setView }) {
 
   if (!selectedClinic) {
     return (
-      <div style={{ minHeight: "100vh", background: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
-          <p style={{ color: COLORS.slate, fontSize: 16 }}>Loading clinic information...</p>
+          <p style={{ color: colors.slate, fontSize: 16 }}>Loading clinic information...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header with Clinic Info */}
@@ -138,7 +139,7 @@ export default function DoctorSelectionPage({ setView }) {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{
               background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: 16,
               padding: 24,
               marginBottom: 24
@@ -148,12 +149,12 @@ export default function DoctorSelectionPage({ setView }) {
                   <h2 style={{ 
                     fontFamily: "'Playfair Display', serif", 
                     fontSize: 24, 
-                    color: COLORS.white, 
+                    color: colors.white, 
                     marginBottom: 8 
                   }}>
                     {selectedClinic.name}
                   </h2>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: COLORS.slate, fontSize: 14 }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: colors.slate, fontSize: 14 }}>
                     <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <MapPin size={16} />
                       {selectedClinic.address}
@@ -170,12 +171,12 @@ export default function DoctorSelectionPage({ setView }) {
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <Star size={16} color={COLORS.gold} />
-                    <span style={{ color: COLORS.white, fontSize: 18, fontWeight: 600 }}>
+                    <Star size={16} color={colors.gold} />
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 18, fontWeight: 600 }}>
                       {selectedClinic.rating}
                     </span>
                   </div>
-                  <p style={{ color: COLORS.slate, fontSize: 12 }}>
+                  <p style={{ color: colors.slate, fontSize: 12 }}>
                     {selectedClinic.doctors} doctors available
                   </p>
                 </div>
@@ -185,12 +186,12 @@ export default function DoctorSelectionPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: COLORS.white, 
+              color: colors.white, 
               marginBottom: 12 
             }}>
               Choose a Doctor
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>
+            <p style={{ color: colors.slate, fontSize: 16 }}>
               Select from our experienced healthcare professionals
             </p>
           </motion.div>
@@ -199,7 +200,7 @@ export default function DoctorSelectionPage({ setView }) {
         {/* Search and Filters */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20, marginBottom: 32 }}>
           <div style={{ position: "relative" }}>
-            <Search size={20} color={COLORS.slate} style={{ position: "absolute", left: 16, top: 14 }} />
+            <Search size={20} color={colors.slate} style={{ position: "absolute", left: 16, top: 14 }} />
             <input
               type="text"
               placeholder="Search doctors by name or specialty..."
@@ -208,10 +209,10 @@ export default function DoctorSelectionPage({ setView }) {
               style={{
                 width: "100%",
                 background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 12,
                 padding: "12px 16px 12px 48px",
-                color: COLORS.white,
+                color: colors.white,
                 fontSize: 14,
                 outline: "none"
               }}
@@ -223,10 +224,10 @@ export default function DoctorSelectionPage({ setView }) {
             onChange={(e) => setSelectedSpecialty(e.target.value)}
             style={{
               background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: COLORS.white,
+              color: colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -242,7 +243,7 @@ export default function DoctorSelectionPage({ setView }) {
 
         {/* Results Count */}
         <div style={{ marginBottom: 24 }}>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>
+          <p style={{ color: colors.slate, fontSize: 14 }}>
             Found {filteredDoctors.length} doctors
           </p>
         </div>
@@ -258,7 +259,7 @@ export default function DoctorSelectionPage({ setView }) {
               onClick={() => handleDoctorSelect(doctor)}
               style={{
                 background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 24,
                 cursor: "pointer",
@@ -267,12 +268,12 @@ export default function DoctorSelectionPage({ setView }) {
               onMouseEnter={(e) => {
                 e.target.style.transform = "translateY(-4px)";
                 e.target.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = COLORS.teal;
+                e.target.style.borderColor = colors.teal;
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = "translateY(0)";
                 e.target.style.boxShadow = "none";
-                e.target.style.borderColor = COLORS.border;
+                e.target.style.borderColor = colors.border;
               }}
             >
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
@@ -287,39 +288,39 @@ export default function DoctorSelectionPage({ setView }) {
                 {/* Doctor Info */}
                 <div style={{ flex: 1 }}>
                   <div style={{ marginBottom: 12 }}>
-                    <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 4 }}>
+                    <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, fontWeight: 600, marginBottom: 4 }}>
                       {doctor.name}
                     </h3>
-                    <p style={{ color: COLORS.teal, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
+                    <p style={{ color: colors.teal, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
                       {doctor.specialty}
                     </p>
-                    <p style={{ color: COLORS.slate, fontSize: 13, marginBottom: 8 }}>
+                    <p style={{ color: colors.slate, fontSize: 13, marginBottom: 8 }}>
                       {doctor.education}
                     </p>
                   </div>
 
                   <div style={{ display: "flex", gap: 24, marginBottom: 12 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Star size={16} color={COLORS.gold} />
-                      <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>
+                      <Star size={16} color={colors.gold} />
+                      <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                         {doctor.rating}
                       </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Users size={16} color={COLORS.slate} />
-                      <span style={{ color: COLORS.white, fontSize: 14 }}>
+                      <Users size={16} color={colors.slate} />
+                      <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                         {doctor.patients} patients
                       </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Clock size={16} color={COLORS.slate} />
-                      <span style={{ color: COLORS.white, fontSize: 14 }}>
+                      <Clock size={16} color={colors.slate} />
+                      <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                         {doctor.experience}
                       </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Calendar size={16} color={COLORS.slate} />
-                      <span style={{ color: COLORS.white, fontSize: 14 }}>
+                      <Calendar size={16} color={colors.slate} />
+                      <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                         Next: {doctor.nextAvailable}
                       </span>
                     </div>
@@ -327,8 +328,8 @@ export default function DoctorSelectionPage({ setView }) {
 
                   <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                     <div style={{
-                      background: `${COLORS.teal}15`,
-                      color: COLORS.teal,
+                      background: `${colors.teal}15`,
+                      color: colors.teal,
                       padding: "4px 12px",
                       borderRadius: 20,
                       fontSize: 12,
@@ -337,8 +338,8 @@ export default function DoctorSelectionPage({ setView }) {
                       {doctor.languages.join(", ")}
                     </div>
                     <div style={{
-                      background: `${COLORS.gold}15`,
-                      color: COLORS.gold,
+                      background: `${colors.gold}15`,
+                      color: colors.gold,
                       padding: "4px 12px",
                       borderRadius: 20,
                       fontSize: 12,
@@ -352,14 +353,14 @@ export default function DoctorSelectionPage({ setView }) {
                 {/* Action */}
                 <div style={{ textAlign: "right" }}>
                   <div style={{ marginBottom: 16 }}>
-                    <p style={{ color: COLORS.slate, fontSize: 12, marginBottom: 4 }}>Available Today</p>
+                    <p style={{ color: colors.slate, fontSize: 12, marginBottom: 4 }}>Available Today</p>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "flex-end", maxWidth: 200 }}>
                       {doctor.availability.today.slice(0, 3).map((slot, idx) => (
                         <span
                           key={idx}
                           style={{
-                            background: `${COLORS.teal}15`,
-                            color: COLORS.teal,
+                            background: `${colors.teal}15`,
+                            color: colors.teal,
                             padding: "2px 8px",
                             borderRadius: 12,
                             fontSize: 11,
@@ -370,7 +371,7 @@ export default function DoctorSelectionPage({ setView }) {
                         </span>
                       ))}
                       {doctor.availability.today.length > 3 && (
-                        <span style={{ color: COLORS.slate, fontSize: 11 }}>
+                        <span style={{ color: colors.slate, fontSize: 11 }}>
                           +{doctor.availability.today.length - 3} more
                         </span>
                       )}
@@ -385,12 +386,12 @@ export default function DoctorSelectionPage({ setView }) {
                       handleDoctorSelect(doctor);
                     }}
                     style={{
-                      background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                      background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                       border: "none",
                       borderRadius: 8,
                       padding: "10px 20px",
                       cursor: "pointer",
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14,
                       fontWeight: 600,
                       display: "flex",
@@ -412,15 +413,15 @@ export default function DoctorSelectionPage({ setView }) {
           <div style={{
             textAlign: "center",
             padding: "60px 20px",
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: theme === 'white' ? colors.white : colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>👨‍⚕️</div>
-            <h3 style={{ color: COLORS.white, fontSize: 20, marginBottom: 8 }}>
+            <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, marginBottom: 8 }}>
               No doctors found
             </h3>
-            <p style={{ color: COLORS.slate, fontSize: 14 }}>
+            <p style={{ color: colors.slate, fontSize: 14 }}>
               Try adjusting your search criteria or filters
             </p>
           </div>

@@ -6,7 +6,7 @@ import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function AdminBookAppointmentPage({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
 
@@ -129,7 +129,7 @@ export default function AdminBookAppointmentPage({ setView }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -143,7 +143,7 @@ export default function AdminBookAppointmentPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: colors.white, 
+              color: theme === 'white' ? '#1a202c' : colors.white, 
               marginBottom: 12 
             }}>
               Book Appointment
@@ -178,7 +178,7 @@ export default function AdminBookAppointmentPage({ setView }) {
             {adminClinic.image}
           </div>
           <div style={{ flex: 1 }}>
-            <h2 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 8 }}>
+            <h2 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, fontWeight: 600, marginBottom: 8 }}>
               {adminClinic.name}
             </h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: colors.slate, fontSize: 14 }}>
@@ -202,7 +202,7 @@ export default function AdminBookAppointmentPage({ setView }) {
               marginBottom: 4, justifyContent: "flex-end" 
             }}>
               <Star size={16} color={colors.gold} fill={colors.gold} />
-              <span style={{ color: colors.white, fontWeight: 600 }}>{adminClinic.rating}</span>
+              <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontWeight: 600 }}>{adminClinic.rating}</span>
             </div>
             <div style={{ color: colors.slate, fontSize: 12 }}>
               {adminClinic.doctors} doctors
@@ -327,7 +327,7 @@ export default function AdminBookAppointmentPage({ setView }) {
                   {doctor.image}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
+                  <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
                     {doctor.name}
                   </h3>
                   <p style={{ color: colors.teal, fontSize: 14, fontWeight: 500, marginBottom: 2 }}>
@@ -347,19 +347,19 @@ export default function AdminBookAppointmentPage({ setView }) {
               }}>
                 <div>
                   <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Experience</p>
-                  <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+                  <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
                     {doctor.experience}
                   </p>
                 </div>
                 <div>
                   <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Patients</p>
-                  <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+                  <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
                     {doctor.patients.toLocaleString()}
                   </p>
                 </div>
                 <div>
                   <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Fee</p>
-                  <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+                  <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
                     ₹{doctor.consultationFee}
                   </p>
                 </div>
@@ -367,7 +367,7 @@ export default function AdminBookAppointmentPage({ setView }) {
                   <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Rating</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <Star size={12} color={colors.gold} fill={colors.gold} />
-                    <span style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
                       {doctor.rating}
                     </span>
                   </div>
@@ -447,7 +447,7 @@ export default function AdminBookAppointmentPage({ setView }) {
             borderRadius: 16
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>👨‍⚕️</div>
-            <h3 style={{ color: colors.white, fontSize: 20, marginBottom: 8 }}>
+            <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, marginBottom: 8 }}>
               No doctors found
             </h3>
             <p style={{ color: colors.slate, fontSize: 14 }}>

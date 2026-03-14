@@ -6,7 +6,7 @@ import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function DoctorBookingPage({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [selectedDate, setSelectedDate] = useState("today");
@@ -95,7 +95,7 @@ export default function DoctorBookingPage({ setView }) {
   if (!selectedDoctor || !selectedClinic) {
     console.log('DoctorBookingPage Debug - Rendering loading state:', { selectedDoctor, selectedClinic });
     return (
-      <div style={{ minHeight: "100vh", background: colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: colors.slate, fontSize: 16 }}>Loading booking information...</p>
         </div>
@@ -104,7 +104,7 @@ export default function DoctorBookingPage({ setView }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -119,7 +119,7 @@ export default function DoctorBookingPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: colors.white, 
+              color: theme === 'white' ? '#1a202c' : colors.white, 
               marginBottom: 12 
             }}>
               Book Appointment
@@ -143,7 +143,7 @@ export default function DoctorBookingPage({ setView }) {
                 height: 32,
                 borderRadius: "50%",
                 background: bookingStep >= item.step ? colors.teal : "#374151",
-                color: colors.white,
+                color: theme === 'white' ? '#ffffff' : colors.white,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -153,7 +153,7 @@ export default function DoctorBookingPage({ setView }) {
                 {bookingStep > item.step ? <CheckCircle size={16} /> : item.step}
               </div>
               <span style={{
-                color: bookingStep >= item.step ? colors.white : colors.slate,
+                color: bookingStep >= item.step ? (theme === 'white' ? '#1a202c' : colors.white) : (theme === 'white' ? '#2d3748' : colors.slate),
                 fontSize: 14,
                 fontWeight: bookingStep >= item.step ? 600 : 400
               }}>
@@ -183,7 +183,7 @@ export default function DoctorBookingPage({ setView }) {
             <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
               <Avatar initials={selectedDoctor.image} color={selectedDoctor.color} size={60} />
               <div style={{ flex: 1 }}>
-                <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
+                <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
                   {selectedDoctor.name}
                 </h3>
                 <p style={{ color: colors.teal, fontSize: 14, marginBottom: 2 }}>
@@ -213,7 +213,7 @@ export default function DoctorBookingPage({ setView }) {
               padding: 24,
               marginBottom: 32
             }}>
-              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+              <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
                 Select Appointment Time
               </h3>
               
@@ -231,7 +231,7 @@ export default function DoctorBookingPage({ setView }) {
                     transition: "all 0.2s"
                   }}
                 >
-                  <div style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                  <div style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
                     Today
                   </div>
                   <div style={{ color: colors.slate, fontSize: 12 }}>
@@ -251,7 +251,7 @@ export default function DoctorBookingPage({ setView }) {
                     transition: "all 0.2s"
                   }}
                 >
-                  <div style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                  <div style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
                     Tomorrow
                   </div>
                   <div style={{ color: colors.slate, fontSize: 12 }}>
@@ -262,7 +262,7 @@ export default function DoctorBookingPage({ setView }) {
 
               {/* Time Slots */}
               <div>
-                <h4 style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+                <h4 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
                   Available Time Slots
                 </h4>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 12 }}>
@@ -278,7 +278,7 @@ export default function DoctorBookingPage({ setView }) {
                         borderRadius: 8,
                         padding: "12px",
                         cursor: "pointer",
-                        color: colors.white,
+                        color: theme === 'white' ? '#1a202c' : colors.white,
                         fontSize: 14,
                         fontWeight: 600,
                         display: "flex",
@@ -307,14 +307,14 @@ export default function DoctorBookingPage({ setView }) {
               padding: 24,
               marginBottom: 32
             }}>
-              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+              <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
                 Patient Details
               </h3>
               
               <form onSubmit={handlePatientDetailsSubmit}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
                   <div>
-                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Full Name *
                     </label>
                     <input
@@ -328,7 +328,7 @@ export default function DoctorBookingPage({ setView }) {
                         border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: colors.white,
+                        color: theme === 'white' ? '#1a202c' : colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -337,7 +337,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Phone Number *
                     </label>
                     <input
@@ -351,7 +351,7 @@ export default function DoctorBookingPage({ setView }) {
                         border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: colors.white,
+                        color: theme === 'white' ? '#1a202c' : colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -360,7 +360,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Email Address *
                     </label>
                     <input
@@ -374,7 +374,7 @@ export default function DoctorBookingPage({ setView }) {
                         border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: colors.white,
+                        color: theme === 'white' ? '#1a202c' : colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -383,7 +383,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Age *
                     </label>
                     <input
@@ -399,7 +399,7 @@ export default function DoctorBookingPage({ setView }) {
                         border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: colors.white,
+                        color: theme === 'white' ? '#1a202c' : colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -408,7 +408,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Gender *
                     </label>
                     <select
@@ -421,7 +421,7 @@ export default function DoctorBookingPage({ setView }) {
                         border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: colors.white,
+                        color: theme === 'white' ? '#1a202c' : colors.white,
                         fontSize: 14,
                         cursor: "pointer",
                         outline: "none"
@@ -436,7 +436,7 @@ export default function DoctorBookingPage({ setView }) {
                 </div>
                 
                 <div style={{ marginTop: 20 }}>
-                  <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                  <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                     Reason for Visit
                   </label>
                   <textarea
@@ -444,11 +444,11 @@ export default function DoctorBookingPage({ setView }) {
                     onChange={(e) => setPatientDetails({...patientDetails, reason: e.target.value})}
                     style={{
                       width: "100%",
-                      background: "#111827",
+                      background: theme === 'white' ? colors.white : "#111827",
                       border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "12px",
-                      color: colors.white,
+                      color: theme === 'white' ? '#1a202c' : colors.white,
                       fontSize: 14,
                       outline: "none",
                       minHeight: 80,
@@ -507,7 +507,7 @@ export default function DoctorBookingPage({ setView }) {
               padding: 24,
               marginBottom: 32
             }}>
-              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+              <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
                 Booking Confirmation
               </h3>
               
@@ -521,25 +521,25 @@ export default function DoctorBookingPage({ setView }) {
               }}>
                 <div style={{ display: "grid", gap: 16 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Date & Time</span>
-                    <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Date & Time</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                       {selectedDate === "today" ? "Today" : "Tomorrow"}, {selectedTime}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Doctor</span>
-                    <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Doctor</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                       {selectedDoctor.name}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Clinic</span>
-                    <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Clinic</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                       {selectedClinic.name}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Consultation Fee</span>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Consultation Fee</span>
                     <span style={{ color: colors.gold, fontSize: 14, fontWeight: 600 }}>
                       {selectedDoctor.consultationFee}
                     </span>
@@ -555,31 +555,31 @@ export default function DoctorBookingPage({ setView }) {
                 padding: 20,
                 marginBottom: 24
               }}>
-                <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
+                <h4 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
                   Patient Information
                 </h4>
                 <div style={{ display: "grid", gap: 12 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Name</span>
-                    <span style={{ color: colors.white, fontSize: 14 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Name</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                       {patientDetails.name}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Phone</span>
-                    <span style={{ color: colors.white, fontSize: 14 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Phone</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                       {patientDetails.phone}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Email</span>
-                    <span style={{ color: colors.white, fontSize: 14 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Email</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                       {patientDetails.email}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: colors.slate, fontSize: 14 }}>Age & Gender</span>
-                    <span style={{ color: colors.white, fontSize: 14 }}>
+                    <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Age & Gender</span>
+                    <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                       {patientDetails.age} years, {patientDetails.gender}
                     </span>
                   </div>

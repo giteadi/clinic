@@ -6,7 +6,7 @@ import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function BookingConfirmationPage({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [bookingData, setBookingData] = useState(null);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function BookingConfirmationPage({ setView }) {
 
   if (!bookingData) {
     return (
-      <div style={{ minHeight: "100vh", background: colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: colors.slate, fontSize: 16 }}>Loading booking confirmation...</p>
         </div>
@@ -51,7 +51,7 @@ export default function BookingConfirmationPage({ setView }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Success Animation */}
@@ -77,7 +77,7 @@ export default function BookingConfirmationPage({ setView }) {
           <h1 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: "clamp(28px, 4vw, 36px)", 
-            color: colors.white, 
+            color: theme === 'white' ? colors.slate : colors.white, 
             marginBottom: 12 
           }}>
             Booking Confirmed!
@@ -96,7 +96,7 @@ export default function BookingConfirmationPage({ setView }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           style={{
-            background: "#0f172a",
+            background: theme === 'white' ? colors.white : "#0f172a",
             border: `1px solid ${colors.border}`,
             borderRadius: 16,
             padding: 32,
@@ -105,7 +105,7 @@ export default function BookingConfirmationPage({ setView }) {
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 24 }}>
             <div>
-              <h2 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 8 }}>
+              <h2 style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 20, fontWeight: 600, marginBottom: 8 }}>
                 Appointment Details
               </h2>
               <p style={{ color: colors.slate, fontSize: 14 }}>
@@ -128,7 +128,7 @@ export default function BookingConfirmationPage({ setView }) {
           <div style={{ display: "flex", gap: 20, marginBottom: 24 }}>
             <Avatar initials={bookingData.doctor.image} color={bookingData.doctor.color} size={60} />
             <div style={{ flex: 1 }}>
-              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
+              <h3 style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
                 {bookingData.doctor.name}
               </h3>
               <p style={{ color: colors.teal, fontSize: 14, marginBottom: 2 }}>
@@ -161,7 +161,7 @@ export default function BookingConfirmationPage({ setView }) {
               </div>
               <div>
                 <p style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>Date</p>
-                <p style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                   {bookingData.date === "today" ? "Today" : "Tomorrow"}
                 </p>
               </div>
@@ -181,7 +181,7 @@ export default function BookingConfirmationPage({ setView }) {
               </div>
               <div>
                 <p style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>Time</p>
-                <p style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                   {bookingData.time}
                 </p>
               </div>
@@ -201,7 +201,7 @@ export default function BookingConfirmationPage({ setView }) {
               </div>
               <div>
                 <p style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>Consultation Fee</p>
-                <p style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                   {bookingData.doctor.consultationFee}
                 </p>
               </div>
@@ -210,31 +210,31 @@ export default function BookingConfirmationPage({ setView }) {
 
           {/* Clinic Address */}
           <div style={{
-            background: "#111827",
+            background: theme === 'white' ? colors.cream : "#111827",
             border: `1px solid ${colors.border}`,
             borderRadius: 12,
             padding: 20,
             marginBottom: 24
           }}>
-            <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
+            <h4 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
               Clinic Location
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <MapPin size={16} color={colors.slate} />
-                <span style={{ color: colors.white, fontSize: 14 }}>
+                <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                   {bookingData.clinic.address}
                 </span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Phone size={16} color={colors.slate} />
-                <span style={{ color: colors.white, fontSize: 14 }}>
+                <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                   {bookingData.clinic.phone}
                 </span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Clock size={16} color={colors.slate} />
-                <span style={{ color: colors.white, fontSize: 14 }}>
+                <span style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14 }}>
                   {bookingData.clinic.timings}
                 </span>
               </div>
@@ -243,31 +243,31 @@ export default function BookingConfirmationPage({ setView }) {
 
           {/* Patient Info */}
           <div style={{
-            background: "#111827",
+            background: theme === 'white' ? colors.cream : "#111827",
             border: `1px solid ${colors.border}`,
             borderRadius: 12,
             padding: 20,
             marginBottom: 24
           }}>
-            <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
+            <h4 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
               Patient Information
             </h4>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
               <div>
                 <p style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>Name</p>
-                <p style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                   {bookingData.patient.name}
                 </p>
               </div>
               <div>
                 <p style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>Phone</p>
-                <p style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                   {bookingData.patient.phone}
                 </p>
               </div>
               <div>
                 <p style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>Email</p>
-                <p style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, fontWeight: 600 }}>
                   {bookingData.patient.email}
                 </p>
               </div>
@@ -292,7 +292,7 @@ export default function BookingConfirmationPage({ setView }) {
               borderRadius: 12,
               padding: "16px",
               cursor: "pointer",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -315,7 +315,7 @@ export default function BookingConfirmationPage({ setView }) {
               borderRadius: 12,
               padding: "16px",
               cursor: "pointer",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -338,7 +338,7 @@ export default function BookingConfirmationPage({ setView }) {
               borderRadius: 12,
               padding: "16px",
               cursor: "pointer",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -368,7 +368,7 @@ export default function BookingConfirmationPage({ setView }) {
           <h4 style={{ color: colors.teal, fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
             Important Information
           </h4>
-          <ul style={{ color: colors.white, fontSize: 14, lineHeight: 1.6, margin: 0, paddingLeft: 20 }}>
+          <ul style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 14, lineHeight: 1.6, margin: 0, paddingLeft: 20 }}>
             <li>Please arrive 15 minutes before your appointment time</li>
             <li>Bring a valid ID proof and any previous medical records</li>
             <li>Payment can be made at the clinic via cash, card, or UPI</li>
@@ -393,7 +393,7 @@ export default function BookingConfirmationPage({ setView }) {
               borderRadius: 12,
               padding: "16px 32px",
               cursor: "pointer",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 16,
               fontWeight: 600
             }}

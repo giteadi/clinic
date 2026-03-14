@@ -5,7 +5,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 
 export default function ViewReportsPage({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedReport, setSelectedReport] = useState("overview");
 
@@ -48,7 +48,7 @@ export default function ViewReportsPage({ setView }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -62,7 +62,7 @@ export default function ViewReportsPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: colors.white, 
+              color: theme === 'white' ? colors.slate : colors.white, 
               marginBottom: 12 
             }}>
               View Reports
@@ -79,11 +79,11 @@ export default function ViewReportsPage({ setView }) {
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
             style={{
-              background: colors.background || colors.navyLight,
+              background: theme === 'white' ? colors.white : colors.navyLight,
               border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -99,11 +99,11 @@ export default function ViewReportsPage({ setView }) {
             value={selectedReport}
             onChange={(e) => setSelectedReport(e.target.value)}
             style={{
-              background: colors.background || colors.navyLight,
+              background: theme === 'white' ? colors.white : colors.navyLight,
               border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -124,7 +124,7 @@ export default function ViewReportsPage({ setView }) {
               borderRadius: 12,
               padding: "12px 20px",
               cursor: "pointer",
-              color: colors.white,
+              color: theme === 'white' ? colors.slate : colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -146,7 +146,7 @@ export default function ViewReportsPage({ setView }) {
           <h2 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: 24, 
-            color: colors.white, 
+            color: theme === 'white' ? colors.navy : colors.white, 
             marginBottom: 24,
             fontWeight: 700
           }}>
@@ -207,7 +207,7 @@ export default function ViewReportsPage({ setView }) {
                   </div>
                 </div>
                 
-                <div style={{ color: colors.white, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
+                <div style={{ color: theme === 'white' ? colors.navy : colors.white, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>
                   {stat.value}
                 </div>
                 <div style={{ color: colors.slate, fontSize: 14 }}>
@@ -237,7 +237,7 @@ export default function ViewReportsPage({ setView }) {
             minHeight: 300
           }}>
             <h3 style={{ 
-              color: colors.white, 
+              color: theme === 'white' ? colors.slate : colors.white, 
               fontSize: 18, 
               fontWeight: 600, 
               marginBottom: 20 
@@ -270,7 +270,7 @@ export default function ViewReportsPage({ setView }) {
             minHeight: 300
           }}>
             <h3 style={{ 
-              color: colors.white, 
+              color: theme === 'white' ? colors.slate : colors.white, 
               fontSize: 18, 
               fontWeight: 600, 
               marginBottom: 20 

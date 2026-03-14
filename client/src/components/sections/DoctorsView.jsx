@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import { DOCTORS } from "../../constants/data";
 import DoctorCard from "./DoctorCard";
 
 export default function DoctorsView({ onBook }) {
+  const { colors } = useTheme();
   return (
     <section style={{ 
       minHeight: "100vh", 
-      background: COLORS.cream, 
+      background: colors.cream, 
       padding: "clamp(60px, 8vw, 100px) clamp(16px, 4vw, 32px) 60px",
       display: "grid",
       gridTemplateRows: "auto 1fr"
@@ -17,14 +18,14 @@ export default function DoctorsView({ onBook }) {
           <h2 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: "clamp(28px, 4vw, 36px)", 
-            color: COLORS.navy, 
+            color: colors.navy, 
             marginBottom: 8,
             textAlign: { xs: "center", md: "left" }
           }}>
             Our Doctors
           </h2>
           <p style={{ 
-            color: COLORS.slate, 
+            color: colors.slate, 
             fontSize: "clamp(14px, 2vw, 16px)", 
             marginBottom: "clamp(24px, 4vw, 36px)",
             textAlign: { xs: "center", md: "left" }

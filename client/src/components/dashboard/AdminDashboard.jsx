@@ -7,7 +7,7 @@ import Avatar from "../common/Avatar";
 import BackButton from "../common/BackButton";
 
 export default function AdminDashboard({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [activeTab, setActiveTab] = useState("overview");
   const dispatch = useDispatch();
   const { actions: quickActions } = useSelector(state => state.quickActions);
@@ -27,7 +27,7 @@ export default function AdminDashboard({ setView }) {
     // Navigate based on action route
     switch (action.route) {
       case "schedule-appointment":
-        setView("appointment");
+        setView("admin-appointment");
         break;
       case "manage-patients":
         setView("manage-patients");
@@ -68,7 +68,7 @@ export default function AdminDashboard({ setView }) {
                 text="Back to Home"
               />
               <div>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: colors.navy, marginBottom: 8, fontWeight: 700 }}>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: colors.slate, marginBottom: 8, fontWeight: 700 }}>
                   Admin Dashboard
                 </h1>
                 <p style={{ color: colors.slate, fontSize: 16 }}>Manage clinic operations and staff</p>
@@ -94,7 +94,7 @@ export default function AdminDashboard({ setView }) {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Avatar initials="AD" color={colors.teal} size={40} />
                 <div>
-                  <div style={{ color: colors.navy, fontWeight: 600, fontSize: 15 }}>Admin User</div>
+                  <div style={{ color: colors.slate, fontWeight: 600, fontSize: 15 }}>Admin User</div>
                   <div style={{ color: colors.slate, fontSize: 12 }}>admin@clinic.com</div>
                 </div>
               </div>
@@ -135,8 +135,8 @@ export default function AdminDashboard({ setView }) {
                     {stat.change}
                   </div>
                 </div>
-                <div style={{ color: colors.navy, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>{stat.value}</div>
-                <div style={{ color: colors.slate, fontSize: 14 }}>{stat.label}</div>
+                <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>{stat.value}</div>
+                <div style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -157,7 +157,7 @@ export default function AdminDashboard({ setView }) {
               }}>
                 <h3 style={{ 
                   fontFamily: "'Playfair Display', serif", 
-                  fontSize: 18, color: colors.navy, fontWeight: 700 
+                  fontSize: 18, color: colors.slate, fontWeight: 700 
                 }}>
                   Recent Appointments
                 </h3>
@@ -171,11 +171,11 @@ export default function AdminDashboard({ setView }) {
                       padding: "12px 0", borderBottom: `1px solid ${colors.border}`
                     }}>
                     <div>
-                      <div style={{ color: colors.navy, fontWeight: 600, fontSize: 14 }}>{apt.patient}</div>
-                      <div style={{ color: colors.slate, fontSize: 12 }}>{apt.doctor}</div>
+                      <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 600, fontSize: 14 }}>{apt.patient}</div>
+                      <div style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 12 }}>{apt.doctor}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ color: colors.navy, fontWeight: 600, fontSize: 13 }}>{apt.time}</div>
+                      <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 600, fontSize: 13 }}>{apt.time}</div>
                       <div style={{
                         padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600,
                         background: apt.status === "confirmed" ? `${colors.teal}18` : `${colors.gold}18`,
@@ -200,7 +200,7 @@ export default function AdminDashboard({ setView }) {
               }}>
                 <h3 style={{ 
                   fontFamily: "'Playfair Display', serif", 
-                  fontSize: 18, color: colors.navy, fontWeight: 700 
+                  fontSize: 18, color: colors.slate, fontWeight: 700 
                 }}>
                   Quick Actions
                 </h3>
@@ -243,10 +243,10 @@ export default function AdminDashboard({ setView }) {
                         {IconComponent && <IconComponent size={20} color={action.color} />}
                       </div>
                       <div style={{ textAlign: "left", flex: 1 }}>
-                        <div style={{ color: colors.navy, fontWeight: 600, fontSize: 14 }}>{action.label}</div>
-                        <div style={{ color: colors.slate, fontSize: 11, marginTop: 2 }}>{action.description}</div>
+                        <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 600, fontSize: 14 }}>{action.label}</div>
+                        <div style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 11, marginTop: 2, opacity: 0.8 }}>{action.description}</div>
                       </div>
-                      <ChevronRight size={16} color={colors.slate} />
+                      <ChevronRight size={16} color={theme === 'white' ? '#4a5568' : colors.slate} />
                     </motion.button>
                   );
                 })}

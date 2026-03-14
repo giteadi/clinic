@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, Users, Calendar, Phone, Mail, Filter, ChevronRight, Edit, Trash2, Eye } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function ManagePatientsPage({ setView }) {
+  const { colors, theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
 
@@ -79,7 +80,7 @@ export default function ManagePatientsPage({ setView }) {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -93,12 +94,12 @@ export default function ManagePatientsPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: COLORS.white, 
+              color: theme === 'white' ? colors.slate : colors.white, 
               marginBottom: 12 
             }}>
               Manage Patients
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>
+            <p style={{ color: colors.slate, fontSize: 16 }}>
               View and manage patient records and information
             </p>
           </motion.div>
@@ -107,7 +108,7 @@ export default function ManagePatientsPage({ setView }) {
         {/* Search and Filters */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20, marginBottom: 32 }}>
           <div style={{ position: "relative" }}>
-            <Search size={20} color={COLORS.slate} style={{ position: "absolute", left: 16, top: 14 }} />
+            <Search size={20} color={colors.slate} style={{ position: "absolute", left: 16, top: 14 }} />
             <input
               type="text"
               placeholder="Search patients by name, email, or phone..."
@@ -115,11 +116,11 @@ export default function ManagePatientsPage({ setView }) {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 width: "100%",
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: theme === 'white' ? colors.white : "#0f172a",
+                border: `1px solid ${colors.border}`,
                 borderRadius: 12,
                 padding: "12px 16px 12px 48px",
-                color: COLORS.white,
+                color: theme === 'white' ? colors.slate : colors.white,
                 fontSize: 14,
                 outline: "none"
               }}
@@ -130,11 +131,11 @@ export default function ManagePatientsPage({ setView }) {
             value={selectedFilter}
             onChange={(e) => setSelectedFilter(e.target.value)}
             style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: theme === 'white' ? colors.white : "#0f172a",
+              border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: COLORS.white,
+              color: theme === 'white' ? colors.navy : colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -148,7 +149,7 @@ export default function ManagePatientsPage({ setView }) {
 
         {/* Results Count */}
         <div style={{ marginBottom: 24 }}>
-          <p style={{ color: COLORS.slate, fontSize: 14 }}>
+          <p style={{ color: colors.slate, fontSize: 14 }}>
             Found {filteredPatients.length} patients
           </p>
         </div>
@@ -162,8 +163,8 @@ export default function ManagePatientsPage({ setView }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               style={{
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: theme === 'white' ? colors.white : "#0f172a",
+                border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 24,
                 transition: "all 0.2s"
@@ -171,12 +172,12 @@ export default function ManagePatientsPage({ setView }) {
               onMouseEnter={(e) => {
                 e.target.style.transform = "translateY(-2px)";
                 e.target.style.boxShadow = "0 8px 25px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = COLORS.teal;
+                e.target.style.borderColor = colors.teal;
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = "translateY(0)";
                 e.target.style.boxShadow = "none";
-                e.target.style.borderColor = COLORS.border;
+                e.target.style.borderColor = colors.border;
               }}
             >
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
@@ -184,17 +185,17 @@ export default function ManagePatientsPage({ setView }) {
                 {/* Patient Avatar */}
                 <Avatar 
                   initials={patient.name.split(' ').map(n => n[0]).join('')}
-                  color={patient.status === "active" ? COLORS.teal : COLORS.slate}
+                  color={patient.status === "active" ? colors.teal : colors.slate}
                   size={60}
                 />
 
                 {/* Patient Info */}
                 <div style={{ flex: 1 }}>
                   <div style={{ marginBottom: 16 }}>
-                    <h3 style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, marginBottom: 8 }}>
+                    <h3 style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 20, fontWeight: 600, marginBottom: 8 }}>
                       {patient.name}
                     </h3>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: COLORS.slate, fontSize: 13 }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: colors.slate, fontSize: 13 }}>
                       <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <Mail size={14} />
                         {patient.email}
@@ -208,32 +209,32 @@ export default function ManagePatientsPage({ setView }) {
 
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 16 }}>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Age / Gender</p>
-                      <p style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Age / Gender</p>
+                      <p style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 13, fontWeight: 600 }}>
                         {patient.age} / {patient.gender}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Blood Group</p>
-                      <p style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Blood Group</p>
+                      <p style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 13, fontWeight: 600 }}>
                         {patient.bloodGroup}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Last Visit</p>
-                      <p style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Last Visit</p>
+                      <p style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 13, fontWeight: 600 }}>
                         {patient.lastVisit}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Total Visits</p>
-                      <p style={{ color: COLORS.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Total Visits</p>
+                      <p style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 13, fontWeight: 600 }}>
                         {patient.totalVisits}
                       </p>
                     </div>
                     <div>
-                      <p style={{ color: COLORS.slate, fontSize: 11, marginBottom: 2 }}>Assigned Doctor</p>
-                      <p style={{ color: COLORS.teal, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Assigned Doctor</p>
+                      <p style={{ color: colors.teal, fontSize: 13, fontWeight: 600 }}>
                         {patient.assignedDoctor}
                       </p>
                     </div>
@@ -247,8 +248,8 @@ export default function ManagePatientsPage({ setView }) {
                     borderRadius: 20,
                     fontSize: 11,
                     fontWeight: 600,
-                    background: patient.status === "active" ? `${COLORS.teal}18` : `${COLORS.slate}18`,
-                    color: patient.status === "active" ? COLORS.teal : COLORS.slate,
+                    background: patient.status === "active" ? `${colors.teal}18` : `${colors.slate}18`,
+                    color: patient.status === "active" ? colors.teal : colors.slate,
                     marginBottom: 12
                   }}>
                     {patient.status}
@@ -260,12 +261,12 @@ export default function ManagePatientsPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handlePatientAction("view", patient.id)}
                       style={{
-                        background: `${COLORS.teal}15`,
-                        border: `1px solid ${COLORS.teal}30`,
+                        background: `${colors.teal}15`,
+                        border: `1px solid ${colors.teal}30`,
                         borderRadius: 8,
                         padding: "8px",
                         cursor: "pointer",
-                        color: COLORS.teal
+                        color: colors.teal
                       }}
                     >
                       <Eye size={16} />
@@ -275,12 +276,12 @@ export default function ManagePatientsPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handlePatientAction("edit", patient.id)}
                       style={{
-                        background: `${COLORS.gold}15`,
-                        border: `1px solid ${COLORS.gold}30`,
+                        background: `${colors.gold}15`,
+                        border: `1px solid ${colors.gold}30`,
                         borderRadius: 8,
                         padding: "8px",
                         cursor: "pointer",
-                        color: COLORS.gold
+                        color: colors.gold
                       }}
                     >
                       <Edit size={16} />
@@ -290,12 +291,12 @@ export default function ManagePatientsPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handlePatientAction("delete", patient.id)}
                       style={{
-                        background: `${COLORS.red}15`,
-                        border: `1px solid ${COLORS.red}30`,
+                        background: `${colors.red}15`,
+                        border: `1px solid ${colors.red}30`,
                         borderRadius: 8,
                         padding: "8px",
                         cursor: "pointer",
-                        color: COLORS.red
+                        color: colors.red
                       }}
                     >
                       <Trash2 size={16} />
@@ -312,15 +313,15 @@ export default function ManagePatientsPage({ setView }) {
           <div style={{
             textAlign: "center",
             padding: "60px 20px",
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: theme === 'white' ? colors.white : "#0f172a",
+            border: `1px solid ${colors.border}`,
             borderRadius: 16
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>👥</div>
-            <h3 style={{ color: COLORS.white, fontSize: 20, marginBottom: 8 }}>
+            <h3 style={{ color: theme === 'white' ? colors.navy : colors.white, fontSize: 20, marginBottom: 8 }}>
               No patients found
             </h3>
-            <p style={{ color: COLORS.slate, fontSize: 14 }}>
+            <p style={{ color: colors.slate, fontSize: 14 }}>
               Try adjusting your search criteria or filters
             </p>
           </div>

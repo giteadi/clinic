@@ -6,7 +6,7 @@ import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function AdminAppointmentPage({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -136,7 +136,7 @@ export default function AdminAppointmentPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: colors.white, 
+              color: theme === 'white' ? '#1a202c' : colors.white, 
               marginBottom: 12 
             }}>
               Manage Appointments
@@ -164,7 +164,7 @@ export default function AdminAppointmentPage({ setView }) {
               borderRadius: 12,
               padding: "14px 20px",
               cursor: "pointer",
-              color: colors.white,
+              color: theme === 'white' ? '#1a202c' : colors.white,
               fontSize: 14,
               fontWeight: 600,
               display: "flex",
@@ -186,7 +186,7 @@ export default function AdminAppointmentPage({ setView }) {
               border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: colors.white,
+              color: theme === 'white' ? '#1a202c' : colors.white,
               fontSize: 14,
               outline: "none"
             }}
@@ -205,7 +205,7 @@ export default function AdminAppointmentPage({ setView }) {
                 border: `1px solid ${colors.border}`,
                 borderRadius: 12,
                 padding: "12px 16px 12px 48px",
-                color: colors.white,
+                color: theme === 'white' ? '#1a202c' : colors.white,
                 fontSize: 14,
                 outline: "none"
               }}
@@ -220,7 +220,7 @@ export default function AdminAppointmentPage({ setView }) {
               border: `1px solid ${colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: colors.white,
+              color: theme === 'white' ? '#1a202c' : colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -280,7 +280,7 @@ export default function AdminAppointmentPage({ setView }) {
                     <Calendar size={24} color={colors.teal} />
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ color: colors.white, fontSize: 12, fontWeight: 600 }}>
+                    <div style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 12, fontWeight: 600 }}>
                       {new Date(appointment.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
                     <div style={{ color: colors.slate, fontSize: 11 }}>
@@ -292,7 +292,7 @@ export default function AdminAppointmentPage({ setView }) {
                 {/* Appointment Details */}
                 <div style={{ flex: 1 }}>
                   <div style={{ marginBottom: 12 }}>
-                    <h3 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                    <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
                       {appointment.reason}
                     </h3>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: colors.slate, fontSize: 12 }}>
@@ -307,19 +307,19 @@ export default function AdminAppointmentPage({ setView }) {
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
                     <div>
                       <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Patient</p>
-                      <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
                         {appointment.patientName}
                       </p>
                     </div>
                     <div>
                       <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Contact</p>
-                      <p style={{ color: colors.white, fontSize: 12 }}>
+                      <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 12 }}>
                         {appointment.patientPhone}
                       </p>
                     </div>
                     <div>
                       <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Type</p>
-                      <p style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+                      <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
                         {appointment.type}
                       </p>
                     </div>
@@ -404,7 +404,7 @@ export default function AdminAppointmentPage({ setView }) {
             borderRadius: 16
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>📅</div>
-            <h3 style={{ color: colors.white, fontSize: 20, marginBottom: 8 }}>
+            <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, marginBottom: 8 }}>
               No appointments found
             </h3>
             <p style={{ color: colors.slate, fontSize: 14 }}>

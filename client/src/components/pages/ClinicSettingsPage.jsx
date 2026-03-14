@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Settings, Clock, MapPin, Phone, Mail, Globe, Save, Upload, X, Plus, Trash2 } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 
 export default function ClinicSettingsPage({ setView }) {
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState("general");
   const [formData, setFormData] = useState({
     clinicName: "City Medical Center",
@@ -97,7 +98,7 @@ export default function ClinicSettingsPage({ setView }) {
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -111,12 +112,12 @@ export default function ClinicSettingsPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: COLORS.white, 
+              color: colors.white, 
               marginBottom: 12 
             }}>
               Clinic Settings
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>
+            <p style={{ color: colors.slate, fontSize: 16 }}>
               Configure clinic preferences and settings
             </p>
           </motion.div>
@@ -125,11 +126,11 @@ export default function ClinicSettingsPage({ setView }) {
         {/* Tabs */}
         <div style={{ 
           display: "flex", 
-          background: "#0f172a", 
+          background: theme === 'white' ? colors.white : colors.navyLight, 
           borderRadius: 12, 
           padding: 8, 
           marginBottom: 32,
-          border: `1px solid ${COLORS.border}`
+          border: `1px solid ${colors.border}`
         }}>
           {tabs.map(tab => (
             <button
@@ -141,11 +142,11 @@ export default function ClinicSettingsPage({ setView }) {
                 border: "none",
                 background: "none",
                 cursor: "pointer",
-                color: activeTab === tab.id ? COLORS.white : COLORS.slate,
+                color: activeTab === tab.id ? colors.white : colors.slate,
                 fontWeight: 600,
                 fontSize: 14,
                 borderRadius: 8,
-                background: activeTab === tab.id ? COLORS.teal : "transparent"
+                background: activeTab === tab.id ? colors.teal : "transparent"
               }}
             >
               {tab.label}
@@ -159,8 +160,8 @@ export default function ClinicSettingsPage({ setView }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: theme === 'white' ? colors.cream : colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16,
             padding: 32
           }}
@@ -168,7 +169,7 @@ export default function ClinicSettingsPage({ setView }) {
           {activeTab === "general" && (
             <div style={{ display: "grid", gap: 24 }}>
               <div>
-                <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                   Clinic Name
                 </label>
                 <input
@@ -177,11 +178,11 @@ export default function ClinicSettingsPage({ setView }) {
                   onChange={(e) => handleInputChange("clinicName", e.target.value)}
                   style={{
                     width: "100%",
-                    background: COLORS.navy,
-                    border: `1px solid ${COLORS.border}`,
+                    background: theme === 'white' ? colors.white : colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: theme === 'white' ? colors.slate : colors.white,
                     fontSize: 14
                   }}
                 />
@@ -189,7 +190,7 @@ export default function ClinicSettingsPage({ setView }) {
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
                 <div>
-                  <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                  <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                     Email
                   </label>
                   <input
@@ -198,17 +199,17 @@ export default function ClinicSettingsPage({ setView }) {
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     style={{
                       width: "100%",
-                      background: COLORS.navy,
-                      border: `1px solid ${COLORS.border}`,
+                      background: theme === 'white' ? colors.white : colors.navyLight,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "12px 16px",
-                      color: COLORS.white,
+                      color: theme === 'white' ? colors.slate : colors.white,
                       fontSize: 14
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                  <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                     Phone
                   </label>
                   <input
@@ -217,11 +218,11 @@ export default function ClinicSettingsPage({ setView }) {
                     onChange={(e) => handleInputChange("phone", e.target.value)}
                     style={{
                       width: "100%",
-                      background: COLORS.navy,
-                      border: `1px solid ${COLORS.border}`,
+                      background: theme === 'white' ? colors.white : colors.navyLight,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "12px 16px",
-                      color: COLORS.white,
+                      color: theme === 'white' ? colors.slate : colors.white,
                       fontSize: 14
                     }}
                   />
@@ -229,7 +230,7 @@ export default function ClinicSettingsPage({ setView }) {
               </div>
 
               <div>
-                <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                   Address
                 </label>
                 <textarea
@@ -238,11 +239,11 @@ export default function ClinicSettingsPage({ setView }) {
                   rows={3}
                   style={{
                     width: "100%",
-                    background: COLORS.navy,
-                    border: `1px solid ${COLORS.border}`,
+                    background: theme === 'white' ? colors.white : colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: theme === 'white' ? colors.slate : colors.white,
                     fontSize: 14,
                     resize: "vertical"
                   }}
@@ -250,7 +251,7 @@ export default function ClinicSettingsPage({ setView }) {
               </div>
 
               <div>
-                <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                   Website
                 </label>
                 <input
@@ -259,11 +260,11 @@ export default function ClinicSettingsPage({ setView }) {
                   onChange={(e) => handleInputChange("website", e.target.value)}
                   style={{
                     width: "100%",
-                    background: COLORS.navy,
-                    border: `1px solid ${COLORS.border}`,
+                    background: theme === 'white' ? colors.white : colors.navyLight,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: COLORS.white,
+                    color: theme === 'white' ? colors.slate : colors.white,
                     fontSize: 14
                   }}
                 />
@@ -273,7 +274,7 @@ export default function ClinicSettingsPage({ setView }) {
 
           {activeTab === "timings" && (
             <div style={{ display: "grid", gap: 20 }}>
-              <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
+              <h3 style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
                 Clinic Timings
               </h3>
               {days.map(day => (
@@ -283,12 +284,12 @@ export default function ClinicSettingsPage({ setView }) {
                   gap: 16,
                   alignItems: "center",
                   padding: "16px",
-                  background: COLORS.navy,
+                  background: theme === 'white' ? colors.white : colors.navyLight,
                   borderRadius: 8,
-                  border: `1px solid ${COLORS.border}`
+                  border: `1px solid ${colors.border}`
                 }}>
                   <span style={{ 
-                    color: COLORS.white, 
+                    color: theme === 'white' ? colors.slate : colors.white, 
                     fontSize: 14, 
                     fontWeight: 600,
                     textTransform: "capitalize"
@@ -301,11 +302,11 @@ export default function ClinicSettingsPage({ setView }) {
                     onChange={(e) => handleTimingChange(day, "open", e.target.value)}
                     disabled={formData.timings[day].closed}
                     style={{
-                      background: formData.timings[day].closed ? COLORS.slate : COLORS.white,
-                      border: `1px solid ${COLORS.border}`,
+                      background: formData.timings[day].closed ? colors.slate : colors.white,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 6,
                       padding: "8px 12px",
-                      color: formData.timings[day].closed ? COLORS.slate : COLORS.navy,
+                      color: formData.timings[day].closed ? colors.slate : colors.slate,
                       fontSize: 14
                     }}
                   />
@@ -315,11 +316,11 @@ export default function ClinicSettingsPage({ setView }) {
                     onChange={(e) => handleTimingChange(day, "close", e.target.value)}
                     disabled={formData.timings[day].closed}
                     style={{
-                      background: formData.timings[day].closed ? COLORS.slate : COLORS.white,
-                      border: `1px solid ${COLORS.border}`,
+                      background: formData.timings[day].closed ? colors.slate : colors.white,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 6,
                       padding: "8px 12px",
-                      color: formData.timings[day].closed ? COLORS.slate : COLORS.navy,
+                      color: formData.timings[day].closed ? colors.slate : colors.slate,
                       fontSize: 14
                     }}
                   />
@@ -335,7 +336,7 @@ export default function ClinicSettingsPage({ setView }) {
                       onChange={(e) => handleTimingChange(day, "closed", e.target.checked)}
                       style={{ cursor: "pointer" }}
                     />
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>
                       Closed
                     </span>
                   </label>
@@ -347,7 +348,7 @@ export default function ClinicSettingsPage({ setView }) {
           {activeTab === "services" && (
             <div style={{ display: "grid", gap: 32 }}>
               <div>
-                <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
+                <h3 style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
                   Medical Specialties
                 </h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
@@ -359,10 +360,10 @@ export default function ClinicSettingsPage({ setView }) {
                         alignItems: "center",
                         gap: 8,
                         padding: "8px 16px",
-                        background: `${COLORS.teal}18`,
-                        border: `1px solid ${COLORS.teal}30`,
+                        background: `${colors.teal}18`,
+                        border: `1px solid ${colors.teal}30`,
                         borderRadius: 20,
-                        color: COLORS.teal,
+                        color: colors.teal,
                         fontSize: 14,
                         fontWeight: 600
                       }}
@@ -375,7 +376,7 @@ export default function ClinicSettingsPage({ setView }) {
                           border: "none",
                           cursor: "pointer",
                           padding: 2,
-                          color: COLORS.teal
+                          color: colors.teal
                         }}
                       >
                         <X size={14} />
@@ -392,11 +393,11 @@ export default function ClinicSettingsPage({ setView }) {
                     onKeyPress={(e) => e.key === "Enter" && handleAddSpecialty()}
                     style={{
                       flex: 1,
-                      background: COLORS.navy,
-                      border: `1px solid ${COLORS.border}`,
+                      background: theme === 'white' ? colors.white : colors.navyLight,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "10px 16px",
-                      color: COLORS.white,
+                      color: theme === 'white' ? colors.slate : colors.white,
                       fontSize: 14
                     }}
                   />
@@ -405,12 +406,12 @@ export default function ClinicSettingsPage({ setView }) {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleAddSpecialty}
                     style={{
-                      background: COLORS.teal,
+                      background: colors.teal,
                       border: "none",
                       borderRadius: 8,
                       padding: "10px 16px",
                       cursor: "pointer",
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14,
                       fontWeight: 600,
                       display: "flex",
@@ -425,7 +426,7 @@ export default function ClinicSettingsPage({ setView }) {
               </div>
 
               <div>
-                <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
+                <h3 style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
                   Clinic Features
                 </h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
@@ -437,10 +438,10 @@ export default function ClinicSettingsPage({ setView }) {
                         alignItems: "center",
                         gap: 8,
                         padding: "8px 16px",
-                        background: `${COLORS.gold}18`,
-                        border: `1px solid ${COLORS.gold}30`,
+                        background: `${colors.gold}18`,
+                        border: `1px solid ${colors.gold}30`,
                         borderRadius: 20,
-                        color: COLORS.gold,
+                        color: colors.gold,
                         fontSize: 14,
                         fontWeight: 600
                       }}
@@ -453,7 +454,7 @@ export default function ClinicSettingsPage({ setView }) {
                           border: "none",
                           cursor: "pointer",
                           padding: 2,
-                          color: COLORS.gold
+                          color: colors.gold
                         }}
                       >
                         <X size={14} />
@@ -470,11 +471,11 @@ export default function ClinicSettingsPage({ setView }) {
                     onKeyPress={(e) => e.key === "Enter" && handleAddFeature()}
                     style={{
                       flex: 1,
-                      background: COLORS.navy,
-                      border: `1px solid ${COLORS.border}`,
+                      background: theme === 'white' ? colors.white : colors.navyLight,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "10px 16px",
-                      color: COLORS.white,
+                      color: theme === 'white' ? colors.slate : colors.white,
                       fontSize: 14
                     }}
                   />
@@ -483,12 +484,12 @@ export default function ClinicSettingsPage({ setView }) {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleAddFeature}
                     style={{
-                      background: COLORS.gold,
+                      background: colors.gold,
                       border: "none",
                       borderRadius: 8,
                       padding: "10px 16px",
                       cursor: "pointer",
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14,
                       fontWeight: 600,
                       display: "flex",
@@ -511,12 +512,12 @@ export default function ClinicSettingsPage({ setView }) {
               whileTap={{ scale: 0.98 }}
               onClick={handleSave}
               style={{
-                background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                 border: "none",
                 borderRadius: 12,
                 padding: "14px 32px",
                 cursor: "pointer",
-                color: COLORS.white,
+                color: colors.white,
                 fontSize: 16,
                 fontWeight: 600,
                 display: "inline-flex",

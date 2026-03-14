@@ -7,19 +7,7 @@ import {
   ChevronDown, LogOut, Settings, FileText, Users, BarChart3,
   Building2, Zap, Award, TrendingUp
 } from "lucide-react";
-
-// ─── Design Tokens ───────────────────────────────────────────────────────────
-const COLORS = {
-  navy: "#0A1628",
-  navyLight: "#112240",
-  teal: "#0ABFBC",
-  tealDark: "#089A97",
-  gold: "#E8A838",
-  cream: "#F8F5F0",
-  white: "#FFFFFF",
-  slate: "#8892B0",
-  border: "rgba(10,191,188,0.15)",
-};
+import { useTheme } from "../contexts/ThemeContext";
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 const DOCTORS = [
@@ -69,14 +57,14 @@ function StarRow({ rating }) {
   return (
     <div style={{ display: "flex", gap: 2 }}>
       {[1,2,3,4,5].map(i => (
-        <Star key={i} size={12} fill={i <= Math.floor(rating) ? COLORS.gold : "none"}
-          color={i <= Math.floor(rating) ? COLORS.gold : COLORS.slate} />
+        <Star key={i} size={12} fill={i <= Math.floor(rating) ? colors.gold : "none"}
+          color={i <= Math.floor(rating) ? colors.gold : colors.slate} />
       ))}
     </div>
   );
 }
 
-function Badge({ children, color = COLORS.teal }) {
+function Badge({ children, color = colors.teal }) {
   return (
     <span style={{
       background: `${color}18`, color,
@@ -96,8 +84,8 @@ function Navbar({ view, setView, userRole, setUserRole }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: `${COLORS.navy}F0`, backdropFilter: "blur(20px)",
-      borderBottom: `1px solid ${COLORS.border}`,
+      background: `${colors.navy}F0`, backdropFilter: "blur(20px)",
+      borderBottom: `1px solid ${colors.border}`,
       display: "flex", alignItems: "center", justifyContent: "space-between",
       padding: "0 32px", height: 64,
     }}>
@@ -106,13 +94,13 @@ function Navbar({ view, setView, userRole, setUserRole }) {
         onClick={() => setView("home")}>
         <div style={{
           width: 36, height: 36, borderRadius: 10,
-          background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+          background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
           display: "flex", alignItems: "center", justifyContent: "center"
         }}>
           <Stethoscope size={18} color="#fff" />
         </div>
-        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: COLORS.white }}>
-          Cliniq<span style={{ color: COLORS.teal }}>Pro</span>
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: colors.white }}>
+          Cliniq<span style={{ color: colors.teal }}>Pro</span>
         </span>
       </motion.div>
 
@@ -121,10 +109,10 @@ function Navbar({ view, setView, userRole, setUserRole }) {
           <button key={v} onClick={() => setView(v)}
             style={{
               background: "none", border: "none", cursor: "pointer",
-              color: view === v ? COLORS.teal : COLORS.slate,
+              color: view === v ? colors.teal : colors.slate,
               fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
               textTransform: "capitalize", letterSpacing: 0.3,
-              borderBottom: view === v ? `2px solid ${COLORS.teal}` : "2px solid transparent",
+              borderBottom: view === v ? `2px solid ${colors.teal}` : "2px solid transparent",
               paddingBottom: 2, transition: "all 0.2s"
             }}>
             {v}
@@ -136,10 +124,10 @@ function Navbar({ view, setView, userRole, setUserRole }) {
         {/* Role Switcher */}
         <div style={{ position: "relative" }}>
           <button onClick={() => setOpen(!open)} style={{
-            background: `${COLORS.teal}18`, border: `1px solid ${COLORS.border}`,
+            background: `${colors.teal}18`, border: `1px solid ${colors.border}`,
             borderRadius: 8, padding: "6px 14px", cursor: "pointer",
             display: "flex", alignItems: "center", gap: 6,
-            color: COLORS.teal, fontSize: 13, fontWeight: 600
+            color: colors.teal, fontSize: 13, fontWeight: 600
           }}>
             <User size={14} /> {userRole} <ChevronDown size={12} />
           </button>
@@ -148,15 +136,15 @@ function Navbar({ view, setView, userRole, setUserRole }) {
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
                 style={{
                   position: "absolute", top: 42, right: 0,
-                  background: COLORS.navyLight, border: `1px solid ${COLORS.border}`,
+                  background: colors.navyLight, border: `1px solid ${colors.border}`,
                   borderRadius: 10, overflow: "hidden", minWidth: 140
                 }}>
                 {roles.map(r => (
                   <button key={r} onClick={() => { setUserRole(r); setOpen(false); setView(r === "guest" ? "home" : `${r}-dashboard`); }}
                     style={{
                       display: "block", width: "100%", textAlign: "left",
-                      padding: "10px 16px", background: r === userRole ? `${COLORS.teal}18` : "none",
-                      border: "none", cursor: "pointer", color: r === userRole ? COLORS.teal : COLORS.slate,
+                      padding: "10px 16px", background: r === userRole ? `${colors.teal}18` : "none",
+                      border: "none", cursor: "pointer", color: r === userRole ? colors.teal : colors.slate,
                       fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 500
                     }}>
                     {r}
@@ -170,18 +158,18 @@ function Navbar({ view, setView, userRole, setUserRole }) {
         {userRole !== "guest" ? (
           <button onClick={() => { setUserRole("guest"); setView("home"); }}
             style={{
-              background: "none", border: `1px solid ${COLORS.border}`,
+              background: "none", border: `1px solid ${colors.border}`,
               borderRadius: 8, padding: "6px 14px", cursor: "pointer",
-              color: COLORS.slate, fontSize: 13, display: "flex", gap: 6, alignItems: "center"
+              color: colors.slate, fontSize: 13, display: "flex", gap: 6, alignItems: "center"
             }}>
             <LogOut size={14} /> Logout
           </button>
         ) : (
           <button onClick={() => { setUserRole("patient"); setView("patient-dashboard"); }}
             style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none", borderRadius: 8, padding: "8px 18px", cursor: "pointer",
-              color: COLORS.white, fontSize: 13, fontWeight: 600, fontFamily: "'DM Sans', sans-serif"
+              color: colors.white, fontSize: 13, fontWeight: 600, fontFamily: "'DM Sans', sans-serif"
             }}>
             Book Now
           </button>
@@ -196,7 +184,7 @@ function Hero({ setView }) {
   return (
     <section style={{
       minHeight: "100vh", 
-      background: COLORS.navy,
+      background: colors.navy,
       display: "grid",
       placeItems: "center",
       padding: "clamp(60px, 10vw, 100px) clamp(20px, 5vw, 32px) clamp(40px, 8vw, 60px)", 
@@ -206,12 +194,12 @@ function Hero({ setView }) {
       {/* BG Decoration */}
       <div style={{
         position: "absolute", top: -120, right: -120, width: "clamp(300px, 40vw, 500px)", height: "clamp(300px, 40vw, 500px)",
-        borderRadius: "50%", background: `radial-gradient(circle, ${COLORS.teal}12, transparent 70%)`,
+        borderRadius: "50%", background: `radial-gradient(circle, ${colors.teal}12, transparent 70%)`,
         pointerEvents: "none"
       }} />
       <div style={{
         position: "absolute", bottom: -80, left: -80, width: "clamp(250px, 35vw, 400px)", height: "clamp(250px, 35vw, 400px)",
-        borderRadius: "50%", background: `radial-gradient(circle, ${COLORS.gold}10, transparent 70%)`,
+        borderRadius: "50%", background: `radial-gradient(circle, ${colors.gold}10, transparent 70%)`,
         pointerEvents: "none"
       }} />
 
@@ -226,13 +214,13 @@ function Hero({ setView }) {
 
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8,
-          background: `${COLORS.teal}15`, border: `1px solid ${COLORS.teal}30`,
+          background: `${colors.teal}15`, border: `1px solid ${colors.teal}30`,
           borderRadius: 30, padding: "clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px)", 
           justifySelf: "center"
         }}>
-          <Zap size={14} color={COLORS.teal} />
+          <Zap size={14} color={colors.teal} />
           <span style={{ 
-            color: COLORS.teal, 
+            color: colors.teal, 
             fontSize: "clamp(11px, 2vw, 13px)", 
             fontWeight: 600, 
             letterSpacing: 0.5 
@@ -245,15 +233,15 @@ function Hero({ setView }) {
           fontFamily: "'Playfair Display', serif",
           fontSize: "clamp(32px, 6vw, 72px)", 
           lineHeight: 1.1,
-          color: COLORS.white, 
+          color: colors.white, 
           fontWeight: 700
         }}>
           Your Health,<br />
-          <span style={{ color: COLORS.teal }}>Beautifully</span> Managed
+          <span style={{ color: colors.teal }}>Beautifully</span> Managed
         </h1>
 
         <p style={{
-          color: COLORS.slate, 
+          color: colors.slate, 
           fontSize: "clamp(14px, 2.5vw, 18px)", 
           lineHeight: 1.7, 
           fontFamily: "'DM Sans', sans-serif",
@@ -274,10 +262,10 @@ function Hero({ setView }) {
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
             onClick={() => setView("doctors")}
             style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none", borderRadius: 12, 
               padding: "clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 32px)",
-              color: COLORS.white, 
+              color: colors.white, 
               fontSize: "clamp(14px, 2.5vw, 16px)", 
               fontWeight: 600, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif", 
@@ -285,7 +273,7 @@ function Hero({ setView }) {
               alignItems: "center", 
               justifyContent: "center",
               gap: 8,
-              boxShadow: `0 8px 30px ${COLORS.teal}40`,
+              boxShadow: `0 8px 30px ${colors.teal}40`,
               width: "100%"
             }}>
             <Calendar size={18} /> Book Appointment
@@ -294,10 +282,10 @@ function Hero({ setView }) {
             onClick={() => setView("clinics")}
             style={{
               background: "transparent", 
-              border: `1.5px solid ${COLORS.border}`,
+              border: `1.5px solid ${colors.border}`,
               borderRadius: 12, 
               padding: "clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 32px)",
-              color: COLORS.white, 
+              color: colors.white, 
               fontSize: "clamp(14px, 2.5vw, 16px)", 
               fontWeight: 600, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif", 
@@ -326,7 +314,7 @@ function Hero({ setView }) {
               style={{
                 textAlign: "center", 
                 padding: "clamp(16px, 3vw, 20px) clamp(20px, 4vw, 36px)",
-                borderRight: i < STATS.length - 1 ? `1px solid ${COLORS.border}` : "none",
+                borderRight: i < STATS.length - 1 ? `1px solid ${colors.border}` : "none",
                 display: "grid",
                 gap: "clamp(4px, 1vw, 8px)"
               }}>
@@ -334,10 +322,10 @@ function Hero({ setView }) {
                 fontFamily: "'Playfair Display', serif", 
                 fontSize: "clamp(24px, 4vw, 32px)", 
                 fontWeight: 700, 
-                color: COLORS.teal 
+                color: colors.teal 
               }}>{s.value}</div>
               <div style={{ 
-                color: COLORS.slate, 
+                color: colors.slate, 
                 fontSize: "clamp(11px, 2vw, 13px)", 
                 fontWeight: 500 
               }}>{s.label}</div>
@@ -354,7 +342,7 @@ function SearchSection({ setView }) {
   const [query, setQuery] = useState("");
   return (
     <section style={{ 
-      background: COLORS.cream, 
+      background: colors.cream, 
       padding: "clamp(40px, 8vw, 60px) clamp(20px, 4vw, 32px)",
       display: "grid",
       placeItems: "center"
@@ -368,7 +356,7 @@ function SearchSection({ setView }) {
       }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           style={{
-            background: COLORS.white, 
+            background: colors.white, 
             borderRadius: "clamp(12px, 2vw, 20px)", 
             padding: "clamp(24px, 4vw, 32px) clamp(20px, 4vw, 36px)",
             boxShadow: "0 20px 60px rgba(10,22,40,0.08)",
@@ -378,7 +366,7 @@ function SearchSection({ setView }) {
           <h2 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: "clamp(24px, 4vw, 28px)", 
-            color: COLORS.navy, 
+            color: colors.navy, 
             fontWeight: 700,
             textAlign: "center"
           }}>
@@ -391,44 +379,44 @@ function SearchSection({ setView }) {
             alignItems: "end"
           }}>
             <div style={{ position: "relative" }}>
-              <Search size={16} color={COLORS.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
+              <Search size={16} color={colors.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
               <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Doctor name or specialty..."
                 style={{
                   width: "100%", 
                   padding: "clamp(12px, 2.5vw, 12px) clamp(16px, 3vw, 16px) clamp(12px, 2.5vw, 12px) 42px", 
                   borderRadius: 10,
-                  border: `1.5px solid ${COLORS.border}`, 
-                  background: COLORS.cream,
+                  border: `1.5px solid ${colors.border}`, 
+                  background: colors.cream,
                   fontSize: "clamp(14px, 2vw, 14px)", 
                   fontFamily: "'DM Sans', sans-serif", 
                   outline: "none",
-                  color: COLORS.navy, 
+                  color: colors.navy, 
                   boxSizing: "border-box"
                 }} />
             </div>
             <div style={{ position: "relative" }}>
-              <MapPin size={16} color={COLORS.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
+              <MapPin size={16} color={colors.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
               <input placeholder="City or clinic..."
                 style={{
                   width: "100%", 
                   padding: "clamp(12px, 2.5vw, 12px) clamp(16px, 3vw, 16px) clamp(12px, 2.5vw, 12px) 42px", 
                   borderRadius: 10,
-                  border: `1.5px solid ${COLORS.border}`, 
-                  background: COLORS.cream,
+                  border: `1.5px solid ${colors.border}`, 
+                  background: colors.cream,
                   fontSize: "clamp(14px, 2vw, 14px)", 
                   fontFamily: "'DM Sans', sans-serif", 
                   outline: "none",
-                  color: COLORS.navy, 
+                  color: colors.navy, 
                   boxSizing: "border-box"
                 }} />
             </div>
             <motion.button whileHover={{ scale: 1.03 }} onClick={() => setView("doctors")}
               style={{
-                background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                 border: "none", 
                 borderRadius: 10, 
                 padding: "clamp(12px, 2.5vw, 12px) clamp(20px, 4vw, 28px)",
-                color: COLORS.white, 
+                color: colors.white, 
                 fontWeight: 600, 
                 fontSize: "clamp(14px, 2vw, 14px)", 
                 cursor: "pointer",
@@ -453,19 +441,19 @@ function SearchSection({ setView }) {
                   justifyContent: "center",
                   gap: 8, 
                   padding: "clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px)",
-                  background: `${COLORS.teal}10`, 
-                  border: `1px solid ${COLORS.border}`,
+                  background: `${colors.teal}10`, 
+                  border: `1px solid ${colors.border}`,
                   borderRadius: 30, 
                   cursor: "pointer", 
-                  color: COLORS.navy,
+                  color: colors.navy,
                   fontSize: "clamp(12px, 2vw, 13px)", 
                   fontWeight: 500, 
                   fontFamily: "'DM Sans', sans-serif",
                   width: "100%"
                 }}>
-                <sp.icon size={14} color={COLORS.teal} />
+                <sp.icon size={14} color={colors.teal} />
                 {sp.label}
-                <span style={{ color: COLORS.slate, fontSize: "clamp(10px, 1.5vw, 12px)" }}>({sp.count})</span>
+                <span style={{ color: colors.slate, fontSize: "clamp(10px, 1.5vw, 12px)" }}>({sp.count})</span>
               </button>
             ))}
           </div>
@@ -482,32 +470,32 @@ function DoctorCard({ doc, onBook }) {
     <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }} transition={{ duration: 0.3 }}
       style={{
-        background: COLORS.white, borderRadius: 18, overflow: "hidden",
+        background: colors.white, borderRadius: 18, overflow: "hidden",
         boxShadow: "0 4px 24px rgba(10,22,40,0.08)",
         border: `1px solid rgba(10,22,40,0.06)`
       }}>
       {/* Header */}
-      <div style={{ background: COLORS.navy, padding: "24px 24px 20px", position: "relative" }}>
+      <div style={{ background: colors.navy, padding: "24px 24px 20px", position: "relative" }}>
         <div style={{ position: "absolute", top: 16, right: 16 }}>
-          <Badge color={COLORS.gold}>{doc.fee}</Badge>
+          <Badge color={colors.gold}>{doc.fee}</Badge>
         </div>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
           <Avatar initials={doc.img} color={doc.color} size={54} />
           <div>
-            <div style={{ color: COLORS.white, fontWeight: 700, fontSize: 16, fontFamily: "'Playfair Display', serif" }}>{doc.name}</div>
-            <div style={{ color: COLORS.teal, fontSize: 13, fontWeight: 600, marginTop: 2 }}>{doc.specialty}</div>
-            <div style={{ color: COLORS.slate, fontSize: 12, marginTop: 2 }}>{doc.clinic} • {doc.exp}</div>
+            <div style={{ color: colors.white, fontWeight: 700, fontSize: 16, fontFamily: "'Playfair Display', serif" }}>{doc.name}</div>
+            <div style={{ color: colors.teal, fontSize: 13, fontWeight: 600, marginTop: 2 }}>{doc.specialty}</div>
+            <div style={{ color: colors.slate, fontSize: 12, marginTop: 2 }}>{doc.clinic} • {doc.exp}</div>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14 }}>
           <StarRow rating={doc.rating} />
-          <span style={{ color: COLORS.gold, fontSize: 13, fontWeight: 700 }}>{doc.rating}</span>
-          <span style={{ color: COLORS.slate, fontSize: 12 }}>({doc.reviews} reviews)</span>
+          <span style={{ color: colors.gold, fontSize: 13, fontWeight: 700 }}>{doc.rating}</span>
+          <span style={{ color: colors.slate, fontSize: 12 }}>({doc.reviews} reviews)</span>
         </div>
       </div>
       {/* Slots */}
       <div style={{ padding: "20px 24px" }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.slate, letterSpacing: 0.5, marginBottom: 10 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: colors.slate, letterSpacing: 0.5, marginBottom: 10 }}>
           AVAILABLE TODAY
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -515,9 +503,9 @@ function DoctorCard({ doc, onBook }) {
             <button key={slot} onClick={() => setSelectedSlot(slot)}
               style={{
                 padding: "7px 16px", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600,
-                background: selectedSlot === slot ? `${COLORS.teal}18` : COLORS.cream,
-                border: `1.5px solid ${selectedSlot === slot ? COLORS.teal : "transparent"}`,
-                color: selectedSlot === slot ? COLORS.teal : COLORS.navy,
+                background: selectedSlot === slot ? `${colors.teal}18` : colors.cream,
+                border: `1.5px solid ${selectedSlot === slot ? colors.teal : "transparent"}`,
+                color: selectedSlot === slot ? colors.teal : colors.navy,
                 fontFamily: "'DM Sans', sans-serif"
               }}>
               {slot}
@@ -528,9 +516,9 @@ function DoctorCard({ doc, onBook }) {
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
             onClick={() => onBook(doc, selectedSlot)}
             style={{
-              flex: 1, background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              flex: 1, background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none", borderRadius: 10, padding: "11px",
-              color: COLORS.white, fontWeight: 600, fontSize: 14, cursor: "pointer",
+              color: colors.white, fontWeight: 600, fontSize: 14, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif"
             }}>
             {selectedSlot ? `Book ${selectedSlot}` : "Book Appointment"}
@@ -540,7 +528,7 @@ function DoctorCard({ doc, onBook }) {
               background: "#25D366", border: "none", borderRadius: 10,
               padding: "11px 14px", cursor: "pointer",
               display: "flex", alignItems: "center", gap: 6,
-              color: COLORS.white, fontWeight: 600, fontSize: 13
+              color: colors.white, fontWeight: 600, fontSize: 13
             }}>
             <MessageCircle size={15} />
           </motion.button>
@@ -555,7 +543,7 @@ function DoctorsView({ onBook }) {
   return (
     <section style={{ 
       minHeight: "100vh", 
-      background: COLORS.cream, 
+      background: colors.cream, 
       padding: "clamp(60px, 8vw, 100px) clamp(16px, 4vw, 32px) 60px",
       display: "grid",
       gridTemplateRows: "auto 1fr"
@@ -565,14 +553,14 @@ function DoctorsView({ onBook }) {
           <h2 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: "clamp(28px, 4vw, 36px)", 
-            color: COLORS.navy, 
+            color: colors.navy, 
             marginBottom: 8,
             textAlign: { xs: "center", md: "left" }
           }}>
             Our Doctors
           </h2>
           <p style={{ 
-            color: COLORS.slate, 
+            color: colors.slate, 
             fontSize: "clamp(14px, 2vw, 16px)", 
             marginBottom: "clamp(24px, 4vw, 36px)",
             textAlign: { xs: "center", md: "left" }
@@ -612,31 +600,31 @@ function BookingModal({ doctor, slot, onClose }) {
       }}>
       <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
         style={{
-          background: COLORS.white, borderRadius: 24, padding: 36, width: "100%",
+          background: colors.white, borderRadius: 24, padding: 36, width: "100%",
           maxWidth: 480, position: "relative"
         }}>
-        <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: COLORS.cream, border: "none", borderRadius: 8, padding: 8, cursor: "pointer" }}>
-          <X size={18} color={COLORS.slate} />
+        <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: colors.cream, border: "none", borderRadius: 8, padding: 8, cursor: "pointer" }}>
+          <X size={18} color={colors.slate} />
         </button>
 
         {done ? (
           <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ textAlign: "center", padding: "20px 0" }}>
-            <div style={{ width: 64, height: 64, borderRadius: "50%", background: `${COLORS.teal}18`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-              <Check size={32} color={COLORS.teal} />
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: `${colors.teal}18`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+              <Check size={32} color={colors.teal} />
             </div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: COLORS.navy, marginBottom: 8 }}>Appointment Confirmed!</h3>
-            <p style={{ color: COLORS.slate }}>WhatsApp confirmation sent to your number.</p>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: colors.navy, marginBottom: 8 }}>Appointment Confirmed!</h3>
+            <p style={{ color: colors.slate }}>WhatsApp confirmation sent to your number.</p>
           </motion.div>
         ) : (
           <>
             <div style={{ marginBottom: 24 }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: COLORS.navy, marginBottom: 4 }}>Book Appointment</h3>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: colors.navy, marginBottom: 4 }}>Book Appointment</h3>
               {doctor && (
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "12px 16px", background: COLORS.cream, borderRadius: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "12px 16px", background: colors.cream, borderRadius: 12 }}>
                   <Avatar initials={doctor.img} color={doctor.color} size={40} />
                   <div>
-                    <div style={{ fontWeight: 700, color: COLORS.navy, fontSize: 14 }}>{doctor.name}</div>
-                    <div style={{ color: COLORS.teal, fontSize: 12 }}>{doctor.specialty} • {slot || "Select time"}</div>
+                    <div style={{ fontWeight: 700, color: colors.navy, fontSize: 14 }}>{doctor.name}</div>
+                    <div style={{ color: colors.teal, fontSize: 12 }}>{doctor.specialty} • {slot || "Select time"}</div>
                   </div>
                 </div>
               )}
@@ -649,14 +637,14 @@ function BookingModal({ doctor, slot, onClose }) {
                 { key: "email", label: "Email (optional)", type: "email", icon: Mail },
               ].map(f => (
                 <div key={f.key} style={{ position: "relative" }}>
-                  <f.icon size={15} color={COLORS.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
+                  <f.icon size={15} color={colors.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
                   <input type={f.type} placeholder={f.label} value={form[f.key]}
                     onChange={e => setForm({ ...form, [f.key]: e.target.value })}
                     style={{
                       width: "100%", padding: "12px 14px 12px 40px", borderRadius: 10,
-                      border: `1.5px solid ${COLORS.border}`, background: COLORS.cream,
+                      border: `1.5px solid ${colors.border}`, background: colors.cream,
                       fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none",
-                      color: COLORS.navy, boxSizing: "border-box"
+                      color: colors.navy, boxSizing: "border-box"
                     }} />
                 </div>
               ))}
@@ -665,18 +653,18 @@ function BookingModal({ doctor, slot, onClose }) {
                 rows={3}
                 style={{
                   width: "100%", padding: "12px 14px", borderRadius: 10,
-                  border: `1.5px solid ${COLORS.border}`, background: COLORS.cream,
+                  border: `1.5px solid ${colors.border}`, background: colors.cream,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none",
-                  color: COLORS.navy, resize: "none", boxSizing: "border-box"
+                  color: colors.navy, resize: "none", boxSizing: "border-box"
                 }} />
             </div>
 
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
               <motion.button whileHover={{ scale: 1.02 }} onClick={handleSubmit}
                 style={{
-                  flex: 1, background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                  flex: 1, background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   border: "none", borderRadius: 12, padding: "13px",
-                  color: COLORS.white, fontWeight: 700, fontSize: 15, cursor: "pointer",
+                  color: colors.white, fontWeight: 700, fontSize: 15, cursor: "pointer",
                   fontFamily: "'DM Sans', sans-serif"
                 }}>
                 Confirm Booking
@@ -684,7 +672,7 @@ function BookingModal({ doctor, slot, onClose }) {
               <motion.button whileHover={{ scale: 1.02 }}
                 style={{
                   background: "#25D366", border: "none", borderRadius: 12, padding: "13px 16px",
-                  color: COLORS.white, fontWeight: 600, cursor: "pointer",
+                  color: colors.white, fontWeight: 600, cursor: "pointer",
                   display: "flex", alignItems: "center", gap: 6, fontSize: 14
                 }}>
                 <MessageCircle size={16} /> WhatsApp
@@ -700,22 +688,22 @@ function BookingModal({ doctor, slot, onClose }) {
 // ─── Patient Dashboard ────────────────────────────────────────────────────────
 function PatientDashboard({ setView }) {
   const appts = [
-    { doctor: "Dr. Ayesha Khan", spec: "Cardiologist", date: "Mon, Mar 16", time: "10:00 AM", status: "confirmed", color: COLORS.teal },
-    { doctor: "Dr. Rahul Mehta", spec: "Dermatologist", date: "Wed, Mar 18", time: "12:00 PM", status: "pending", color: COLORS.gold },
+    { doctor: "Dr. Ayesha Khan", spec: "Cardiologist", date: "Mon, Mar 16", time: "10:00 AM", status: "confirmed", color: colors.teal },
+    { doctor: "Dr. Rahul Mehta", spec: "Dermatologist", date: "Wed, Mar 18", time: "12:00 PM", status: "pending", color: colors.gold },
   ];
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.cream, padding: "100px 32px 60px" }}>
+    <div style={{ minHeight: "100vh", background: colors.cream, padding: "100px 32px 60px" }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 36 }}>
           <div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: COLORS.navy, marginBottom: 4 }}>Patient Dashboard</h2>
-            <p style={{ color: COLORS.slate }}>Welcome back, Ananya 👋</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: colors.navy, marginBottom: 4 }}>Patient Dashboard</h2>
+            <p style={{ color: colors.slate }}>Welcome back, Ananya 👋</p>
           </div>
           <motion.button whileHover={{ scale: 1.03 }} onClick={() => setView("doctors")}
             style={{
-              background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none", borderRadius: 10, padding: "11px 22px",
-              color: COLORS.white, fontWeight: 600, fontSize: 14, cursor: "pointer",
+              color: colors.white, fontWeight: 600, fontSize: 14, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 8
             }}>
             <Plus size={16} /> New Appointment
@@ -724,42 +712,42 @@ function PatientDashboard({ setView }) {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
           {[
-            { label: "Upcoming", value: "2", color: COLORS.teal, icon: Calendar },
-            { label: "Completed", value: "12", color: COLORS.gold, icon: Check },
+            { label: "Upcoming", value: "2", color: colors.teal, icon: Calendar },
+            { label: "Completed", value: "12", color: colors.gold, icon: Check },
             { label: "Doctors Visited", value: "5", color: "#7C3AED", icon: Stethoscope },
           ].map(m => (
             <motion.div key={m.label} whileHover={{ y: -2 }}
               style={{
-                background: COLORS.white, borderRadius: 16, padding: "22px 24px",
+                background: colors.white, borderRadius: 16, padding: "22px 24px",
                 boxShadow: "0 4px 16px rgba(10,22,40,0.06)"
               }}>
               <m.icon size={20} color={m.color} />
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 700, color: COLORS.navy, marginTop: 12 }}>{m.value}</div>
-              <div style={{ color: COLORS.slate, fontSize: 13, marginTop: 4 }}>{m.label}</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 700, color: colors.navy, marginTop: 12 }}>{m.value}</div>
+              <div style={{ color: colors.slate, fontSize: 13, marginTop: 4 }}>{m.label}</div>
             </motion.div>
           ))}
         </div>
 
-        <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: COLORS.navy, marginBottom: 16 }}>Upcoming Appointments</h3>
+        <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: colors.navy, marginBottom: 16 }}>Upcoming Appointments</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {appts.map((a, i) => (
             <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
               style={{
-                background: COLORS.white, borderRadius: 14, padding: "20px 24px",
+                background: colors.white, borderRadius: 14, padding: "20px 24px",
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 boxShadow: "0 4px 16px rgba(10,22,40,0.05)"
               }}>
               <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                 <Avatar initials={a.doctor.split(" ").map(n => n[0]).join("")} color={a.color} size={44} />
                 <div>
-                  <div style={{ fontWeight: 700, color: COLORS.navy, fontSize: 15 }}>{a.doctor}</div>
-                  <div style={{ color: COLORS.slate, fontSize: 13 }}>{a.spec}</div>
+                  <div style={{ fontWeight: 700, color: colors.navy, fontSize: 15 }}>{a.doctor}</div>
+                  <div style={{ color: colors.slate, fontSize: 13 }}>{a.spec}</div>
                 </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 14 }}>{a.date}</div>
-                <div style={{ color: COLORS.teal, fontSize: 13 }}>{a.time}</div>
-                <Badge color={a.status === "confirmed" ? COLORS.teal : COLORS.gold}>{a.status}</Badge>
+                <div style={{ color: colors.navy, fontWeight: 600, fontSize: 14 }}>{a.date}</div>
+                <div style={{ color: colors.teal, fontSize: 13 }}>{a.time}</div>
+                <Badge color={a.status === "confirmed" ? colors.teal : colors.gold}>{a.status}</Badge>
               </div>
             </motion.div>
           ))}
@@ -772,9 +760,9 @@ function PatientDashboard({ setView }) {
 // ─── Admin Dashboard ──────────────────────────────────────────────────────────
 function AdminDashboard() {
   const metrics = [
-    { label: "Today's Appointments", value: "28", change: "+4", icon: Calendar, color: COLORS.teal },
+    { label: "Today's Appointments", value: "28", change: "+4", icon: Calendar, color: colors.teal },
     { label: "Total Patients", value: "1,284", change: "+12", icon: Users, color: "#7C3AED" },
-    { label: "Revenue Today", value: "₹22,400", change: "+8%", icon: TrendingUp, color: COLORS.gold },
+    { label: "Revenue Today", value: "₹22,400", change: "+8%", icon: TrendingUp, color: colors.gold },
     { label: "Avg Rating", value: "4.9★", change: "stable", icon: Star, color: "#059669" },
   ];
 
@@ -785,14 +773,14 @@ function AdminDashboard() {
     { time: "11:00", patient: "Fatima Malik", doctor: "Dr. Patel", status: "confirmed" },
   ];
 
-  const statusColor = { done: "#059669", "in-progress": COLORS.teal, waiting: COLORS.gold, confirmed: "#7C3AED" };
+  const statusColor = { done: "#059669", "in-progress": colors.teal, waiting: colors.gold, confirmed: "#7C3AED" };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, padding: "100px 32px 60px" }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, padding: "100px 32px 60px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ marginBottom: 36 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: COLORS.white, marginBottom: 4 }}>Admin Dashboard</h2>
-          <p style={{ color: COLORS.slate }}>HeartCare Clinic — Manage everything from here</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: colors.white, marginBottom: 4 }}>Admin Dashboard</h2>
+          <p style={{ color: colors.slate }}>HeartCare Clinic — Manage everything from here</p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 18, marginBottom: 36 }}>
@@ -800,31 +788,31 @@ function AdminDashboard() {
             <motion.div key={m.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
               whileHover={{ y: -3 }}
               style={{
-                background: COLORS.navyLight, borderRadius: 16, padding: "22px 24px",
-                border: `1px solid ${COLORS.border}`
+                background: colors.navyLight, borderRadius: 16, padding: "22px 24px",
+                border: `1px solid ${colors.border}`
               }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <m.icon size={20} color={m.color} />
                 <span style={{ color: m.color, fontSize: 12, fontWeight: 600 }}>{m.change}</span>
               </div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: COLORS.white }}>{m.value}</div>
-              <div style={{ color: COLORS.slate, fontSize: 13, marginTop: 4 }}>{m.label}</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: colors.white }}>{m.value}</div>
+              <div style={{ color: colors.slate, fontSize: 13, marginTop: 4 }}>{m.label}</div>
             </motion.div>
           ))}
         </div>
 
-        <div style={{ background: COLORS.navyLight, borderRadius: 20, padding: 28, border: `1px solid ${COLORS.border}` }}>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: COLORS.white, marginBottom: 20 }}>Today's Schedule</h3>
+        <div style={{ background: colors.navyLight, borderRadius: 20, padding: 28, border: `1px solid ${colors.border}` }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: colors.white, marginBottom: 20 }}>Today's Schedule</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {todayAppts.map((a, i) => (
               <div key={i} style={{
                 display: "flex", alignItems: "center", gap: 20, padding: "14px 18px",
-                background: `${COLORS.navy}80`, borderRadius: 12
+                background: `${colors.navy}80`, borderRadius: 12
               }}>
-                <div style={{ color: COLORS.teal, fontWeight: 700, fontSize: 14, minWidth: 48 }}>{a.time}</div>
+                <div style={{ color: colors.teal, fontWeight: 700, fontSize: 14, minWidth: 48 }}>{a.time}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: COLORS.white, fontWeight: 600, fontSize: 14 }}>{a.patient}</div>
-                  <div style={{ color: COLORS.slate, fontSize: 12 }}>{a.doctor}</div>
+                  <div style={{ color: colors.white, fontWeight: 600, fontSize: 14 }}>{a.patient}</div>
+                  <div style={{ color: colors.slate, fontSize: 12 }}>{a.doctor}</div>
                 </div>
                 <Badge color={statusColor[a.status]}>{a.status}</Badge>
               </div>
@@ -846,42 +834,42 @@ function SuperAdminDashboard() {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, padding: "100px 32px 60px" }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, padding: "100px 32px 60px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ marginBottom: 36 }}>
-          <div style={{ display: "inline-flex", gap: 8, alignItems: "center", background: `${COLORS.gold}18`, border: `1px solid ${COLORS.gold}30`, borderRadius: 30, padding: "4px 16px", marginBottom: 16 }}>
-            <Award size={14} color={COLORS.gold} />
-            <span style={{ color: COLORS.gold, fontSize: 12, fontWeight: 600 }}>SUPER ADMIN</span>
+          <div style={{ display: "inline-flex", gap: 8, alignItems: "center", background: `${colors.gold}18`, border: `1px solid ${colors.gold}30`, borderRadius: 30, padding: "4px 16px", marginBottom: 16 }}>
+            <Award size={14} color={colors.gold} />
+            <span style={{ color: colors.gold, fontSize: 12, fontWeight: 600 }}>SUPER ADMIN</span>
           </div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: COLORS.white, marginBottom: 4 }}>Platform Overview</h2>
-          <p style={{ color: COLORS.slate }}>Manage all clinics, doctors, and platform settings</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: colors.white, marginBottom: 4 }}>Platform Overview</h2>
+          <p style={{ color: colors.slate }}>Manage all clinics, doctors, and platform settings</p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16, marginBottom: 36 }}>
           {[
-            { label: "Total Clinics", value: "500+", icon: Building2, color: COLORS.teal },
+            { label: "Total Clinics", value: "500+", icon: Building2, color: colors.teal },
             { label: "Active Doctors", value: "1,247", icon: Stethoscope, color: "#7C3AED" },
-            { label: "Monthly Revenue", value: "₹48.2L", icon: BarChart3, color: COLORS.gold },
+            { label: "Monthly Revenue", value: "₹48.2L", icon: BarChart3, color: colors.gold },
             { label: "Total Patients", value: "52,841", icon: Users, color: "#059669" },
           ].map((m, i) => (
             <motion.div key={m.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
               style={{
-                background: COLORS.navyLight, borderRadius: 16, padding: "22px",
-                border: `1px solid ${COLORS.border}`, textAlign: "center"
+                background: colors.navyLight, borderRadius: 16, padding: "22px",
+                border: `1px solid ${colors.border}`, textAlign: "center"
               }}>
               <m.icon size={22} color={m.color} style={{ marginBottom: 10 }} />
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: COLORS.white }}>{m.value}</div>
-              <div style={{ color: COLORS.slate, fontSize: 12, marginTop: 4 }}>{m.label}</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: colors.white }}>{m.value}</div>
+              <div style={{ color: colors.slate, fontSize: 12, marginTop: 4 }}>{m.label}</div>
             </motion.div>
           ))}
         </div>
 
-        <div style={{ background: COLORS.navyLight, borderRadius: 20, padding: 28, border: `1px solid ${COLORS.border}` }}>
+        <div style={{ background: colors.navyLight, borderRadius: 20, padding: 28, border: `1px solid ${colors.border}` }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: COLORS.white }}>All Clinics</h3>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: colors.white }}>All Clinics</h3>
             <button style={{
-              background: `${COLORS.teal}18`, border: `1px solid ${COLORS.border}`,
-              borderRadius: 8, padding: "7px 16px", color: COLORS.teal, fontSize: 13,
+              background: `${colors.teal}18`, border: `1px solid ${colors.border}`,
+              borderRadius: 8, padding: "7px 16px", color: colors.teal, fontSize: 13,
               fontWeight: 600, cursor: "pointer", display: "flex", gap: 6, alignItems: "center"
             }}>
               <Plus size={14} /> Add Clinic
@@ -892,27 +880,27 @@ function SuperAdminDashboard() {
               <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "16px 20px", background: `${COLORS.navy}80`, borderRadius: 12
+                  padding: "16px 20px", background: `${colors.navy}80`, borderRadius: 12
                 }}>
                 <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: `${COLORS.teal}18`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Building2 size={18} color={COLORS.teal} />
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: `${colors.teal}18`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Building2 size={18} color={colors.teal} />
                   </div>
                   <div>
-                    <div style={{ color: COLORS.white, fontWeight: 700, fontSize: 14 }}>{c.name}</div>
-                    <div style={{ color: COLORS.slate, fontSize: 12 }}>{c.city} • {c.doctors} doctors</div>
+                    <div style={{ color: colors.white, fontWeight: 700, fontSize: 14 }}>{c.name}</div>
+                    <div style={{ color: colors.slate, fontSize: 12 }}>{c.city} • {c.doctors} doctors</div>
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ color: COLORS.white, fontWeight: 600, fontSize: 14 }}>{c.appts}</div>
-                    <div style={{ color: COLORS.slate, fontSize: 11 }}>appts</div>
+                    <div style={{ color: colors.white, fontWeight: 600, fontSize: 14 }}>{c.appts}</div>
+                    <div style={{ color: colors.slate, fontSize: 11 }}>appts</div>
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ color: COLORS.gold, fontWeight: 600, fontSize: 14 }}>{c.revenue}</div>
-                    <div style={{ color: COLORS.slate, fontSize: 11 }}>revenue</div>
+                    <div style={{ color: colors.gold, fontWeight: 600, fontSize: 14 }}>{c.revenue}</div>
+                    <div style={{ color: colors.slate, fontSize: 11 }}>revenue</div>
                   </div>
-                  <Badge color={c.status === "active" ? COLORS.teal : COLORS.red}>{c.status}</Badge>
+                  <Badge color={c.status === "active" ? colors.teal : colors.red}>{c.status}</Badge>
                 </div>
               </motion.div>
             ))}
@@ -926,11 +914,11 @@ function SuperAdminDashboard() {
 // ─── Reviews Section ──────────────────────────────────────────────────────────
 function ReviewsSection() {
   return (
-    <section style={{ background: COLORS.navy, padding: "80px 32px" }}>
+    <section style={{ background: colors.navy, padding: "80px 32px" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 50 }}>
-          <div style={{ color: COLORS.teal, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 12 }}>PATIENT REVIEWS</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 38, color: COLORS.white }}>
+          <div style={{ color: colors.teal, fontSize: 13, fontWeight: 600, letterSpacing: 1, marginBottom: 12 }}>PATIENT REVIEWS</div>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 38, color: colors.white }}>
             What Our Patients Say
           </h2>
         </div>
@@ -938,16 +926,16 @@ function ReviewsSection() {
           {REVIEWS.map((r, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
               style={{
-                background: COLORS.navyLight, borderRadius: 20, padding: "28px",
-                border: `1px solid ${COLORS.border}`
+                background: colors.navyLight, borderRadius: 20, padding: "28px",
+                border: `1px solid ${colors.border}`
               }}>
               <StarRow rating={r.rating} />
-              <p style={{ color: COLORS.slate, fontSize: 15, lineHeight: 1.6, margin: "16px 0", fontFamily: "'DM Sans', sans-serif" }}>
+              <p style={{ color: colors.slate, fontSize: 15, lineHeight: 1.6, margin: "16px 0", fontFamily: "'DM Sans', sans-serif" }}>
                 "{r.text}"
               </p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ color: COLORS.white, fontWeight: 600, fontSize: 14 }}>{r.name}</div>
-                <div style={{ color: COLORS.slate, fontSize: 12 }}>{r.date}</div>
+                <div style={{ color: colors.white, fontWeight: 600, fontSize: 14 }}>{r.name}</div>
+                <div style={{ color: colors.slate, fontSize: 12 }}>{r.date}</div>
               </div>
             </motion.div>
           ))}
@@ -961,22 +949,22 @@ function ReviewsSection() {
 function InquirySection() {
   const [sent, setSent] = useState(false);
   return (
-    <section style={{ background: COLORS.cream, padding: "80px 32px" }}>
+    <section style={{ background: colors.cream, padding: "80px 32px" }}>
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: COLORS.navy }}>Patient Inquiry</h2>
-          <p style={{ color: COLORS.slate, marginTop: 10 }}>Have a question? We'll get back to you within 2 hours.</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: colors.navy }}>Patient Inquiry</h2>
+          <p style={{ color: colors.slate, marginTop: 10 }}>Have a question? We'll get back to you within 2 hours.</p>
         </div>
         {sent ? (
           <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}
-            style={{ textAlign: "center", padding: 40, background: COLORS.white, borderRadius: 20, boxShadow: "0 8px 30px rgba(10,22,40,0.08)" }}>
-            <Check size={40} color={COLORS.teal} style={{ marginBottom: 12 }} />
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: COLORS.navy }}>Message Sent!</h3>
-            <p style={{ color: COLORS.slate, marginTop: 8 }}>Our team will contact you shortly on WhatsApp.</p>
+            style={{ textAlign: "center", padding: 40, background: colors.white, borderRadius: 20, boxShadow: "0 8px 30px rgba(10,22,40,0.08)" }}>
+            <Check size={40} color={colors.teal} style={{ marginBottom: 12 }} />
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: colors.navy }}>Message Sent!</h3>
+            <p style={{ color: colors.slate, marginTop: 8 }}>Our team will contact you shortly on WhatsApp.</p>
           </motion.div>
         ) : (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-            style={{ background: COLORS.white, borderRadius: 20, padding: 36, boxShadow: "0 8px 30px rgba(10,22,40,0.08)" }}>
+            style={{ background: colors.white, borderRadius: 20, padding: 36, boxShadow: "0 8px 30px rgba(10,22,40,0.08)" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {[
                 { label: "Your Name", type: "text", icon: User },
@@ -984,28 +972,28 @@ function InquirySection() {
                 { label: "Email Address", type: "email", icon: Mail },
               ].map(f => (
                 <div key={f.label} style={{ position: "relative" }}>
-                  <f.icon size={15} color={COLORS.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
+                  <f.icon size={15} color={colors.slate} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
                   <input type={f.type} placeholder={f.label}
                     style={{
                       width: "100%", padding: "13px 14px 13px 42px", borderRadius: 10,
-                      border: `1.5px solid ${COLORS.border}`, background: COLORS.cream,
+                      border: `1.5px solid ${colors.border}`, background: colors.cream,
                       fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none",
-                      color: COLORS.navy, boxSizing: "border-box"
+                      color: colors.navy, boxSizing: "border-box"
                     }} />
                 </div>
               ))}
               <textarea placeholder="Your message or inquiry..." rows={4}
                 style={{
                   width: "100%", padding: "13px 14px", borderRadius: 10,
-                  border: `1.5px solid ${COLORS.border}`, background: COLORS.cream,
+                  border: `1.5px solid ${colors.border}`, background: colors.cream,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none",
-                  color: COLORS.navy, resize: "none", boxSizing: "border-box"
+                  color: colors.navy, resize: "none", boxSizing: "border-box"
                 }} />
               <motion.button whileHover={{ scale: 1.02 }} onClick={() => setSent(true)}
                 style={{
-                  background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   border: "none", borderRadius: 12, padding: "14px",
-                  color: COLORS.white, fontWeight: 700, fontSize: 15, cursor: "pointer",
+                  color: colors.white, fontWeight: 700, fontSize: 15, cursor: "pointer",
                   fontFamily: "'DM Sans', sans-serif"
                 }}>
                 Send Inquiry
@@ -1021,22 +1009,22 @@ function InquirySection() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ background: COLORS.navy, borderTop: `1px solid ${COLORS.border}`, padding: "40px 32px 24px" }}>
+    <footer style={{ background: colors.navy, borderTop: `1px solid ${colors.border}`, padding: "40px 32px 24px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Stethoscope size={16} color="#fff" />
           </div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: COLORS.white }}>
-            Cliniq<span style={{ color: COLORS.teal }}>Pro</span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: colors.white }}>
+            Cliniq<span style={{ color: colors.teal }}>Pro</span>
           </span>
         </div>
-        <div style={{ color: COLORS.slate, fontSize: 13 }}>
+        <div style={{ color: colors.slate, fontSize: 13 }}>
           © 2025 CliniqPro. Built for modern healthcare.
         </div>
         <div style={{ display: "flex", gap: 20 }}>
           {["Privacy", "Terms", "Support"].map(l => (
-            <span key={l} style={{ color: COLORS.slate, fontSize: 13, cursor: "pointer" }}>{l}</span>
+            <span key={l} style={{ color: colors.slate, fontSize: 13, cursor: "pointer" }}>{l}</span>
           ))}
         </div>
       </div>
@@ -1046,6 +1034,7 @@ function Footer() {
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function CliniqPro() {
+  const { colors } = useTheme();
   const [view, setView] = useState("home");
   const [userRole, setUserRole] = useState("guest");
   const [booking, setBooking] = useState(null);
@@ -1060,7 +1049,7 @@ export default function CliniqPro() {
   }, []);
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: COLORS.cream, minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: colors.cream, minHeight: "100vh" }}>
       <Navbar view={view} setView={setView} userRole={userRole} setUserRole={setUserRole} />
 
       <AnimatePresence mode="wait">
@@ -1081,9 +1070,9 @@ export default function CliniqPro() {
         )}
         {view === "clinics" && (
           <motion.div key="clinics" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div style={{ minHeight: "100vh", background: COLORS.cream, padding: "100px 32px 60px", textAlign: "center" }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: COLORS.navy }}>Clinic Directory</h2>
-              <p style={{ color: COLORS.slate, marginTop: 10 }}>500+ clinics across India — coming soon in full view.</p>
+            <div style={{ minHeight: "100vh", background: colors.cream, padding: "100px 32px 60px", textAlign: "center" }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: colors.navy }}>Clinic Directory</h2>
+              <p style={{ color: colors.slate, marginTop: 10 }}>500+ clinics across India — coming soon in full view.</p>
             </div>
           </motion.div>
         )}

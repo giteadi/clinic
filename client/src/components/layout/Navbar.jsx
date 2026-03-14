@@ -66,7 +66,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
         }}
       >
 
-        {/* LOGO */}
+        {/* colors.GO */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -220,7 +220,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </button>
           )}
 
-          {/* LOGIN/LOGOUT BUTTON - DESKTOP ONLY */}
+          {/* colors.GIN/colors.GOUT BUTTON - DESKTOP ONLY */}
           {!isMobile && (
             isAuthenticated && actualUserRole !== "guest" ? (
               <button
