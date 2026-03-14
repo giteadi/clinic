@@ -18,14 +18,17 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // Get actual user role from Redux state
   const actualUserRole = user?.role || 'guest';
 
-  // ✅ Auto close mobile menu when screen becomes desktop
+  // ✅ Handle responsive screen size
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (!mobile) {
         setMobileMenuOpen(false);
       }
     };
@@ -106,7 +109,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
         <div
           className="desktop-nav"
           style={{
-            display: window.innerWidth > 768 ? "flex" : "none",
+            display: !isMobile ? "flex" : "none",
             gap: 28,
             alignItems: "center"
           }}
@@ -142,7 +145,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
 
           {/* USER INFO - DESKTOP ONLY */}
-          {isAuthenticated && actualUserRole !== "guest" && window.innerWidth > 768 && (
+          {isAuthenticated && actualUserRole !== "guest" && !isMobile && (
             <div style={{ 
               display: "flex", 
               alignItems: "center", 
@@ -160,7 +163,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           )}
 
           {/* DASHBOARD BUTTON - DESKTOP ONLY */}
-          {isAuthenticated && actualUserRole !== "guest" && window.innerWidth > 768 && (
+          {isAuthenticated && actualUserRole !== "guest" && !isMobile && (
             <button
               onClick={() => setView(`${actualUserRole}-dashboard`)}
               style={{
@@ -182,7 +185,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           )}
 
           {/* BOOK APPOINTMENT BUTTON - DESKTOP ONLY */}
-          {window.innerWidth > 768 && (
+          {!isMobile && (
             <button
               onClick={() => {
                 if (isAuthenticated && actualUserRole !== "guest") {
@@ -199,17 +202,16 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     setView("clinic-selection");
                   }
                 } else {
-                  setView("login");
+                  setView("clinic-selection");
                 }
               }}
-              className="desktop-book-btn"
               style={{
-                background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
-                border: "none",
+                background: `${colors.teal}15`,
+                border: `1px solid ${colors.teal}30`,
                 borderRadius: 8,
-                padding: "8px 18px",
+                padding: "6px 14px",
                 cursor: "pointer",
-                color: colors.white,
+                color: colors.teal,
                 fontSize: 13,
                 fontWeight: 600
               }}
@@ -219,7 +221,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           )}
 
           {/* LOGIN/LOGOUT BUTTON - DESKTOP ONLY */}
-          {window.innerWidth > 768 && (
+          {!isMobile && (
             isAuthenticated && actualUserRole !== "guest" ? (
               <button
                 onClick={handleLogout}
@@ -235,27 +237,28 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                   fontWeight: 500,
                   display: "flex",
                   alignItems: "center",
-                  gap: 6
+                  gap: 8,
+                  width: "100%"
                 }}
               >
-                <LogOut size={14} /> Logout
+                <LogOut size={16} /> Logout
               </button>
             ) : (
               <button
                 onClick={() => setView("login")}
-                className="desktop-login-btn"
                 style={{
-                  background: "none",
-                  border: `1px solid ${colors.border}`,
+                  background: `${colors.teal}15`,
+                  border: `1px solid ${colors.teal}30`,
                   borderRadius: 8,
                   padding: "6px 14px",
                   cursor: "pointer",
-                  color: colors.slate,
+                  color: colors.teal,
                   fontSize: 13,
-                  fontWeight: 500
+                  fontWeight: 600,
+                  width: "100%"
                 }}
               >
-                Login
+                Login / Register
               </button>
             )
           )}
@@ -265,7 +268,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-menu-btn"
             style={{
-              display: window.innerWidth <= 768 ? "flex" : "none",
+              display: isMobile ? "flex" : "none",
               background: colors.background || colors.navyLight,
               border: `1px solid ${colors.border}`,
               cursor: "pointer",
