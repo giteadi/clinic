@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Search, Calendar, Users, Clock, Plus, Edit, Trash2, Filter, ChevronRight } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
@@ -9,7 +8,7 @@ export default function AdminAppointmentPage({ setView }) {
   const { colors, theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState("");
   const [appointments, setAppointments] = useState([
     {
       id: 1,
@@ -132,7 +131,7 @@ export default function AdminAppointmentPage({ setView }) {
             text="Back to Dashboard"
             style={{ marginBottom: 24 }}
           />
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div>
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
@@ -144,7 +143,7 @@ export default function AdminAppointmentPage({ setView }) {
             <p style={{ color: colors.slate, fontSize: 16 }}>
               Book and manage patient appointments
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Action Bar */}
@@ -154,9 +153,7 @@ export default function AdminAppointmentPage({ setView }) {
           gap: 20, 
           marginBottom: 32 
         }}>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={handleBookNewAppointment}
             style={{
               background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
@@ -175,7 +172,7 @@ export default function AdminAppointmentPage({ setView }) {
           >
             <Plus size={18} />
             Book New Appointment
-          </motion.button>
+          </button>
 
           <input
             type="date"
@@ -244,29 +241,15 @@ export default function AdminAppointmentPage({ setView }) {
         {/* Appointments List */}
         <div style={{ display: "grid", gap: 20 }}>
           {filteredAppointments.map((appointment, index) => (
-            <motion.div
+            <div
               key={appointment.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
               style={{
                 background: colors.background || colors.navyLight,
                 border: `1px solid ${colors.border}`,
                 borderRadius: 16,
-                padding: 24,
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 8px 25px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = colors.teal;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-                e.target.style.borderColor = colors.border;
-              }}
-            >
+                padding: 24
+            }}
+          >
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
                 
                 {/* Date & Time */}
@@ -342,9 +325,7 @@ export default function AdminAppointmentPage({ setView }) {
                   </div>
                   
                   <div style={{ display: "flex", gap: 8 }}>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    <button
                       onClick={() => handleAppointmentAction("view", appointment.id)}
                       style={{
                         background: `${colors.teal}15`,
@@ -356,10 +337,8 @@ export default function AdminAppointmentPage({ setView }) {
                       }}
                     >
                       <ChevronRight size={16} />
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    </button>
+                    <button
                       onClick={() => handleAppointmentAction("edit", appointment.id)}
                       style={{
                         background: `${colors.gold}15`,
@@ -371,10 +350,8 @@ export default function AdminAppointmentPage({ setView }) {
                       }}
                     >
                       <Edit size={16} />
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    </button>
+                    <button
                       onClick={() => handleAppointmentAction("delete", appointment.id)}
                       style={{
                         background: `${colors.red}15`,
@@ -386,11 +363,11 @@ export default function AdminAppointmentPage({ setView }) {
                       }}
                     >
                       <Trash2 size={16} />
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

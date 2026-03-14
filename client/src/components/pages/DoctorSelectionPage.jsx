@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Search, Star, Users, Clock, Calendar, Phone, Mail, ArrowLeft, Filter, Heart, MapPin } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
@@ -136,7 +135,7 @@ export default function DoctorSelectionPage({ setView }) {
             style={{ marginBottom: 24 }}
           />
           
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div>
             <div style={{
               background: "#0f172a",
               border: `1px solid ${colors.border}`,
@@ -194,7 +193,7 @@ export default function DoctorSelectionPage({ setView }) {
             <p style={{ color: colors.slate, fontSize: 16 }}>
               Select from our experienced healthcare professionals
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Search and Filters */}
@@ -251,11 +250,8 @@ export default function DoctorSelectionPage({ setView }) {
         {/* Doctors List */}
         <div style={{ display: "grid", gap: 24 }}>
           {filteredDoctors.map((doctor, index) => (
-            <motion.div
+            <div
               key={doctor.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
               onClick={() => handleDoctorSelect(doctor)}
               style={{
                 background: theme === 'white' ? '#FFFFFF' : "#0f172a",
@@ -379,9 +375,7 @@ export default function DoctorSelectionPage({ setView }) {
                     </div>
                   </div>
                   
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDoctorSelect(doctor);
@@ -402,10 +396,10 @@ export default function DoctorSelectionPage({ setView }) {
                   >
                     Book Appointment
                     <Calendar size={16} />
-                  </motion.button>
+                  </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

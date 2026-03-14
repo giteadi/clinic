@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { MapPin, Clock, Calendar, Star } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import Avatar from "../common/Avatar";
@@ -8,11 +7,11 @@ import Badge from "../common/Badge";
 export default function DoctorCard({ doc, onBook }) {
   const { colors } = useTheme();
   return (
-    <motion.div whileHover={{ y: -4 }} style={{
+    <div style={{
       background: colors.white, borderRadius: 20, padding: 24,
       boxShadow: "0 10px 40px rgba(10,22,40,0.08)",
       border: `1px solid ${colors.border}`,
-      width: "100%", maxWidth: 360, cursor: "pointer"
+      width: "100%", maxWidth: 360
     }}>
       <div style={{ display: "flex", alignItems: "start", gap: 16, marginBottom: 20 }}>
         <Avatar initials={doc.img} color={doc.color} size={64} />
@@ -52,15 +51,7 @@ export default function DoctorCard({ doc, onBook }) {
               style={{
                 padding: "6px 12px", borderRadius: 8, border: `1px solid ${colors.border}`,
                 background: colors.cream, color: colors.navy, fontSize: 12, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s"
-              }}
-              onMouseOver={(e) => {
-                e.target.style.background = colors.teal;
-                e.target.style.color = colors.white;
-              }}
-              onMouseOut={(e) => {
-                e.target.style.background = colors.cream;
-                e.target.style.color = colors.navy;
+                fontFamily: "'DM Sans', sans-serif"
               }}>
               {slot}
             </button>
@@ -68,7 +59,7 @@ export default function DoctorCard({ doc, onBook }) {
         </div>
       </div>
 
-      <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+      <button
         onClick={() => onBook(doc, doc.slots[0])}
         style={{
           background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
@@ -78,7 +69,7 @@ export default function DoctorCard({ doc, onBook }) {
           boxShadow: `0 4px 20px ${colors.teal}40`
         }}>
         Book Appointment
-      </motion.button>
-    </motion.div>
+      </button>
+    </div>
   );
 }
