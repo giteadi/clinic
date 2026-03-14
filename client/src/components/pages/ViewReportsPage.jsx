@@ -131,7 +131,6 @@ export default function ViewReportsPage({ setView }) {
           </select>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleDownloadReport(selectedReport)}
             style={{
@@ -181,7 +180,6 @@ export default function ViewReportsPage({ setView }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -4, boxShadow: "0 8px 25px rgba(0,0,0,0.15)", borderColor: colors.teal }}
                 style={{
                   background: cardBg,
                   border: `1px solid ${cardBorder}`,

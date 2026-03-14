@@ -191,7 +191,6 @@ export default function Home({ setView }) {
 
               <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setView("clinic-selection")}
                   style={{
@@ -213,7 +212,6 @@ export default function Home({ setView }) {
                 </motion.button>
 
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setView("doctors")}
                   style={{
@@ -418,20 +416,8 @@ export default function Home({ setView }) {
                   border: `1px solid ${colors.border}`,
                   borderRadius: 16,
                   padding: 24,
-                  cursor: "pointer",
-                  transition: "all 0.3s"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "translateY(-8px)";
-                  e.target.style.boxShadow = "0 20px 40px rgba(0,0,0,0.3)";
-                  e.target.style.borderColor = COLORS.teal;
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = "none";
-                  e.target.style.borderColor = colors.border;
-                }}
-              >
+                  cursor: "pointer"
+                }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
                   <Avatar initials={doctor.image} color={doctor.color} size={60} />
                   <div>
@@ -455,8 +441,7 @@ export default function Home({ setView }) {
                     </span>
                   </div>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => setView("doctors")}
                     style={{
                       background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
@@ -564,7 +549,6 @@ export default function Home({ setView }) {
               Join thousands of satisfied patients who trust CliniQ Pro for their healthcare needs
             </p>
             <motion.button
-              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setView("clinic-selection")}
               style={{

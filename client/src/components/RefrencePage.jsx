@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar, Clock, Star, ChevronRight, Phone, MessageCircle,
   User, Shield, Stethoscope, Heart, Activity, X, Check,
@@ -89,7 +88,7 @@ function Navbar({ view, setView, userRole, setUserRole }) {
       display: "flex", alignItems: "center", justifyContent: "space-between",
       padding: "0 32px", height: 64,
     }}>
-      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+      <div
         style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
         onClick={() => setView("home")}>
         <div style={{
@@ -102,7 +101,7 @@ function Navbar({ view, setView, userRole, setUserRole }) {
         <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: colors.white }}>
           Cliniq<span style={{ color: colors.teal }}>Pro</span>
         </span>
-      </motion.div>
+      </div>
 
       <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
         {["home", "doctors", "clinics"].map(v => (
@@ -133,7 +132,7 @@ function Navbar({ view, setView, userRole, setUserRole }) {
           </button>
           <AnimatePresence>
             {open && (
-              <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+              <motion.div exit={{ opacity: 0, y: -8 }}
                 style={{
                   position: "absolute", top: 42, right: 0,
                   background: colors.navyLight, border: `1px solid ${colors.border}`,
@@ -203,7 +202,7 @@ function Hero({ setView }) {
         pointerEvents: "none"
       }} />
 
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+      <div }
         style={{ 
           textAlign: "center", 
           maxWidth: "min(900px, 90%)", 
@@ -259,7 +258,7 @@ function Hero({ setView }) {
           width: "100%",
           maxWidth: "500px"
         }}>
-          <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+          <button
             onClick={() => setView("doctors")}
             style={{
               background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
@@ -277,8 +276,8 @@ function Hero({ setView }) {
               width: "100%"
             }}>
             <Calendar size={18} /> Book Appointment
-          </motion.button>
-          <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+          </button>
+          <button
             onClick={() => setView("clinics")}
             style={{
               background: "transparent", 
@@ -296,7 +295,7 @@ function Hero({ setView }) {
               width: "100%"
             }}>
             <Building2 size={18} /> Explore Clinics
-          </motion.button>
+          </button>
         </div>
 
         {/* Stats */}
@@ -309,9 +308,8 @@ function Hero({ setView }) {
           maxWidth: "600px"
         }}>
           {STATS.map((s, i) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-              style={{
+              <div key={s.label}
+                style={{
                 textAlign: "center", 
                 padding: "clamp(16px, 3vw, 20px) clamp(20px, 4vw, 36px)",
                 borderRight: i < STATS.length - 1 ? `1px solid ${colors.border}` : "none",
@@ -329,10 +327,10 @@ function Hero({ setView }) {
                 fontSize: "clamp(11px, 2vw, 13px)", 
                 fontWeight: 500 
               }}>{s.label}</div>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
@@ -354,7 +352,7 @@ function SearchSection({ setView }) {
         display: "grid",
         gap: "clamp(20px, 4vw, 30px)"
       }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+        <div
           style={{
             background: colors.white, 
             borderRadius: "clamp(12px, 2vw, 20px)", 
@@ -410,7 +408,7 @@ function SearchSection({ setView }) {
                   boxSizing: "border-box"
                 }} />
             </div>
-            <motion.button whileHover={{ scale: 1.03 }} onClick={() => setView("doctors")}
+            <button onClick={() => setView("doctors")}
               style={{
                 background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                 border: "none", 
@@ -424,7 +422,7 @@ function SearchSection({ setView }) {
                 width: "100%"
               }}>
               Search
-            </motion.button>
+            </button>
           </div>
           {/* Specialties */}
           <div style={{ 
@@ -457,7 +455,7 @@ function SearchSection({ setView }) {
               </button>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -467,12 +465,13 @@ function SearchSection({ setView }) {
 function DoctorCard({ doc, onBook }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }} transition={{ duration: 0.3 }}
+    <div
       style={{
         background: colors.white, borderRadius: 18, overflow: "hidden",
         boxShadow: "0 4px 24px rgba(10,22,40,0.08)",
-        border: `1px solid rgba(10,22,40,0.06)`
+        border: `1px solid rgba(10,22,40,0.06)`,
+        transform: "none",
+        transition: "none"
       }}>
       {/* Header */}
       <div style={{ background: colors.navy, padding: "24px 24px 20px", position: "relative" }}>
@@ -513,7 +512,7 @@ function DoctorCard({ doc, onBook }) {
           ))}
         </div>
         <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+          <button
             onClick={() => onBook(doc, selectedSlot)}
             style={{
               flex: 1, background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
@@ -522,8 +521,8 @@ function DoctorCard({ doc, onBook }) {
               fontFamily: "'DM Sans', sans-serif"
             }}>
             {selectedSlot ? `Book ${selectedSlot}` : "Book Appointment"}
-          </motion.button>
-          <motion.button whileHover={{ scale: 1.02 }}
+          </button>
+          <button 
             style={{
               background: "#25D366", border: "none", borderRadius: 10,
               padding: "11px 14px", cursor: "pointer",
@@ -531,10 +530,10 @@ function DoctorCard({ doc, onBook }) {
               color: colors.white, fontWeight: 600, fontSize: 13
             }}>
             <MessageCircle size={15} />
-          </motion.button>
+          </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -549,7 +548,7 @@ function DoctorsView({ onBook }) {
       gridTemplateRows: "auto 1fr"
     }}>
       <div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%" }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <div>
           <h2 style={{ 
             fontFamily: "'Playfair Display', serif", 
             fontSize: "clamp(28px, 4vw, 36px)", 
@@ -567,7 +566,7 @@ function DoctorsView({ onBook }) {
           }}>
             Book with verified specialists instantly
           </p>
-        </motion.div>
+        </div>
         <div style={{ 
           display: "grid", 
           gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
@@ -592,13 +591,13 @@ function BookingModal({ doctor, slot, onClose }) {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+    <div
       style={{
         position: "fixed", inset: 0, background: "rgba(10,22,40,0.85)",
         zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center",
         padding: 20, backdropFilter: "blur(8px)"
       }}>
-      <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
+      <div
         style={{
           background: colors.white, borderRadius: 24, padding: 36, width: "100%",
           maxWidth: 480, position: "relative"
@@ -608,13 +607,13 @@ function BookingModal({ doctor, slot, onClose }) {
         </button>
 
         {done ? (
-          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ textAlign: "center", padding: "20px 0" }}>
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
             <div style={{ width: 64, height: 64, borderRadius: "50%", background: `${colors.teal}18`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
               <Check size={32} color={colors.teal} />
             </div>
             <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: colors.navy, marginBottom: 8 }}>Appointment Confirmed!</h3>
-            <p style={{ color: colors.slate }}>WhatsApp confirmation sent to your number.</p>
-          </motion.div>
+            <p style={{ color: colors.slate, marginTop: 8 }}>WhatsApp confirmation sent to your number.</p>
+          </div>
         ) : (
           <>
             <div style={{ marginBottom: 24 }}>
@@ -660,7 +659,7 @@ function BookingModal({ doctor, slot, onClose }) {
             </div>
 
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-              <motion.button whileHover={{ scale: 1.02 }} onClick={handleSubmit}
+              <button onClick={handleSubmit}
                 style={{
                   flex: 1, background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   border: "none", borderRadius: 12, padding: "13px",
@@ -668,20 +667,20 @@ function BookingModal({ doctor, slot, onClose }) {
                   fontFamily: "'DM Sans', sans-serif"
                 }}>
                 Confirm Booking
-              </motion.button>
-              <motion.button whileHover={{ scale: 1.02 }}
+              </button>
+              <button 
                 style={{
                   background: "#25D366", border: "none", borderRadius: 12, padding: "13px 16px",
                   color: colors.white, fontWeight: 600, cursor: "pointer",
                   display: "flex", alignItems: "center", gap: 6, fontSize: 14
                 }}>
                 <MessageCircle size={16} /> WhatsApp
-              </motion.button>
+              </button>
             </div>
           </>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -699,7 +698,7 @@ function PatientDashboard({ setView }) {
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, color: colors.navy, marginBottom: 4 }}>Patient Dashboard</h2>
             <p style={{ color: colors.slate }}>Welcome back, Ananya 👋</p>
           </div>
-          <motion.button whileHover={{ scale: 1.03 }} onClick={() => setView("doctors")}
+          <button onClick={() => setView("doctors")}
             style={{
               background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
               border: "none", borderRadius: 10, padding: "11px 22px",
@@ -707,7 +706,7 @@ function PatientDashboard({ setView }) {
               fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 8
             }}>
             <Plus size={16} /> New Appointment
-          </motion.button>
+          </button>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
@@ -716,7 +715,7 @@ function PatientDashboard({ setView }) {
             { label: "Completed", value: "12", color: colors.gold, icon: Check },
             { label: "Doctors Visited", value: "5", color: "#7C3AED", icon: Stethoscope },
           ].map(m => (
-            <motion.div key={m.label} whileHover={{ y: -2 }}
+            <div key={m.label} 
               style={{
                 background: colors.white, borderRadius: 16, padding: "22px 24px",
                 boxShadow: "0 4px 16px rgba(10,22,40,0.06)"
@@ -724,14 +723,14 @@ function PatientDashboard({ setView }) {
               <m.icon size={20} color={m.color} />
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 700, color: colors.navy, marginTop: 12 }}>{m.value}</div>
               <div style={{ color: colors.slate, fontSize: 13, marginTop: 4 }}>{m.label}</div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: colors.navy, marginBottom: 16 }}>Upcoming Appointments</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {appts.map((a, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
+            <div key={i}
               style={{
                 background: colors.white, borderRadius: 14, padding: "20px 24px",
                 display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -749,7 +748,7 @@ function PatientDashboard({ setView }) {
                 <div style={{ color: colors.teal, fontSize: 13 }}>{a.time}</div>
                 <Badge color={a.status === "confirmed" ? colors.teal : colors.gold}>{a.status}</Badge>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -785,8 +784,7 @@ function AdminDashboard() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 18, marginBottom: 36 }}>
           {metrics.map((m, i) => (
-            <motion.div key={m.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-              whileHover={{ y: -3 }}
+            <div key={m.label} 
               style={{
                 background: colors.navyLight, borderRadius: 16, padding: "22px 24px",
                 border: `1px solid ${colors.border}`
@@ -797,7 +795,7 @@ function AdminDashboard() {
               </div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: colors.white }}>{m.value}</div>
               <div style={{ color: colors.slate, fontSize: 13, marginTop: 4 }}>{m.label}</div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -852,7 +850,7 @@ function SuperAdminDashboard() {
             { label: "Monthly Revenue", value: "₹48.2L", icon: BarChart3, color: colors.gold },
             { label: "Total Patients", value: "52,841", icon: Users, color: "#059669" },
           ].map((m, i) => (
-            <motion.div key={m.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+            <div key={m.label} 
               style={{
                 background: colors.navyLight, borderRadius: 16, padding: "22px",
                 border: `1px solid ${colors.border}`, textAlign: "center"
@@ -860,7 +858,7 @@ function SuperAdminDashboard() {
               <m.icon size={22} color={m.color} style={{ marginBottom: 10 }} />
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: colors.white }}>{m.value}</div>
               <div style={{ color: colors.slate, fontSize: 12, marginTop: 4 }}>{m.label}</div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -877,7 +875,7 @@ function SuperAdminDashboard() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {clinics.map((c, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
+              <div key={i} 
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "16px 20px", background: `${colors.navy}80`, borderRadius: 12
@@ -902,7 +900,7 @@ function SuperAdminDashboard() {
                   </div>
                   <Badge color={c.status === "active" ? colors.teal : colors.red}>{c.status}</Badge>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -924,7 +922,7 @@ function ReviewsSection() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
           {REVIEWS.map((r, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+            <div key={i} 
               style={{
                 background: colors.navyLight, borderRadius: 20, padding: "28px",
                 border: `1px solid ${colors.border}`
@@ -937,7 +935,7 @@ function ReviewsSection() {
                 <div style={{ color: colors.white, fontWeight: 600, fontSize: 14 }}>{r.name}</div>
                 <div style={{ color: colors.slate, fontSize: 12 }}>{r.date}</div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -956,14 +954,14 @@ function InquirySection() {
           <p style={{ color: colors.slate, marginTop: 10 }}>Have a question? We'll get back to you within 2 hours.</p>
         </div>
         {sent ? (
-          <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}
+          <div 
             style={{ textAlign: "center", padding: 40, background: colors.white, borderRadius: 20, boxShadow: "0 8px 30px rgba(10,22,40,0.08)" }}>
             <Check size={40} color={colors.teal} style={{ marginBottom: 12 }} />
             <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: colors.navy }}>Message Sent!</h3>
             <p style={{ color: colors.slate, marginTop: 8 }}>Our team will contact you shortly on WhatsApp.</p>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+          <div 
             style={{ background: colors.white, borderRadius: 20, padding: 36, boxShadow: "0 8px 30px rgba(10,22,40,0.08)" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {[
@@ -989,7 +987,7 @@ function InquirySection() {
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none",
                   color: colors.navy, resize: "none", boxSizing: "border-box"
                 }} />
-              <motion.button whileHover={{ scale: 1.02 }} onClick={() => setSent(true)}
+              <button } onClick={() => setSent(true)}
                 style={{
                   background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                   border: "none", borderRadius: 12, padding: "14px",
@@ -997,9 +995,9 @@ function InquirySection() {
                   fontFamily: "'DM Sans', sans-serif"
                 }}>
                 Send Inquiry
-              </motion.button>
+              </button>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>
@@ -1054,42 +1052,42 @@ export default function CliniqPro() {
 
       <AnimatePresence mode="wait">
         {view === "home" && (
-          <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div key="home">
             <Hero setView={setView} />
             <SearchSection setView={setView} />
             <ReviewsSection />
             <InquirySection />
             <Footer />
-          </motion.div>
+          </div>
         )}
         {view === "doctors" && (
-          <motion.div key="doctors" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div key="doctors">
             <DoctorsView onBook={handleBook} />
             <Footer />
-          </motion.div>
+          </div>
         )}
         {view === "clinics" && (
-          <motion.div key="clinics" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div key="clinics">
             <div style={{ minHeight: "100vh", background: colors.cream, padding: "100px 32px 60px", textAlign: "center" }}>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: colors.navy }}>Clinic Directory</h2>
               <p style={{ color: colors.slate, marginTop: 10 }}>500+ clinics across India — coming soon in full view.</p>
             </div>
-          </motion.div>
+          </div>
         )}
         {view === "patient-dashboard" && (
-          <motion.div key="patient" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div key="patient">
             <PatientDashboard setView={setView} />
-          </motion.div>
+          </div>
         )}
         {view === "admin-dashboard" && (
-          <motion.div key="admin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div key="admin">
             <AdminDashboard />
-          </motion.div>
+          </div>
         )}
         {view === "superadmin-dashboard" && (
-          <motion.div key="superadmin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div key="superadmin">
             <SuperAdminDashboard />
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

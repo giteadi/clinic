@@ -171,20 +171,8 @@ export default function ClinicSelectionPage({ setView }) {
                 border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 24,
-                cursor: "pointer",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-4px)";
-                e.target.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = colors.teal;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-                e.target.style.borderColor = colors.border;
-              }}
-            >
+                cursor: "pointer"
+              }}>
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
                 
                 {/* Clinic Icon */}
@@ -266,7 +254,6 @@ export default function ClinicSelectionPage({ setView }) {
                   </div>
                   
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={(e) => {
                       e.stopPropagation();

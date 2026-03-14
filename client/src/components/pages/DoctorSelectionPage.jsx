@@ -259,18 +259,7 @@ export default function DoctorSelectionPage({ setView }) {
                 borderRadius: 16,
                 padding: 24,
                 cursor: "pointer",
-                transition: "all 0.2s",
                 boxShadow: theme === 'white' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-4px)";
-                e.target.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = colors.teal;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = theme === 'white' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none';
-                e.target.style.borderColor = theme === 'white' ? 'rgba(0,0,0,0.08)' : colors.border;
               }}
             >
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>

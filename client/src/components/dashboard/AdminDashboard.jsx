@@ -212,29 +212,14 @@ export default function AdminDashboard({ setView }) {
                   return (
                     <motion.button 
                       key={action.id} 
-                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleQuickAction(action)}
                       style={{
                         display: "flex", alignItems: "center", gap: 12,
                         padding: 16, background: colors.cream, borderRadius: 12,
                         border: "none", cursor: "pointer", width: "100%",
-                        transition: "all 0.2s",
                         opacity: action.enabled ? 1 : 0.5
-                      }}
-                      onMouseEnter={(e) => {
-                        if (action.enabled) {
-                          e.target.style.transform = "translateY(-2px)";
-                          e.target.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (action.enabled) {
-                          e.target.style.transform = "translateY(0)";
-                          e.target.style.boxShadow = "none";
-                        }
-                      }}
-                    >
+                      }}>
                       <div style={{ 
                         width: 40, height: 40, borderRadius: 10, 
                         background: `${action.color}18`, 

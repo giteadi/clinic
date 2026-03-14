@@ -259,7 +259,6 @@ export default function AdminBookAppointmentPage({ setView }) {
           </select>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handlePatientSearch}
             style={{
@@ -302,21 +301,8 @@ export default function AdminBookAppointmentPage({ setView }) {
                 border: `1px solid ${colors.border}`,
                 borderRadius: 16,
                 padding: 24,
-                cursor: "pointer",
-                transition: "all 0.3s ease"
-              }}
-              onClick={() => handleDoctorSelect(doctor)}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-4px)";
-                e.target.style.boxShadow = "0 12px 30px rgba(0,0,0,0.3)";
-                e.target.style.borderColor = colors.teal;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-                e.target.style.borderColor = colors.border;
-              }}
-            >
+                cursor: "pointer"
+              }}>
               <div style={{ display: "flex", alignItems: "start", gap: 16, marginBottom: 16 }}>
                 <div style={{
                   width: 60, height: 60, borderRadius: 12,
@@ -406,7 +392,6 @@ export default function AdminBookAppointmentPage({ setView }) {
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => {
                   e.stopPropagation();

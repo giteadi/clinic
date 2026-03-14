@@ -146,7 +146,6 @@ export default function DoctorsPage({ setView }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -4, scale: 1.02 }}
               style={{
                 background: `${colors.navy}F0`,
                 border: `1px solid ${colors.border}`,
