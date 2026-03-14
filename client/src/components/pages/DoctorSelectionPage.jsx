@@ -208,11 +208,11 @@ export default function DoctorSelectionPage({ setView }) {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 width: "100%",
-                background: "#0f172a",
-                border: `1px solid ${colors.border}`,
+                background: theme === 'white' ? '#FFFFFF' : "#0f172a",
+                border: `1px solid ${theme === 'white' ? 'rgba(0,0,0,0.08)' : colors.border}`,
                 borderRadius: 12,
                 padding: "12px 16px 12px 48px",
-                color: colors.white,
+                color: theme === 'white' ? '#1a202c' : colors.white,
                 fontSize: 14,
                 outline: "none"
               }}
@@ -223,11 +223,11 @@ export default function DoctorSelectionPage({ setView }) {
             value={selectedSpecialty}
             onChange={(e) => setSelectedSpecialty(e.target.value)}
             style={{
-              background: "#0f172a",
-              border: `1px solid ${colors.border}`,
+              background: theme === 'white' ? '#FFFFFF' : "#0f172a",
+              border: `1px solid ${theme === 'white' ? 'rgba(0,0,0,0.08)' : colors.border}`,
               borderRadius: 12,
               padding: "12px 16px",
-              color: colors.white,
+              color: theme === 'white' ? '#1a202c' : colors.white,
               fontSize: 14,
               cursor: "pointer",
               outline: "none"
@@ -258,12 +258,13 @@ export default function DoctorSelectionPage({ setView }) {
               transition={{ delay: index * 0.1 }}
               onClick={() => handleDoctorSelect(doctor)}
               style={{
-                background: "#0f172a",
-                border: `1px solid ${colors.border}`,
+                background: theme === 'white' ? '#FFFFFF' : "#0f172a",
+                border: `1px solid ${theme === 'white' ? 'rgba(0,0,0,0.08)' : colors.border}`,
                 borderRadius: 16,
                 padding: 24,
                 cursor: "pointer",
-                transition: "all 0.2s"
+                transition: "all 0.2s",
+                boxShadow: theme === 'white' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'
               }}
               onMouseEnter={(e) => {
                 e.target.style.transform = "translateY(-4px)";
@@ -272,8 +273,8 @@ export default function DoctorSelectionPage({ setView }) {
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-                e.target.style.borderColor = colors.border;
+                e.target.style.boxShadow = theme === 'white' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none';
+                e.target.style.borderColor = theme === 'white' ? 'rgba(0,0,0,0.08)' : colors.border;
               }}
             >
               <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
@@ -413,9 +414,10 @@ export default function DoctorSelectionPage({ setView }) {
           <div style={{
             textAlign: "center",
             padding: "60px 20px",
-            background: theme === 'white' ? colors.white : colors.navyLight,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 16
+            background: theme === 'white' ? '#FFFFFF' : colors.navyLight,
+            border: `1px solid ${theme === 'white' ? 'rgba(0,0,0,0.08)' : colors.border}`,
+            borderRadius: 16,
+            boxShadow: theme === 'white' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>👨‍⚕️</div>
             <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, marginBottom: 8 }}>
