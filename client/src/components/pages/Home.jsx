@@ -17,10 +17,11 @@ import {
   TrendingUp
 } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { THEMES } from "../../contexts/ThemeContext";
 import Avatar from "../common/Avatar";
 
 export default function Home({ setView }) {
-  const { colors } = useTheme();
+  const { theme, colors } = useTheme();
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   const features = [
@@ -170,7 +171,7 @@ export default function Home({ setView }) {
               <h1 style={{
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(36px, 5vw, 56px)",
-                color: colors.white,
+                color: theme === THEMES.WHITE ? colors.slate : colors.white,
                 fontWeight: 700,
                 lineHeight: 1.2,
                 marginBottom: 24
@@ -199,7 +200,7 @@ export default function Home({ setView }) {
                     borderRadius: 12,
                     padding: "16px 32px",
                     cursor: "pointer",
-                    color: colors.white,
+                    color: theme === THEMES.WHITE ? colors.slate : colors.white,
                     fontSize: 16,
                     fontWeight: 600,
                     display: "flex",
@@ -220,7 +221,7 @@ export default function Home({ setView }) {
                     borderRadius: 12,
                     padding: "16px 32px",
                     cursor: "pointer",
-                    color: colors.white,
+                    color: theme === THEMES.WHITE ? colors.slate : colors.white,
                     fontSize: 16,
                     fontWeight: 600,
                     display: "flex",
@@ -243,7 +244,7 @@ export default function Home({ setView }) {
                   <div key={index}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
                       <stat.icon size={20} color={colors.teal} />
-                      <span style={{ color: colors.white, fontSize: 28, fontWeight: 700 }}>
+                      <span style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 28, fontWeight: 700 }}>
                         {stat.value}
                       </span>
                     </div>
@@ -295,7 +296,7 @@ export default function Home({ setView }) {
                   }}>
                     💙
                   </div>
-                  <h3 style={{ color: colors.white, fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
+                  <h3 style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
                     CliniQ Pro
                   </h3>
                   <p style={{ color: colors.slate, fontSize: 16 }}>
@@ -320,7 +321,7 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: colors.white,
+              color: theme === THEMES.WHITE ? colors.slate : colors.white,
               marginBottom: 16
             }}>
               Why Choose CliniQ Pro?
@@ -345,7 +346,7 @@ export default function Home({ setView }) {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   style={{
-                    background: "#0f172a",
+                    background: theme === THEMES.WHITE ? "#FFFFFF" : "#0f172a",
                     border: `1px solid ${colors.border}`,
                     borderRadius: 16,
                     padding: 32,
@@ -364,7 +365,7 @@ export default function Home({ setView }) {
                   }}>
                     <Icon size={28} color={feature.color} />
                   </div>
-                  <h3 style={{ color: colors.white, fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
+                  <h3 style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
                     {feature.title}
                   </h3>
                   <p style={{ color: colors.slate, fontSize: 14, lineHeight: 1.6 }}>
@@ -389,7 +390,7 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: colors.white,
+              color: theme === THEMES.WHITE ? colors.slate : colors.white,
               marginBottom: 16
             }}>
               Meet Our Expert Doctors
@@ -412,7 +413,7 @@ export default function Home({ setView }) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 style={{
-                  background: "#0f172a",
+                  background: theme === THEMES.WHITE ? "#FFFFFF" : "#0f172a",
                   border: `1px solid ${colors.border}`,
                   borderRadius: 16,
                   padding: 24,
@@ -421,7 +422,7 @@ export default function Home({ setView }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
                   <Avatar initials={doctor.image} color={doctor.color} size={60} />
                   <div>
-                    <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
+                    <h3 style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
                       {doctor.name}
                     </h3>
                     <p style={{ color: colors.teal, fontSize: 14, marginBottom: 2 }}>
@@ -436,7 +437,7 @@ export default function Home({ setView }) {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <Star size={16} color={colors.gold} />
-                    <span style={{ color: colors.white, fontSize: 16, fontWeight: 600 }}>
+                    <span style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 16, fontWeight: 600 }}>
                       {doctor.rating}
                     </span>
                   </div>
@@ -449,7 +450,7 @@ export default function Home({ setView }) {
                       borderRadius: 8,
                       padding: "8px 16px",
                       cursor: "pointer",
-                      color: colors.white,
+                      color: theme === THEMES.WHITE ? colors.slate : colors.white,
                       fontSize: 14,
                       fontWeight: 600
                     }}
@@ -475,7 +476,7 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: colors.white,
+              color: theme === THEMES.WHITE ? colors.slate : colors.white,
               marginBottom: 16
             }}>
               What Our Patients Say
@@ -498,7 +499,7 @@ export default function Home({ setView }) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 style={{
-                  background: "#0f172a",
+                  background: theme === THEMES.WHITE ? "#FFFFFF" : "#0f172a",
                   border: `1px solid ${colors.border}`,
                   borderRadius: 16,
                   padding: 32
@@ -509,13 +510,13 @@ export default function Home({ setView }) {
                     <Star key={i} size={16} color={colors.gold} />
                   ))}
                 </div>
-                <p style={{ color: colors.white, fontSize: 16, lineHeight: 1.6, marginBottom: 24, fontStyle: "italic" }}>
+                <p style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 16, lineHeight: 1.6, marginBottom: 24, fontStyle: "italic" }}>
                   "{testimonial.content}"
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                   <Avatar initials={testimonial.avatar} color={colors.teal} size={40} />
                   <div>
-                    <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 2 }}>
+                    <h4 style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 2 }}>
                       {testimonial.name}
                     </h4>
                     <p style={{ color: colors.slate, fontSize: 14, margin: 0 }}>
@@ -530,7 +531,7 @@ export default function Home({ setView }) {
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: "80px 20px", background: colors.navy }}>
+      <section style={{ padding: "80px 20px", background: theme === THEMES.WHITE ? "#F8F9FA" : colors.navy }}>
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -540,7 +541,7 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: colors.white,
+              color: theme === THEMES.WHITE ? colors.slate : colors.white,
               marginBottom: 24
             }}>
               Ready to Take Control of Your Health?
@@ -557,7 +558,7 @@ export default function Home({ setView }) {
                 borderRadius: 12,
                 padding: "16px 40px",
                 cursor: "pointer",
-                color: colors.white,
+                color: theme === THEMES.WHITE ? colors.slate : colors.white,
                 fontSize: 18,
                 fontWeight: 600,
                 display: "inline-flex",

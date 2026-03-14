@@ -18,10 +18,11 @@ import {
   ChevronRight
 } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { THEMES } from "../../contexts/ThemeContext";
 import Link from "../common/Link";
 
 export default function Footer() {
-  const { colors } = useTheme();
+  const { theme, colors } = useTheme();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e) => {
@@ -90,7 +91,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{ background: colors.navy, borderTop: `1px solid ${colors.border}` }}>
+    <footer style={{ background: theme === THEMES.WHITE ? "#F8F9FA" : colors.navy, borderTop: `1px solid ${colors.border}` }}>
       {/* Main Footer Content */}
       <div style={{ padding: "60px 32px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -122,7 +123,7 @@ export default function Footer() {
                     fontFamily: "'Playfair Display', serif", 
                     fontSize: 22, 
                     fontWeight: 700, 
-                    color: colors.white,
+                    color: theme === THEMES.WHITE ? colors.slate : colors.white,
                     marginBottom: 2
                   }}>
                     Cliniq<span style={{ color: colors.teal }}>Pro</span>
@@ -154,7 +155,7 @@ export default function Footer() {
                         <Icon size={16} color={colors.teal} />
                       </div>
                       <div>
-                        <p style={{ color: colors.white, fontSize: 14, margin: 0 }}>{info.text}</p>
+                        <p style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 14, margin: 0 }}>{info.text}</p>
                         <p style={{ color: colors.slate, fontSize: 11, margin: 0 }}>{info.label}</p>
                       </div>
                     </div>
@@ -175,7 +176,7 @@ export default function Footer() {
                       style={{
                         width: 36,
                         height: 36,
-                        background: "#0f172a",
+                        background: theme === THEMES.WHITE ? "#FFFFFF" : "#0f172a",
                         border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         display: "flex",
@@ -197,7 +198,7 @@ export default function Footer() {
             {footerSections.map((section, index) => (
               <div key={index}>
                 <h4 style={{ 
-                  color: colors.white, 
+                  color: theme === THEMES.WHITE ? colors.slate : colors.white, 
                   fontSize: 16, 
                   fontWeight: 600, 
                   marginBottom: 20,
@@ -259,11 +260,11 @@ export default function Footer() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   style={{
-                    background: "#0f172a",
+                    background: theme === THEMES.WHITE ? "#FFFFFF" : "#0f172a",
                     border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 16px",
-                    color: colors.white,
+                    color: theme === THEMES.WHITE ? colors.slate : colors.white,
                     fontSize: 14,
                     outline: "none"
                   }}
@@ -327,7 +328,7 @@ export default function Footer() {
 
           {/* Features Row */}
           <div style={{
-            background: "#0f172a",
+            background: theme === THEMES.WHITE ? "#FFFFFF" : "#0f172a",
             border: `1px solid ${colors.border}`,
             borderRadius: 12,
             padding: 24,
@@ -360,7 +361,7 @@ export default function Footer() {
                       <Icon size={20} color={colors.teal} />
                     </div>
                     <div>
-                      <h4 style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
+                      <h4 style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
                         {feature.title}
                       </h4>
                       <p style={{ color: colors.slate, fontSize: 12, margin: 0 }}>
@@ -377,7 +378,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div style={{
-        background: "#0a0f1f",
+        background: theme === THEMES.WHITE ? "#F0F0F0" : "#0a0f1f",
         borderTop: `1px solid ${colors.border}`,
         padding: "20px 32px"
       }}>

@@ -10,6 +10,7 @@ import {
   X
 } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useClinic } from "../../contexts/ClinicContext";
 import ThemeToggle from "../common/ThemeToggle";
 import { logout, clearPersistedData } from "../../store/authSlice";
 
@@ -17,6 +18,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { colors } = useTheme();
+  const { isClinicSpecific, clinicName, primaryColor, logo } = useClinic();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -83,13 +85,18 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               width: 36,
               height: 36,
               borderRadius: 10,
-              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+              background: `linear-gradient(135deg, ${isClinicSpecific ? primaryColor : colors.teal}, ${isClinicSpecific ? primaryColor : colors.tealDark})`,
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              overflow: "hidden"
             }}
           >
-            <Stethoscope size={18} color="#fff" />
+            {logo ? (
+              <img src={logo} alt="Clinic Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <Stethoscope size={18} color="#fff" />
+            )}
           </div>
 
           <span
@@ -100,7 +107,15 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               color: colors.slate
             }}
           >
-            Cliniq<span style={{ color: colors.teal }}>Pro</span>
+            {isClinicSpecific ? (
+              <>
+                {clinicName.split(' ')[0]}<span style={{ color: primaryColor }}> {clinicName.split(' ').slice(1).join(' ')}</span>
+              </>
+            ) : (
+              <>
+                Cliniq<span style={{ color: colors.teal }}>Pro</span>
+              </>
+            )}
           </span>
         </motion.div>
 
@@ -114,7 +129,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             alignItems: "center"
           }}
         >
-          {["home", "doctors", "clinics"].map((v) => (
+          {["home", "doctors", ...(isClinicSpecific ? [] : ["clinics"])].map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
@@ -122,13 +137,13 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: view === v ? colors.teal : colors.slate,
+                color: view === v ? (isClinicSpecific ? primaryColor : colors.teal) : colors.slate,
                 fontSize: 14,
                 fontWeight: 500,
                 textTransform: "capitalize",
                 borderBottom:
                   view === v
-                    ? `2px solid ${colors.teal}`
+                    ? `2px solid ${isClinicSpecific ? primaryColor : colors.teal}`
                     : "2px solid transparent",
                 paddingBottom: 2
               }}
@@ -199,19 +214,19 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     setView("admin-appointment");
                   } else {
                     // For other users or patients without linked clinic, show clinic selection
-                    setView("clinic-selection");
+                    setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
                   }
                 } else {
-                  setView("clinic-selection");
+                  setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
                 }
               }}
               style={{
-                background: `${colors.teal}15`,
-                border: `1px solid ${colors.teal}30`,
+                background: `${isClinicSpecific ? primaryColor : colors.teal}15`,
+                border: `1px solid ${isClinicSpecific ? primaryColor : colors.teal}30`,
                 borderRadius: 8,
                 padding: "6px 14px",
                 cursor: "pointer",
-                color: colors.teal,
+                color: isClinicSpecific ? primaryColor : colors.teal,
                 fontSize: 13,
                 fontWeight: 600
               }}
@@ -331,7 +346,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           >
 
             <div style={{ display: "grid", gap: 8, marginBottom: 24 }}>
-              {["home", "doctors", "clinics"].map((v) => (
+              {["home", "doctors", ...(isClinicSpecific ? [] : ["clinics"])].map((v) => (
                 <button
                   key={v}
                   onClick={() => {
@@ -339,10 +354,10 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     setMobileMenuOpen(false);
                   }}
                   style={{
-                    background: view === v ? `${colors.teal}20` : colors.background || colors.navyLight,
+                    background: view === v ? `${isClinicSpecific ? primaryColor : colors.teal}20` : colors.background || colors.navyLight,
                     border: `1px solid ${colors.border}`,
                     cursor: "pointer",
-                    color: view === v ? colors.teal : colors.slate,
+                    color: view === v ? (isClinicSpecific ? primaryColor : colors.teal) : colors.slate,
                     fontSize: 15,
                     padding: "12px 16px",
                     borderRadius: 8,
@@ -419,12 +434,12 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     setView("admin-appointment");
                   } else {
                     // For other users or patients without linked clinic, show clinic selection
-                    setView("clinic-selection");
+                    setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
                   }
                   setMobileMenuOpen(false);
                 }}
                 style={{
-                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+                  background: `linear-gradient(135deg, ${isClinicSpecific ? primaryColor : colors.teal}, ${isClinicSpecific ? primaryColor : colors.tealDark})`,
                   border: "none",
                   borderRadius: 8,
                   padding: "12px 16px",

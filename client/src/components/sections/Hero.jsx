@@ -1,10 +1,21 @@
 import { motion } from "framer-motion";
-import { Calendar, Building2, Zap } from "lucide-react";
+import { Calendar, Building2, Zap, Star } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useClinic } from "../../contexts/ClinicContext";
 import { STATS } from "../../constants/data";
+import ClinicGallery from "./ClinicGallery";
 
 export default function Hero({ setView }) {
   const { colors, theme } = useTheme();
+  const { 
+    clinic, 
+    loading, 
+    isClinicSpecific, 
+    clinicName, 
+    primaryColor, 
+    description,
+    specialties 
+  } = useClinic();
   
   return (
     <section className="theme-transition" style={{
@@ -42,18 +53,19 @@ export default function Hero({ setView }) {
 
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8,
-          background: `${colors.teal}15`, border: `1px solid ${colors.teal}30`,
+          background: `${isClinicSpecific ? primaryColor : colors.teal}15`, 
+          border: `1px solid ${isClinicSpecific ? primaryColor : colors.teal}30`,
           borderRadius: 30, padding: "clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px)", 
           margin: "0 auto"
         }}>
-          <Zap size={14} color={colors.teal} />
+          {isClinicSpecific ? <Star size={14} color={primaryColor} /> : <Zap size={14} color={colors.teal} />}
           <span style={{ 
-            color: colors.teal, 
+            color: isClinicSpecific ? primaryColor : colors.teal, 
             fontSize: "clamp(11px, 2vw, 13px)", 
             fontWeight: 600, 
             letterSpacing: 0.5 
           }}>
-            Trusted by 500+ Clinics Across India
+            {isClinicSpecific ? `${specialties.join(' • ')}` : 'Trusted by 500+ Clinics Across India'}
           </span>
         </div>
 
@@ -64,8 +76,17 @@ export default function Hero({ setView }) {
           color: theme === 'white' ? colors.slate : colors.white, 
           fontWeight: 700
         }}>
-          Your Health,<br />
-          <span style={{ color: colors.teal }}>Beautifully</span> Managed
+          {isClinicSpecific ? (
+            <>
+              Welcome to<br />
+              <span style={{ color: primaryColor }}>{clinicName}</span>
+            </>
+          ) : (
+            <>
+              Your Health,<br />
+              <span style={{ color: colors.teal }}>Beautifully</span> Managed
+            </>
+          )}
         </h1>
 
         <p style={{
@@ -76,7 +97,7 @@ export default function Hero({ setView }) {
           maxWidth: "600px",
           margin: "0 auto"
         }}>
-          Book appointments with top doctors, manage your clinic, and deliver exceptional patient care — all in one elegant platform.
+          {description}
         </p>
 
         <div style={{ 
@@ -90,7 +111,7 @@ export default function Hero({ setView }) {
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
             onClick={() => setView("doctors")}
             style={{
-              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+              background: `linear-gradient(135deg, ${isClinicSpecific ? primaryColor : colors.teal}, ${isClinicSpecific ? primaryColor : colors.tealDark})`,
               border: "none", borderRadius: 12, 
               padding: "clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 32px)",
               color: colors.white, 
@@ -101,13 +122,13 @@ export default function Hero({ setView }) {
               alignItems: "center", 
               justifyContent: "center",
               gap: 8,
-              boxShadow: `0 8px 30px ${colors.teal}40`,
+              boxShadow: `0 8px 30px ${isClinicSpecific ? primaryColor : colors.teal}40`,
               width: "100%"
             }}>
             <Calendar size={18} /> Book Appointment
           </motion.button>
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-            onClick={() => setView("clinics")}
+            onClick={() => setView(isClinicSpecific ? "doctors" : "clinics")}
             style={{
               background: "transparent", 
               border: `1.5px solid ${colors.border}`,
@@ -123,7 +144,7 @@ export default function Hero({ setView }) {
               gap: 8,
               width: "100%"
             }}>
-            <Building2 size={18} /> Explore Clinics
+            <Building2 size={18} /> {isClinicSpecific ? 'View Doctors' : 'Explore Clinics'}
           </motion.button>
         </div>
 
@@ -150,7 +171,7 @@ export default function Hero({ setView }) {
                 fontFamily: "'Playfair Display', serif", 
                 fontSize: "clamp(24px, 4vw, 32px)", 
                 fontWeight: 700, 
-                color: colors.teal 
+                color: isClinicSpecific ? primaryColor : colors.teal 
               }}>{s.value}</div>
               <div style={{ 
                 color: colors.slate, 
@@ -160,6 +181,9 @@ export default function Hero({ setView }) {
             </motion.div>
           ))}
         </div>
+        
+        {/* Clinic-specific gallery */}
+        {isClinicSpecific && <ClinicGallery />}
       </motion.div>
     </section>
   );

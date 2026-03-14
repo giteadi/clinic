@@ -1,10 +1,15 @@
 
 
 import React from 'react';
+import { ClinicProvider } from './contexts/ClinicContext';
 import CliniqPro from './components/CliniqPro';
 
 function App() {
-  return <CliniqPro />;
+  return (
+    <ClinicProvider>
+      <CliniqPro />
+    </ClinicProvider>
+  );
 }
 
 export default App;

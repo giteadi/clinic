@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { ArrowLeft, User, Mail, Lock, Eye, EyeOff, Stethoscope, LogIn, UserPlus } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { loginSuccess, loginFailure, clearError } from "../../store/authSlice";
+import { THEMES } from "../../contexts/ThemeContext";
 
 export default function LoginPage({ setView }) {
-  const { colors } = useTheme();
+  const { theme, colors } = useTheme();
   const dispatch = useDispatch();
   const { loading, error } = useSelector(state => state.auth);
   
@@ -132,7 +133,7 @@ export default function LoginPage({ setView }) {
   return (
     <div className="theme-transition" style={{
       minHeight: "100vh",
-      background: colors.navy,
+      background: colors.theme === THEMES.WHITE ? "#F8F9FA" : colors.navy,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -181,7 +182,7 @@ export default function LoginPage({ setView }) {
 
         {/* Login Card */}
         <div style={{
-          background: `${colors.navy}F0`,
+          background: colors.theme === THEMES.WHITE ? "#FFFFFF" : `${colors.navy}F0`,
           border: `1px solid ${colors.border}`,
           borderRadius: 24, padding: "clamp(32px, 5vw, 40px)",
           backdropFilter: "blur(20px)"
@@ -194,13 +195,13 @@ export default function LoginPage({ setView }) {
               display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 16px"
             }}>
-              <Stethoscope size={32} color="#fff" />
+              <Stethoscope size={32} color={colors.white} />
             </div>
             
             <h1 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(24px, 4vw, 32px)",
-              color: colors.white, fontWeight: 700, marginBottom: 8
+              color: theme === THEMES.WHITE ? colors.slate : colors.white, fontWeight: 700, marginBottom: 8
             }}>
               {isLogin ? "Welcome Back" : "Create Account"}
             </h1>
@@ -214,7 +215,7 @@ export default function LoginPage({ setView }) {
 
           {/* Toggle Login/Register */}
           <div style={{
-            display: "flex", background: `${colors.navy}F0`,
+            display: "flex", background: theme === THEMES.WHITE ? "#F8F9FA" : `${colors.navy}F0`,
             border: `1px solid ${colors.border}`, borderRadius: 12,
             padding: 4, marginBottom: 32
           }}>
@@ -223,7 +224,7 @@ export default function LoginPage({ setView }) {
               style={{
                 flex: 1, padding: "8px 16px", border: "none",
                 borderRadius: 8, background: isLogin ? colors.teal : "none",
-                color: colors.white, fontSize: 14, fontWeight: 600,
+                color: isLogin ? colors.white : (theme === THEMES.WHITE ? colors.slate : colors.white), fontSize: 14, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.2s ease"
               }}
             >
@@ -234,7 +235,7 @@ export default function LoginPage({ setView }) {
               style={{
                 flex: 1, padding: "8px 16px", border: "none",
                 borderRadius: 8, background: !isLogin ? colors.teal : "none",
-                color: colors.white, fontSize: 14, fontWeight: 600,
+                color: !isLogin ? colors.white : (theme === THEMES.WHITE ? colors.slate : colors.white), fontSize: 14, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.2s ease"
               }}
             >
@@ -249,7 +250,7 @@ export default function LoginPage({ setView }) {
               <>
                 <div>
                   <label style={{ 
-                    display: "block", color: colors.white, 
+                    display: "block", color: theme === THEMES.WHITE ? colors.slate : colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Full Name
@@ -267,10 +268,11 @@ export default function LoginPage({ setView }) {
                       placeholder="Enter your full name"
                       style={{
                         width: "100%", padding: "12px 16px 12px 48px",
-                        background: `${colors.navy}F0`,
+                        background: theme === THEMES.WHITE ? "#F8F9FA" : `${colors.navy}F0`,
                         border: `1px solid ${colors.border}`,
-                        borderRadius: 12, color: colors.white,
-                        fontSize: 14, outline: "none"
+                        borderRadius: 12, color: theme === THEMES.WHITE ? colors.slate : colors.white,
+                        fontSize: 14, outline: "none",
+                        "::placeholder": { color: colors.slate }
                       }}
                     />
                   </div>
@@ -278,7 +280,7 @@ export default function LoginPage({ setView }) {
 
                 <div>
                   <label style={{ 
-                    display: "block", color: colors.white, 
+                    display: "block", color: theme === THEMES.WHITE ? colors.slate : colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Phone Number
@@ -295,10 +297,11 @@ export default function LoginPage({ setView }) {
                       placeholder="+91 98765 43210"
                       style={{
                         width: "100%", padding: "12px 16px 12px 48px",
-                        background: `${colors.navy}F0`,
+                        background: theme === THEMES.WHITE ? "#F8F9FA" : `${colors.navy}F0`,
                         border: `1px solid ${colors.border}`,
-                        borderRadius: 12, color: colors.white,
-                        fontSize: 14, outline: "none"
+                        borderRadius: 12, color: theme === THEMES.WHITE ? colors.slate : colors.white,
+                        fontSize: 14, outline: "none",
+                        "::placeholder": { color: colors.slate }
                       }}
                     />
                   </div>
@@ -306,7 +309,7 @@ export default function LoginPage({ setView }) {
 
                 <div>
                   <label style={{ 
-                    display: "block", color: colors.white, 
+                    display: "block", color: theme === THEMES.WHITE ? colors.slate : colors.white, 
                     fontSize: 14, fontWeight: 500, marginBottom: 8 
                   }}>
                     Role
@@ -317,15 +320,15 @@ export default function LoginPage({ setView }) {
                     onChange={handleChange}
                     style={{
                       width: "100%", padding: "12px 16px",
-                      background: `${colors.navy}F0`,
+                      background: theme === THEMES.WHITE ? "#F8F9FA" : `${colors.navy}F0`,
                       border: `1px solid ${colors.border}`,
-                      borderRadius: 12, color: colors.white,
+                      borderRadius: 12, color: theme === THEMES.WHITE ? colors.slate : colors.white,
                       fontSize: 14, outline: "none"
                     }}
                   >
-                    <option value="patient" style={{ background: colors.navy }}>Patient</option>
-                    <option value="admin" style={{ background: colors.navy }}>Clinic Admin</option>
-                    <option value="superadmin" style={{ background: colors.navy }}>Super Admin</option>
+                    <option value="patient" style={{ background: theme === THEMES.WHITE ? "#FFFFFF" : colors.navy, color: theme === THEMES.WHITE ? colors.slate : colors.white }}>Patient</option>
+                    <option value="admin" style={{ background: theme === THEMES.WHITE ? "#FFFFFF" : colors.navy, color: theme === THEMES.WHITE ? colors.slate : colors.white }}>Clinic Admin</option>
+                    <option value="superadmin" style={{ background: theme === THEMES.WHITE ? "#FFFFFF" : colors.navy, color: theme === THEMES.WHITE ? colors.slate : colors.white }}>Super Admin</option>
                   </select>
                 </div>
               </>
@@ -334,7 +337,7 @@ export default function LoginPage({ setView }) {
             {/* Email */}
             <div>
               <label style={{ 
-                display: "block", color: colors.white, 
+                display: "block", color: theme === THEMES.WHITE ? colors.slate : colors.white, 
                 fontSize: 14, fontWeight: 500, marginBottom: 8 
               }}>
                 Email Address
@@ -352,10 +355,11 @@ export default function LoginPage({ setView }) {
                   placeholder="your@email.com"
                   style={{
                     width: "100%", padding: "12px 16px 12px 48px",
-                    background: `${colors.navy}F0`,
+                    background: theme === THEMES.WHITE ? "#F8F9FA" : `${colors.navy}F0`,
                     border: `1px solid ${colors.border}`,
-                    borderRadius: 12, color: colors.white,
-                    fontSize: 14, outline: "none"
+                    borderRadius: 12, color: theme === THEMES.WHITE ? colors.slate : colors.white,
+                    fontSize: 14, outline: "none",
+                    "::placeholder": { color: colors.slate }
                   }}
                 />
               </div>
@@ -364,7 +368,7 @@ export default function LoginPage({ setView }) {
             {/* Password */}
             <div>
               <label style={{ 
-                display: "block", color: colors.white, 
+                display: "block", color: theme === THEMES.WHITE ? colors.slate : colors.white, 
                 fontSize: 14, fontWeight: 500, marginBottom: 8 
               }}>
                 Password
@@ -382,10 +386,11 @@ export default function LoginPage({ setView }) {
                   placeholder="Enter your password"
                   style={{
                     width: "100%", padding: "12px 16px 12px 48px",
-                    background: `${colors.navy}F0`,
+                    background: theme === THEMES.WHITE ? "#F8F9FA" : `${colors.navy}F0`,
                     border: `1px solid ${colors.border}`,
-                    borderRadius: 12, color: colors.white,
-                    fontSize: 14, outline: "none"
+                    borderRadius: 12, color: theme === THEMES.WHITE ? colors.slate : colors.white,
+                    fontSize: 14, outline: "none",
+                    "::placeholder": { color: colors.slate }
                   }}
                 />
                 <button
