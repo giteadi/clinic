@@ -5,7 +5,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 
 export default function ClinicSettingsPage({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [activeTab, setActiveTab] = useState("general");
   const [formData, setFormData] = useState({
     clinicName: "City Medical Center",
@@ -112,7 +112,7 @@ export default function ClinicSettingsPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: colors.white, 
+              color: theme === 'white' ? '#1a202c' : colors.white, 
               marginBottom: 12 
             }}>
               Clinic Settings
