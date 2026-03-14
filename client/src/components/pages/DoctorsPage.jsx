@@ -36,7 +36,7 @@ export default function DoctorsPage({ setView }) {
   };
 
   return (
-    <div style={{
+    <div className="theme-transition" style={{
       minHeight: "100vh",
       background: colors.navy,
       padding: "clamp(80px, 10vw, 100px) clamp(20px, 5vw, 32px)",

@@ -53,7 +53,7 @@ function CliniqProContent() {
   }, []);
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: colors.cream, minHeight: "100vh" }}>
+    <div className="theme-transition" style={{ fontFamily: "'DM Sans', sans-serif", background: colors.cream, minHeight: "100vh" }}>
       <Navbar view={view} setView={wrappedSetView} userRole={userRole} setUserRole={setUserRole} />
 
       <AnimatePresence mode="wait">

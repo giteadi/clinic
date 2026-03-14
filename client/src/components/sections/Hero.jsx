@@ -4,10 +4,10 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { STATS } from "../../constants/data";
 
 export default function Hero({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   
   return (
-    <section style={{
+    <section className="theme-transition" style={{
       minHeight: "100vh", 
       background: colors.navy,
       display: "grid",
@@ -61,7 +61,7 @@ export default function Hero({ setView }) {
           fontFamily: "'Playfair Display', serif",
           fontSize: "clamp(32px, 6vw, 72px)", 
           lineHeight: 1.1,
-          color: colors.white, 
+          color: theme === 'white' ? colors.slate : colors.white, 
           fontWeight: 700
         }}>
           Your Health,<br />
@@ -113,7 +113,7 @@ export default function Hero({ setView }) {
               border: `1.5px solid ${colors.border}`,
               borderRadius: 12, 
               padding: "clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 32px)",
-              color: colors.white, 
+              color: theme === 'white' ? colors.slate : colors.white, 
               fontSize: "clamp(14px, 2.5vw, 16px)", 
               fontWeight: 600, cursor: "pointer",
               fontFamily: "'DM Sans', sans-serif", 

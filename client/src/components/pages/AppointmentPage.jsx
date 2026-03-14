@@ -66,7 +66,7 @@ export default function AppointmentPage({ setView }) {
   const selectedDoctor = doctors.find(d => d.name === formData.doctor);
 
   return (
-    <div style={{
+    <div className="theme-transition" style={{
       minHeight: "100vh",
       background: colors.navy,
       padding: "clamp(80px, 10vw, 100px) clamp(20px, 5vw, 32px)",

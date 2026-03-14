@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, ArrowLeft, AlertCircle, CreditCard } from "lucide-react";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
 
 export default function DoctorBookingPage({ setView }) {
+  const { colors } = useTheme();
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [selectedDate, setSelectedDate] = useState("today");
@@ -94,16 +95,16 @@ export default function DoctorBookingPage({ setView }) {
   if (!selectedDoctor || !selectedClinic) {
     console.log('DoctorBookingPage Debug - Rendering loading state:', { selectedDoctor, selectedClinic });
     return (
-      <div style={{ minHeight: "100vh", background: COLORS.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", background: colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
-          <p style={{ color: COLORS.slate, fontSize: 16 }}>Loading booking information...</p>
+          <p style={{ color: colors.slate, fontSize: 16 }}>Loading booking information...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.navy, paddingTop: 80, paddingBottom: 40 }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80, paddingBottom: 40 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
         
         {/* Header */}
@@ -118,12 +119,12 @@ export default function DoctorBookingPage({ setView }) {
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
               fontSize: "clamp(28px, 4vw, 36px)", 
-              color: COLORS.white, 
+              color: colors.white, 
               marginBottom: 12 
             }}>
               Book Appointment
             </h1>
-            <p style={{ color: COLORS.slate, fontSize: 16 }}>
+            <p style={{ color: colors.slate, fontSize: 16 }}>
               Complete your booking in 3 simple steps
             </p>
           </motion.div>
@@ -141,8 +142,8 @@ export default function DoctorBookingPage({ setView }) {
                 width: 32,
                 height: 32,
                 borderRadius: "50%",
-                background: bookingStep >= item.step ? COLORS.teal : "#374151",
-                color: COLORS.white,
+                background: bookingStep >= item.step ? colors.teal : "#374151",
+                color: colors.white,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -152,7 +153,7 @@ export default function DoctorBookingPage({ setView }) {
                 {bookingStep > item.step ? <CheckCircle size={16} /> : item.step}
               </div>
               <span style={{
-                color: bookingStep >= item.step ? COLORS.white : COLORS.slate,
+                color: bookingStep >= item.step ? colors.white : colors.slate,
                 fontSize: 14,
                 fontWeight: bookingStep >= item.step ? 600 : 400
               }}>
@@ -162,7 +163,7 @@ export default function DoctorBookingPage({ setView }) {
                 <div style={{
                   flex: 1,
                   height: 2,
-                  background: bookingStep > item.step ? COLORS.teal : "#374151",
+                  background: bookingStep > item.step ? colors.teal : "#374151",
                   marginLeft: 8
                 }} />
               )}
@@ -173,8 +174,8 @@ export default function DoctorBookingPage({ setView }) {
         {/* Doctor & Clinic Summary */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{
-            background: "#0f172a",
-            border: `1px solid ${COLORS.border}`,
+            background: colors.background || colors.navyLight,
+            border: `1px solid ${colors.border}`,
             borderRadius: 16,
             padding: 24,
             marginBottom: 32
@@ -182,21 +183,21 @@ export default function DoctorBookingPage({ setView }) {
             <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
               <Avatar initials={selectedDoctor.image} color={selectedDoctor.color} size={60} />
               <div style={{ flex: 1 }}>
-                <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
+                <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 4 }}>
                   {selectedDoctor.name}
                 </h3>
-                <p style={{ color: COLORS.teal, fontSize: 14, marginBottom: 2 }}>
+                <p style={{ color: colors.teal, fontSize: 14, marginBottom: 2 }}>
                   {selectedDoctor.specialty} • {selectedDoctor.experience}
                 </p>
-                <p style={{ color: COLORS.slate, fontSize: 13 }}>
+                <p style={{ color: colors.slate, fontSize: 13 }}>
                   {selectedClinic.name} • {selectedClinic.address}
                 </p>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ color: COLORS.gold, fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
+                <div style={{ color: colors.gold, fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
                   {selectedDoctor.consultationFee}
                 </div>
-                <p style={{ color: COLORS.slate, fontSize: 12 }}>Consultation Fee</p>
+                <p style={{ color: colors.slate, fontSize: 12 }}>Consultation Fee</p>
               </div>
             </div>
           </div>
@@ -206,13 +207,13 @@ export default function DoctorBookingPage({ setView }) {
         {bookingStep === 1 && (
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <div style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 16,
               padding: 24,
               marginBottom: 32
             }}>
-              <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
                 Select Appointment Time
               </h3>
               
@@ -222,18 +223,18 @@ export default function DoctorBookingPage({ setView }) {
                   onClick={() => setSelectedDate("today")}
                   style={{
                     flex: 1,
-                    background: selectedDate === "today" ? `${COLORS.teal}20` : "#111827",
-                    border: selectedDate === "today" ? `1px solid ${COLORS.teal}` : `1px solid ${COLORS.border}`,
+                    background: selectedDate === "today" ? `${colors.teal}20` : colors.background || colors.navyLight,
+                    border: selectedDate === "today" ? `1px solid ${colors.teal}` : `1px solid ${colors.border}`,
                     borderRadius: 12,
                     padding: "16px",
                     cursor: "pointer",
                     transition: "all 0.2s"
                   }}
                 >
-                  <div style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                  <div style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
                     Today
                   </div>
-                  <div style={{ color: COLORS.slate, fontSize: 12 }}>
+                  <div style={{ color: colors.slate, fontSize: 12 }}>
                     {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                   </div>
                 </button>
@@ -242,18 +243,18 @@ export default function DoctorBookingPage({ setView }) {
                   onClick={() => setSelectedDate("tomorrow")}
                   style={{
                     flex: 1,
-                    background: selectedDate === "tomorrow" ? `${COLORS.teal}20` : "#111827",
-                    border: selectedDate === "tomorrow" ? `1px solid ${COLORS.teal}` : `1px solid ${COLORS.border}`,
+                    background: selectedDate === "tomorrow" ? `${colors.teal}20` : colors.background || colors.navyLight,
+                    border: selectedDate === "tomorrow" ? `1px solid ${colors.teal}` : `1px solid ${colors.border}`,
                     borderRadius: 12,
                     padding: "16px",
                     cursor: "pointer",
                     transition: "all 0.2s"
                   }}
                 >
-                  <div style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                  <div style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
                     Tomorrow
                   </div>
-                  <div style={{ color: COLORS.slate, fontSize: 12 }}>
+                  <div style={{ color: colors.slate, fontSize: 12 }}>
                     {new Date(Date.now() + 86400000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                   </div>
                 </button>
@@ -261,7 +262,7 @@ export default function DoctorBookingPage({ setView }) {
 
               {/* Time Slots */}
               <div>
-                <h4 style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+                <h4 style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
                   Available Time Slots
                 </h4>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 12 }}>
@@ -272,12 +273,12 @@ export default function DoctorBookingPage({ setView }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleTimeSelect(time)}
                       style={{
-                        background: selectedTime === time ? COLORS.teal : "#111827",
-                        border: selectedTime === time ? `1px solid ${COLORS.teal}` : `1px solid ${COLORS.border}`,
+                        background: selectedTime === time ? colors.teal : colors.background || colors.navyLight,
+                        border: selectedTime === time ? `1px solid ${colors.teal}` : `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
                         cursor: "pointer",
-                        color: COLORS.white,
+                        color: colors.white,
                         fontSize: 14,
                         fontWeight: 600,
                         display: "flex",
@@ -300,20 +301,20 @@ export default function DoctorBookingPage({ setView }) {
         {bookingStep === 2 && (
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <div style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 16,
               padding: 24,
               marginBottom: 32
             }}>
-              <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
                 Patient Details
               </h3>
               
               <form onSubmit={handlePatientDetailsSubmit}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
                   <div>
-                    <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Full Name *
                     </label>
                     <input
@@ -323,11 +324,11 @@ export default function DoctorBookingPage({ setView }) {
                       onChange={(e) => setPatientDetails({...patientDetails, name: e.target.value})}
                       style={{
                         width: "100%",
-                        background: "#111827",
-                        border: `1px solid ${COLORS.border}`,
+                        background: colors.background || colors.navyLight,
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: COLORS.white,
+                        color: colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -336,7 +337,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Phone Number *
                     </label>
                     <input
@@ -346,11 +347,11 @@ export default function DoctorBookingPage({ setView }) {
                       onChange={(e) => setPatientDetails({...patientDetails, phone: e.target.value})}
                       style={{
                         width: "100%",
-                        background: "#111827",
-                        border: `1px solid ${COLORS.border}`,
+                        background: colors.background || colors.navyLight,
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: COLORS.white,
+                        color: colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -359,7 +360,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Email Address *
                     </label>
                     <input
@@ -369,11 +370,11 @@ export default function DoctorBookingPage({ setView }) {
                       onChange={(e) => setPatientDetails({...patientDetails, email: e.target.value})}
                       style={{
                         width: "100%",
-                        background: "#111827",
-                        border: `1px solid ${COLORS.border}`,
+                        background: colors.background || colors.navyLight,
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: COLORS.white,
+                        color: colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -382,7 +383,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Age *
                     </label>
                     <input
@@ -394,11 +395,11 @@ export default function DoctorBookingPage({ setView }) {
                       onChange={(e) => setPatientDetails({...patientDetails, age: e.target.value})}
                       style={{
                         width: "100%",
-                        background: "#111827",
-                        border: `1px solid ${COLORS.border}`,
+                        background: colors.background || colors.navyLight,
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: COLORS.white,
+                        color: colors.white,
                         fontSize: 14,
                         outline: "none"
                       }}
@@ -407,7 +408,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   
                   <div>
-                    <label style={{ color: COLORS.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    <label style={{ color: colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
                       Gender *
                     </label>
                     <select
@@ -416,11 +417,11 @@ export default function DoctorBookingPage({ setView }) {
                       onChange={(e) => setPatientDetails({...patientDetails, gender: e.target.value})}
                       style={{
                         width: "100%",
-                        background: "#111827",
-                        border: `1px solid ${COLORS.border}`,
+                        background: colors.background || colors.navyLight,
+                        border: `1px solid ${colors.border}`,
                         borderRadius: 8,
                         padding: "12px",
-                        color: COLORS.white,
+                        color: colors.white,
                         fontSize: 14,
                         cursor: "pointer",
                         outline: "none"
@@ -444,10 +445,10 @@ export default function DoctorBookingPage({ setView }) {
                     style={{
                       width: "100%",
                       background: "#111827",
-                      border: `1px solid ${COLORS.border}`,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "12px",
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14,
                       outline: "none",
                       minHeight: 80,
@@ -463,11 +464,11 @@ export default function DoctorBookingPage({ setView }) {
                     onClick={() => setBookingStep(1)}
                     style={{
                       background: "none",
-                      border: `1px solid ${COLORS.border}`,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                       padding: "12px 24px",
                       cursor: "pointer",
-                      color: COLORS.slate,
+                      color: colors.slate,
                       fontSize: 14,
                       fontWeight: 600
                     }}
@@ -478,12 +479,12 @@ export default function DoctorBookingPage({ setView }) {
                   <button
                     type="submit"
                     style={{
-                      background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                      background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                       border: "none",
                       borderRadius: 8,
                       padding: "12px 24px",
                       cursor: "pointer",
-                      color: COLORS.white,
+                      color: colors.white,
                       fontSize: 14,
                       fontWeight: 600
                     }}
@@ -500,46 +501,46 @@ export default function DoctorBookingPage({ setView }) {
         {bookingStep === 3 && (
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <div style={{
-              background: "#0f172a",
-              border: `1px solid ${COLORS.border}`,
+              background: colors.background || colors.navyLight,
+              border: `1px solid ${colors.border}`,
               borderRadius: 16,
               padding: 24,
               marginBottom: 32
             }}>
-              <h3 style={{ color: COLORS.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+              <h3 style={{ color: colors.white, fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
                 Booking Confirmation
               </h3>
               
               {/* Appointment Summary */}
               <div style={{
-                background: `${COLORS.teal}15`,
-                border: `1px solid ${COLORS.teal}30`,
+                background: `${colors.teal}15`,
+                border: `1px solid ${colors.teal}30`,
                 borderRadius: 12,
                 padding: 20,
                 marginBottom: 24
               }}>
                 <div style={{ display: "grid", gap: 16 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Date & Time</span>
-                    <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Date & Time</span>
+                    <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
                       {selectedDate === "today" ? "Today" : "Tomorrow"}, {selectedTime}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Doctor</span>
-                    <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Doctor</span>
+                    <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
                       {selectedDoctor.name}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Clinic</span>
-                    <span style={{ color: COLORS.white, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Clinic</span>
+                    <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
                       {selectedClinic.name}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Consultation Fee</span>
-                    <span style={{ color: COLORS.gold, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Consultation Fee</span>
+                    <span style={{ color: colors.gold, fontSize: 14, fontWeight: 600 }}>
                       {selectedDoctor.consultationFee}
                     </span>
                   </div>
@@ -548,37 +549,37 @@ export default function DoctorBookingPage({ setView }) {
               
               {/* Patient Summary */}
               <div style={{
-                background: "#111827",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.background || colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 12,
                 padding: 20,
                 marginBottom: 24
               }}>
-                <h4 style={{ color: COLORS.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
+                <h4 style={{ color: colors.white, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
                   Patient Information
                 </h4>
                 <div style={{ display: "grid", gap: 12 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Name</span>
-                    <span style={{ color: COLORS.white, fontSize: 14 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Name</span>
+                    <span style={{ color: colors.white, fontSize: 14 }}>
                       {patientDetails.name}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Phone</span>
-                    <span style={{ color: COLORS.white, fontSize: 14 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Phone</span>
+                    <span style={{ color: colors.white, fontSize: 14 }}>
                       {patientDetails.phone}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Email</span>
-                    <span style={{ color: COLORS.white, fontSize: 14 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Email</span>
+                    <span style={{ color: colors.white, fontSize: 14 }}>
                       {patientDetails.email}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: COLORS.slate, fontSize: 14 }}>Age & Gender</span>
-                    <span style={{ color: COLORS.white, fontSize: 14 }}>
+                    <span style={{ color: colors.slate, fontSize: 14 }}>Age & Gender</span>
+                    <span style={{ color: colors.white, fontSize: 14 }}>
                       {patientDetails.age} years, {patientDetails.gender}
                     </span>
                   </div>
@@ -591,13 +592,13 @@ export default function DoctorBookingPage({ setView }) {
                 alignItems: "center",
                 gap: 12,
                 padding: 16,
-                background: `${COLORS.gold}15`,
-                border: `1px solid ${COLORS.gold}30`,
+                background: `${colors.gold}15`,
+                border: `1px solid ${colors.gold}30`,
                 borderRadius: 8,
                 marginBottom: 24
               }}>
-                <CreditCard size={20} color={COLORS.gold} />
-                <span style={{ color: COLORS.gold, fontSize: 14 }}>
+                <CreditCard size={20} color={colors.gold} />
+                <span style={{ color: colors.gold, fontSize: 14 }}>
                   Payment to be made at the clinic
                 </span>
               </div>
@@ -607,11 +608,11 @@ export default function DoctorBookingPage({ setView }) {
                   onClick={() => setBookingStep(2)}
                   style={{
                     background: "none",
-                    border: `1px solid ${COLORS.border}`,
+                    border: `1px solid ${colors.border}`,
                     borderRadius: 8,
                     padding: "12px 24px",
                     cursor: "pointer",
-                    color: COLORS.slate,
+                    color: colors.slate,
                     fontSize: 14,
                     fontWeight: 600
                   }}
@@ -623,12 +624,12 @@ export default function DoctorBookingPage({ setView }) {
                   onClick={handleConfirmBooking}
                   disabled={bookingConfirmed}
                   style={{
-                    background: bookingConfirmed ? COLORS.teal : `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.tealDark})`,
+                    background: bookingConfirmed ? colors.teal : `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                     border: "none",
                     borderRadius: 8,
                     padding: "12px 24px",
                     cursor: bookingConfirmed ? "not-allowed" : "pointer",
-                    color: COLORS.white,
+                    color: colors.white,
                     fontSize: 14,
                     fontWeight: 600,
                     display: "flex",

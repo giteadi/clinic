@@ -45,6 +45,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
   return (
     <>
       <nav
+        className="theme-transition"
         style={{
           position: "fixed",
           top: 0,
@@ -133,6 +134,8 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </button>
           ))}
           
+          {/* THEME TOGGLE - DESKTOP */}
+          <ThemeToggle />
         </div>
 
 
@@ -149,8 +152,8 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
               border: `1px solid ${colors.border}`,
               borderRadius: 8
             }}>
-              <User size={14} />
-              <span style={{ color: colors.white, fontSize: 13, fontWeight: 600 }}>
+              <User size={14} color={colors.slate} />
+              <span style={{ color: colors.slate, fontSize: 13, fontWeight: 600 }}>
                 {user?.name || actualUserRole}
               </span>
             </div>
@@ -309,6 +312,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             animate={{ x: 0 }}
             exit={{ x: 320 }}
             transition={{ duration: 0.25 }}
+            className="theme-transition"
             style={{
               position: "fixed",
               top: 64,
@@ -335,7 +339,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                     background: view === v ? `${colors.teal}20` : colors.background || colors.navyLight,
                     border: `1px solid ${colors.border}`,
                     cursor: "pointer",
-                    color: view === v ? colors.teal : colors.white,
+                    color: view === v ? colors.teal : colors.slate,
                     fontSize: 15,
                     padding: "12px 16px",
                     borderRadius: 8,
@@ -364,8 +368,8 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 borderRadius: 8,
                 marginBottom: 12
               }}>
-                <User size={16} />
-                <span style={{ color: colors.white, fontSize: 14, fontWeight: 600 }}>
+                <User size={16} color={colors.slate} />
+                <span style={{ color: colors.slate, fontSize: 14, fontWeight: 600 }}>
                   {user?.name || actualUserRole}
                 </span>
               </div>

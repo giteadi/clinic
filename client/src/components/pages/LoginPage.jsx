@@ -130,7 +130,7 @@ export default function LoginPage({ setView }) {
   };
 
   return (
-    <div style={{
+    <div className="theme-transition" style={{
       minHeight: "100vh",
       background: colors.navy,
       display: "flex",

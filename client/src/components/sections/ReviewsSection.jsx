@@ -5,12 +5,12 @@ import { REVIEWS } from "../../constants/data";
 import StarRow from "../common/StarRow";
 
 export default function ReviewsSection() {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   return (
-    <section style={{ background: colors.navy, padding: "100px 32px 80px" }}>
+    <section className="theme-transition" style={{ background: colors.navy, padding: "100px 32px 80px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: colors.white, marginBottom: 16, textAlign: "center", fontWeight: 700 }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: theme === 'white' ? colors.slate : colors.white, marginBottom: 16, textAlign: "center", fontWeight: 700 }}>
             What Patients Say
           </h2>
           <p style={{ color: colors.slate, fontSize: 16, marginBottom: 48, textAlign: "center", maxWidth: 600, margin: "0 auto 48px" }}>

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { COLORS } from '../../constants/colors';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function Link({ children, onClick, style = {}, className = "", ...props }) {
+  const { colors } = useTheme();
   return (
     <motion.button
       onClick={onClick}
@@ -11,7 +12,7 @@ export default function Link({ children, onClick, style = {}, className = "", ..
         border: "none",
         cursor: "pointer",
         font: "inherit",
-        color: "inherit",
+        color: colors.slate,
         textDecoration: "none",
         padding: 0,
         margin: 0,

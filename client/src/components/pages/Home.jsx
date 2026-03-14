@@ -109,7 +109,7 @@ export default function Home({ setView }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.navy }}>
+    <div style={{ minHeight: "100vh", background: colors.white }}>
       
       {/* Hero Section */}
       <section style={{
@@ -267,8 +267,8 @@ export default function Home({ setView }) {
               <div style={{
                 width: "100%",
                 height: 500,
-                background: "#0f172a",
-                border: `1px solid ${COLORS.border}`,
+                background: colors.navyLight,
+                border: `1px solid ${colors.border}`,
                 borderRadius: 20,
                 display: "flex",
                 alignItems: "center",
@@ -311,7 +311,7 @@ export default function Home({ setView }) {
       </section>
 
       {/* Features Section */}
-      <section style={{ padding: "80px 20px", background: "#0a0f1f" }}>
+      <section style={{ padding: "80px 20px", background: colors.cream }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -322,12 +322,12 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: COLORS.white,
+              color: colors.white,
               marginBottom: 16
             }}>
               Why Choose CliniQ Pro?
             </h2>
-            <p style={{ color: COLORS.slate, fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
+            <p style={{ color: colors.slate, fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
               We provide comprehensive healthcare solutions with cutting-edge technology and compassionate care
             </p>
           </motion.div>
@@ -380,7 +380,7 @@ export default function Home({ setView }) {
       </section>
 
       {/* Popular Doctors Section */}
-      <section style={{ padding: "80px 20px", background: COLORS.navy }}>
+      <section style={{ padding: "80px 20px", background: colors.navyLight }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -391,12 +391,12 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: COLORS.white,
+              color: colors.white,
               marginBottom: 16
             }}>
               Meet Our Expert Doctors
             </h2>
-            <p style={{ color: COLORS.slate, fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
+            <p style={{ color: colors.slate, fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
               Highly qualified healthcare professionals dedicated to your well-being
             </p>
           </motion.div>
@@ -479,7 +479,7 @@ export default function Home({ setView }) {
       </section>
 
       {/* Testimonials Section */}
-      <section style={{ padding: "80px 20px", background: "#0a0f1f" }}>
+      <section style={{ padding: "80px 20px", background: colors.cream }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -490,12 +490,12 @@ export default function Home({ setView }) {
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(32px, 4vw, 48px)",
-              color: COLORS.white,
+              color: colors.white,
               marginBottom: 16
             }}>
               What Our Patients Say
             </h2>
-            <p style={{ color: COLORS.slate, fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
+            <p style={{ color: colors.slate, fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
               Real stories from real patients who trust us with their health
             </p>
           </motion.div>

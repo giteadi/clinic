@@ -34,9 +34,9 @@ const themeConfig = {
       tealDark: "#089A97",
       gold: "#E8A838",
       cream: "#F8F5F0",
-      white: "#1A202C",
-      slate: "#6C757D",
-      border: "rgba(10,191,188,0.15)",
+      white: "#FFFFFF",
+      slate: "#2D3748",
+      border: "rgba(0,0,0,0.1)",
       red: "#DC2626",
     }
   },
@@ -76,12 +76,12 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('clinic-theme', theme);
     
-    // Apply smooth transition to document root when theme changes
-    document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+    // Apply smooth transition class to body during theme change
+    document.body.classList.add('theme-transition');
     
-    // Add a small delay to ensure smooth transition
+    // Remove the class after transition completes
     const timer = setTimeout(() => {
-      document.documentElement.style.transition = '';
+      document.body.classList.remove('theme-transition');
     }, 300);
     
     return () => clearTimeout(timer);

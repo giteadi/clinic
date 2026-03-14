@@ -1,50 +1,30 @@
 @import "tailwindcss";
 
-/* Global theme transition styles */
-* {
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+/* Smooth theme transitions for root element */
+:root {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Exclude specific elements from transitions for better performance */
+/* Apply transitions only to theme-relevant elements */
+body {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme-aware components with smooth transitions */
+.theme-transition {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exclude media elements from transitions for better performance */
 img,
 video,
 iframe,
 svg,
 canvas {
   transition: none !important;
-}
-
-/* Enhanced transitions for theme-related properties */
-body,
-div,
-section,
-nav,
-footer,
-header,
-main,
-article,
-aside,
-button,
-input,
-select,
-textarea,
-.card,
-.modal,
-.dropdown,
-.motion-div {
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-/* Smooth transitions for interactive elements */
-button:hover,
-input:focus,
-select:focus,
-textarea:focus {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
