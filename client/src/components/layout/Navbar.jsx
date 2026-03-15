@@ -235,19 +235,10 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </button>
           )}
 
-          {/* SUPER ADMIN LOGIN BUTTON - DESKTOP ONLY */}
-          {!isMobile && (
+          {/* SUPER ADMIN DASHBOARD BUTTON - DESKTOP ONLY */}
+          {!isMobile && isAuthenticated && actualUserRole === "superadmin" && (
             <button
-              onClick={() => {
-                console.log('🔐 Super Admin button clicked!');
-                console.log('🔐 Current view before change:', window.location.hash);
-                console.log('🔐 Setting view to superadmin-login');
-                
-                // Direct setView without navigation
-                setView("superadmin-login");
-                
-                console.log('🔐 setView called with superadmin-login');
-              }}
+              onClick={() => setView("superadmin-dashboard")}
               style={{
                 background: `${colors.gold}15`,
                 border: `1px solid ${colors.gold}30`,
@@ -259,7 +250,7 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
                 fontWeight: 600
               }}
             >
-              🔐 Super Admin
+              🔐 Admin Panel
             </button>
           )}
 

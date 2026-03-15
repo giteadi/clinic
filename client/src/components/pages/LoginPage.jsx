@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { ArrowLeft, User, Mail, Lock, Eye, EyeOff, Stethoscope, LogIn, UserPlus, LogOut } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
-import { loginSuccess, loginFailure, clearError, logout } from "../../store/authSlice";
+import { setUser, clearError, logout } from "../../store/slices/authSlice";
 import { THEMES } from "../../contexts/ThemeContext";
 
 export default function LoginPage({ setView }) {
@@ -137,25 +137,21 @@ export default function LoginPage({ setView }) {
     // Basic validation - more strict checks
     if (!formData.email || formData.email.trim() === '') {
       console.log('Email validation failed:', formData.email);
-      dispatch(loginFailure("Please enter email"));
       return;
     }
 
     if (!formData.password || formData.password.trim() === '') {
       console.log('Password validation failed:', formData.password);
-      dispatch(loginFailure("Please enter password"));
       return;
     }
 
     if (!isLogin && (!formData.name || formData.name.trim() === '')) {
       console.log('Name validation failed:', formData.name);
-      dispatch(loginFailure("Please enter your name"));
       return;
     }
 
     if (!isLogin && (!formData.phone || formData.phone.trim() === '')) {
       console.log('Phone validation failed:', formData.phone);
-      dispatch(loginFailure("Please enter phone number"));
       return;
     }
 
@@ -176,7 +172,7 @@ export default function LoginPage({ setView }) {
             clinicId: 1,
             phone: "+91 98765 43210"
           };
-          dispatch(loginSuccess({ user, token: "mock-admin-token" }));
+          dispatch(setUser({ user, token: "mock-admin-token" }));
         } else if (formData.email === "superadmin@cliniqpro.com" && formData.password === "SuperAdmin@123") {
           console.log('✅ Super Admin login successful');
           const user = {
@@ -186,9 +182,9 @@ export default function LoginPage({ setView }) {
             role: "superadmin", 
             phone: "+91 98765 43211"
           };
-          console.log('🔥 Dispatching loginSuccess with:', { user, token: "mock-super-token" });
-          dispatch(loginSuccess({ user, token: "mock-super-token" }));
-          console.log('✅ LoginSuccess dispatched');
+          console.log('🔥 Dispatching setUser with:', { user, token: "mock-super-token" });
+          dispatch(setUser({ user, token: "mock-super-token" }));
+          console.log('✅ setUser dispatched');
         } else if (formData.email === "patient@clinic.com" && formData.password === "patient123") {
           console.log('✅ Patient login successful');
           const user = {
@@ -211,7 +207,7 @@ export default function LoginPage({ setView }) {
               availableSlots: 45
             }
           };
-          dispatch(loginSuccess({ user, token: "mock-patient-token" }));
+          dispatch(setUser({ user, token: "mock-patient-token" }));
         } else {
           console.log('❌ Invalid credentials, trying generic patient login');
           // Generic patient login (for demo)
@@ -235,7 +231,7 @@ export default function LoginPage({ setView }) {
               availableSlots: 45
             }
           };
-          dispatch(loginSuccess({ user, token: "mock-patient-token" }));
+          dispatch(setUser({ user, token: "mock-patient-token" }));
         }
       } else {
         // Registration logic
@@ -246,11 +242,10 @@ export default function LoginPage({ setView }) {
           role: formData.role,
           phone: formData.phone
         };
-        dispatch(loginSuccess({ user, token: "mock-register-token" }));
+        dispatch(setUser({ user, token: "mock-register-token" }));
       }
     } catch (err) {
       console.error('Authentication error:', err);
-      dispatch(loginFailure("Login failed. Please try again."));
     }
   };
 
