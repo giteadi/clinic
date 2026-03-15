@@ -99,7 +99,7 @@ async function createTables() {
         role ENUM('admin', 'receptionist', 'doctor') DEFAULT 'receptionist',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE,
-        UNIQUE KEY (clinic_email, email),
+        UNIQUE KEY (clinic_id, email),
         INDEX (clinic_id)
       )
     `);

@@ -1,11 +1,12 @@
-import { getClinicApiUrl } from '../utils/subdomainDetector';
+import { getClinicApiUrl, getClinicFromSubdomain } from '../utils/subdomainDetector';
 
 /**
  * Service for fetching clinic-specific data
  */
 class ClinicService {
   constructor() {
-    this.baseUrl = getClinicApiUrl();
+    const subdomain = getClinicFromSubdomain();
+    this.baseUrl = getClinicApiUrl(subdomain);
   }
 
   /**

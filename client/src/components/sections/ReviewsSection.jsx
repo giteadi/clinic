@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { THEMES } from "../../contexts/ThemeContext";
 import { useClinic } from "../../contexts/ClinicContext";
 import clinicService from "../../services/clinicService";
 import { REVIEWS } from "../../constants/data";
@@ -19,7 +20,9 @@ export default function ReviewsSection() {
         setLoading(true);
         try {
           const clinicReviews = await clinicService.getClinicReviews(clinicId);
-          setReviews(clinicReviews);
+          console.log('API Response:', clinicReviews); // Debug log
+          // API returns { success: true, data: [...] }
+          setReviews(clinicReviews.data || clinicReviews);
         } catch (error) {
           console.error('Error loading clinic reviews:', error);
           setReviews(REVIEWS);
@@ -37,7 +40,7 @@ export default function ReviewsSection() {
     <section className="theme-transition" style={{ background: colors.navy, padding: "100px 32px 80px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: theme === 'white' ? colors.slate : colors.white, marginBottom: 16, textAlign: "center", fontWeight: 700 }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, color: theme === THEMES.WHITE ? colors.slate : colors.white, marginBottom: 16, textAlign: "center", fontWeight: 700 }}>
             {isClinicSpecific ? `What Patients Say About ${clinicName}` : 'What Patients Say'}
           </h2>
           <p style={{ color: colors.slate, fontSize: 16, marginBottom: 48, textAlign: "center", maxWidth: 600, margin: "0 auto 48px" }}>
@@ -52,7 +55,7 @@ export default function ReviewsSection() {
             <div style={{ textAlign: 'center', color: colors.slate, padding: '40px' }}>
               Loading reviews...
             </div>
-          ) : (
+          ) : Array.isArray(reviews) && reviews.length > 0 ? (
             reviews.map((r, i) => (
               <motion.div key={r.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 style={{
@@ -80,6 +83,10 @@ export default function ReviewsSection() {
                 <div style={{ color: isClinicSpecific ? primaryColor : colors.teal, fontSize: 12, fontWeight: 500 }}>{r.date}</div>
               </motion.div>
             ))
+          ) : (
+            <div style={{ textAlign: 'center', color: colors.slate, padding: '40px' }}>
+              No reviews available yet.
+            </div>
           )}
         </div>
       </div>

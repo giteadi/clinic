@@ -1,14 +1,18 @@
 
 
 import React from 'react';
+import { Provider } from 'react-redux';
 import { ClinicProvider } from './contexts/ClinicContext';
+import { store, persistor } from './store/store';
 import CliniqPro from './components/CliniqPro';
 
 function App() {
   return (
-    <ClinicProvider>
-      <CliniqPro />
-    </ClinicProvider>
+    <Provider store={store}>
+      <ClinicProvider>
+        <CliniqPro />
+      </ClinicProvider>
+    </Provider>
   );
 }
 

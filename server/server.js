@@ -13,6 +13,7 @@ const doctorRoutes = require('./routes/doctors');
 const appointmentRoutes = require('./routes/appointments');
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
+const clinicReviewsRoutes = require('./routes/clinicReviews');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -43,6 +44,7 @@ app.use(clinicMiddleware);
 
 // Routes
 app.use('/api/clinics', clinicRoutes);
+app.use('/api/clinics', clinicReviewsRoutes); // Add clinic-specific routes
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/users', userRoutes);

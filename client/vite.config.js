@@ -15,6 +15,20 @@ export default defineConfig({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    },
+    // Proxy API requests to backend
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+        secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            // Add clinic subdomain header for multi-tenant architecture
+            proxyReq.setHeader('Host', 'citydental.localhost')
+          })
+        }
+      }
     }
   }
 })
