@@ -7,6 +7,7 @@ import authSlice from './slices/authSlice'
 import clinicSlice from './slices/clinicSlice'
 import doctorSlice from './slices/doctorSlice'
 import appointmentSlice from './slices/appointmentSlice'
+import superAdminSlice from './slices/superAdminSlice'
 
 // Root reducer
 const rootReducer = combineReducers({
@@ -14,10 +15,11 @@ const rootReducer = combineReducers({
   clinic: clinicSlice,
   doctors: doctorSlice,
   appointments: appointmentSlice,
+  superAdmin: superAdminSlice,
 })
 
 // Load persisted state
-const preloadedState = loadState();
+const preloadedState = undefined; // Temporarily disable localStorage to fix login issue
 
 // Configure store
 export const store = configureStore({

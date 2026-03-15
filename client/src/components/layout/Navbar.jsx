@@ -235,7 +235,35 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             </button>
           )}
 
-          {/* colors.GIN/colors.GOUT BUTTON - DESKTOP ONLY */}
+          {/* SUPER ADMIN LOGIN BUTTON - DESKTOP ONLY */}
+          {!isMobile && (
+            <button
+              onClick={() => {
+                console.log('🔐 Super Admin button clicked!');
+                console.log('🔐 Current view before change:', window.location.hash);
+                console.log('🔐 Setting view to superadmin-login');
+                
+                // Direct setView without navigation
+                setView("superadmin-login");
+                
+                console.log('🔐 setView called with superadmin-login');
+              }}
+              style={{
+                background: `${colors.gold}15`,
+                border: `1px solid ${colors.gold}30`,
+                borderRadius: 8,
+                padding: "6px 14px",
+                cursor: "pointer",
+                color: colors.gold,
+                fontSize: 13,
+                fontWeight: 600
+              }}
+            >
+              🔐 Super Admin
+            </button>
+          )}
+
+          {/* LOGOUT BUTTON - DESKTOP ONLY */}
           {!isMobile && (
             isAuthenticated && actualUserRole !== "guest" ? (
               <button

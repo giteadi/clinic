@@ -13,6 +13,7 @@ import ClinicPage from "./pages/ClinicPage";
 import PatientDashboard from "./dashboard/PatientDashboard";
 import AdminDashboard from "./dashboard/AdminDashboard";
 import SuperAdminDashboard from "./dashboard/SuperAdminDashboard";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
 import SystemControls from "./admin/SystemControls";
 import ClinicSelectionPage from "./pages/ClinicSelectionPage";
 import DoctorSelectionPage from "./pages/DoctorSelectionPage";
@@ -41,7 +42,10 @@ function CliniqProContent() {
   };
 
   const wrappedSetView = (newView) => {
-    console.log('CliniqPro Debug - View changing from', view, 'to', newView);
+    console.log('🔄 CliniqPro Debug - View changing from', view, 'to', newView);
+    console.log('🔄 Hash before change:', window.location.hash);
+    console.log('🔄 New view requested:', newView);
+    console.log('🔄 Stack trace:', new Error().stack);
     setView(newView);
   };
 
@@ -100,6 +104,16 @@ function CliniqProContent() {
           {view === "superadmin-dashboard" && (
             <div key="superadmin">
               <SuperAdminDashboard setView={wrappedSetView} />
+            </div>
+          )}
+          {view === "superadmin-login" && (
+            <div key="superadmin-login">
+              <SuperAdminLogin setView={wrappedSetView} onLogin={(adminData) => {
+                // Store admin data and go to dashboard
+                localStorage.setItem('superAdminData', JSON.stringify(adminData));
+                console.log('🎯 Super Admin onLogin called, switching to superadmin-dashboard');
+                setView("superadmin-dashboard");
+              }} />
             </div>
           )}
           {view === "system-controls" && (

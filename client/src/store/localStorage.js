@@ -10,7 +10,9 @@ export const loadState = () => {
     if (serializedState === null) {
       return undefined;
     }
-    return JSON.parse(serializedState);
+    const parsedState = JSON.parse(serializedState);
+    console.log('📦 Loading state from localStorage:', parsedState);
+    return parsedState;
   } catch (error) {
     console.warn('Error loading state from localStorage:', error);
     return undefined;

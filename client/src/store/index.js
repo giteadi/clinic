@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import { combineReducers } from '@reduxjs/toolkit';
-import authSlice from './authSlice';
-import clinicSlice from './clinicSlice';
-import superAdminSlice from './superAdminSlice';
+import authSlice from './slices/authSlice';
+import clinicSlice from './slices/clinicSlice';
+import superAdminSlice from './slices/superAdminSlice';
 import quickActionsSlice from './quickActionsSlice';
 
 // Create custom storage using localStorage directly

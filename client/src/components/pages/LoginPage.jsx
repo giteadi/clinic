@@ -1,18 +1,28 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import { ArrowLeft, User, Mail, Lock, Eye, EyeOff, Stethoscope, LogIn, UserPlus } from "lucide-react";
+import { ArrowLeft, User, Mail, Lock, Eye, EyeOff, Stethoscope, LogIn, UserPlus, LogOut } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
-import { loginSuccess, loginFailure, clearError } from "../../store/authSlice";
+import { loginSuccess, loginFailure, clearError, logout } from "../../store/authSlice";
 import { THEMES } from "../../contexts/ThemeContext";
 
 export default function LoginPage({ setView }) {
   const { theme, colors } = useTheme();
   const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.auth);
+  const { loading, error, user, isAuthenticated } = useSelector(state => {
+  console.log('🔍 Redux state check:', { 
+    auth: state.auth, 
+    isAuthenticated: state.auth.isAuthenticated, 
+    user: state.auth.user 
+  });
+  return state.auth;
+});
   
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // UI state only
+  const isSubmittingRef = useRef(false); // Synchronous guard
+  const formRef = useRef(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,7 +31,96 @@ export default function LoginPage({ setView }) {
     role: "patient"
   });
 
+  // Reset form when switching between login/register
+  useEffect(() => {
+    setFormData({
+      email: "",
+      password: "",
+      name: "",
+      phone: "",
+      role: "patient"
+    });
+  }, [isLogin]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setFormData({
+      email: "",
+      password: "",
+      name: "",
+      phone: "",
+      role: "patient"
+    });
+  };
+
+  // Reset form on component mount
+  useEffect(() => {
+    console.log('🔄 LoginPage mounted, resetting form');
+    setFormData({
+      email: "",
+      password: "",
+      name: "",
+      phone: "",
+      role: "patient"
+    });
+    setIsSubmitting(false);
+  }, []);
+
+  // Handle dashboard redirect after authentication
+  useEffect(() => {
+    console.log('🔄 LoginPage - Auth state check:', { isAuthenticated, user: !!user, userRole: user?.role });
+    if (isAuthenticated && user) {
+      console.log('🔄 LoginPage - Authentication successful, redirecting...', { role: user.role });
+      if (user.role === "superadmin") {
+        console.log('🎯 Redirecting to superadmin-dashboard');
+        setView("superadmin-dashboard");
+      } else if (user.role === "admin") {
+        console.log('🎯 Redirecting to admin-dashboard');
+        setView("admin-dashboard");
+      } else {
+        console.log('🎯 Redirecting to patient-dashboard');
+        setView("patient-dashboard");
+      }
+    } else {
+      console.log('🔄 LoginPage - Not authenticated yet:', { isAuthenticated, user });
+    }
+  }, [isAuthenticated, user, setView]);
+
+  // Add this after the useState declarations
+  const formSubmitSource = useRef('manual');
+
+  const handleManualSubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('🚨 Manual submit triggered');
+    
+    // 🚨 AGGRESSIVE GUARD: Prevent any multiple calls
+    if (isSubmittingRef.current) {
+      console.log('🚨 BLOCKED: Form already submitting (aggressive guard)');
+      return;
+    }
+    
+    // 🚨 IMMEDIATE LOCK: Set before any async operations
+    isSubmittingRef.current = true;
+    console.log('🚨 LOCKED: Submission guard activated');
+    
+    setIsSubmitting(true);
+    
+    try {
+      await handleSubmit(e);
+    } catch (error) {
+      console.error('🚨 Submit error:', error);
+    } finally {
+      // Always reset the guard
+      console.log('🚨 UNLOCKED: Finally block reset');
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
+    }
+  };
+
   const handleChange = (e) => {
+    console.log('📝 Form field changed:', { name: e.target.name, value: e.target.value });
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -29,14 +128,46 @@ export default function LoginPage({ setView }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    console.log('handleSubmit called!', { e, formData, isLogin, isSubmittingRef: isSubmittingRef.current });
+    
+    // Don't check guard here since handleManualSubmit already handles it
+    
     dispatch(clearError());
+
+    // Basic validation - more strict checks
+    if (!formData.email || formData.email.trim() === '') {
+      console.log('Email validation failed:', formData.email);
+      dispatch(loginFailure("Please enter email"));
+      return;
+    }
+
+    if (!formData.password || formData.password.trim() === '') {
+      console.log('Password validation failed:', formData.password);
+      dispatch(loginFailure("Please enter password"));
+      return;
+    }
+
+    if (!isLogin && (!formData.name || formData.name.trim() === '')) {
+      console.log('Name validation failed:', formData.name);
+      dispatch(loginFailure("Please enter your name"));
+      return;
+    }
+
+    if (!isLogin && (!formData.phone || formData.phone.trim() === '')) {
+      console.log('Phone validation failed:', formData.phone);
+      dispatch(loginFailure("Please enter phone number"));
+      return;
+    }
+
+    console.log('Form validation passed, proceeding with authentication...');
+    console.log('🔑 Login attempt:', { email: formData.email, isLogin, passwordLength: formData.password.length });
 
     // Mock authentication logic
     try {
       if (isLogin) {
-        // Login logic
+        // Login logic - check email/password only, ignore role field for login
         if (formData.email === "admin@clinic.com" && formData.password === "admin123") {
+          console.log('✅ Admin login successful');
           const user = {
             id: 1,
             name: "Admin User",
@@ -46,18 +177,20 @@ export default function LoginPage({ setView }) {
             phone: "+91 98765 43210"
           };
           dispatch(loginSuccess({ user, token: "mock-admin-token" }));
-          setView("admin-dashboard");
-        } else if (formData.email === "superadmin@clinic.com" && formData.password === "super123") {
+        } else if (formData.email === "superadmin@cliniqpro.com" && formData.password === "SuperAdmin@123") {
+          console.log('✅ Super Admin login successful');
           const user = {
             id: 2,
             name: "Super Admin",
             email: formData.email,
-            role: "superadmin",
+            role: "superadmin", 
             phone: "+91 98765 43211"
           };
+          console.log('🔥 Dispatching loginSuccess with:', { user, token: "mock-super-token" });
           dispatch(loginSuccess({ user, token: "mock-super-token" }));
-          setView("superadmin-dashboard");
+          console.log('✅ LoginSuccess dispatched');
         } else if (formData.email === "patient@clinic.com" && formData.password === "patient123") {
+          console.log('✅ Patient login successful');
           const user = {
             id: 3,
             name: "John Doe",
@@ -72,15 +205,15 @@ export default function LoginPage({ setView }) {
               rating: 4.8,
               doctors: 25,
               specialties: ["General", "Cardiology", "Orthopedics"],
-              image: "🏥",
+              image: "",
               timings: "24/7",
               distance: "2.5 km",
               availableSlots: 45
             }
           };
           dispatch(loginSuccess({ user, token: "mock-patient-token" }));
-          setView("patient-dashboard");
         } else {
+          console.log('❌ Invalid credentials, trying generic patient login');
           // Generic patient login (for demo)
           const user = {
             id: Math.floor(Math.random() * 1000),
@@ -96,14 +229,13 @@ export default function LoginPage({ setView }) {
               rating: 4.8,
               doctors: 25,
               specialties: ["General", "Cardiology", "Orthopedics"],
-              image: "🏥",
+              image: "",
               timings: "24/7",
               distance: "2.5 km",
               availableSlots: 45
             }
           };
           dispatch(loginSuccess({ user, token: "mock-patient-token" }));
-          setView("patient-dashboard");
         }
       } else {
         // Registration logic
@@ -115,17 +247,9 @@ export default function LoginPage({ setView }) {
           phone: formData.phone
         };
         dispatch(loginSuccess({ user, token: "mock-register-token" }));
-        
-        // Redirect based on role
-        if (formData.role === "admin") {
-          setView("admin-dashboard");
-        } else if (formData.role === "superadmin") {
-          setView("superadmin-dashboard");
-        } else {
-          setView("patient-dashboard");
-        }
       }
     } catch (err) {
+      console.error('Authentication error:', err);
       dispatch(loginFailure("Login failed. Please try again."));
     }
   };
@@ -243,8 +367,72 @@ export default function LoginPage({ setView }) {
             </button>
           </div>
 
+          {/* Already Logged In Section */}
+          {isAuthenticated && user && (
+            <div style={{
+              marginBottom: 24,
+              padding: 16,
+              background: `${colors.teal}10`,
+              border: `1px solid ${colors.teal}30`,
+              borderRadius: 12,
+              textAlign: "center"
+            }}>
+              <div style={{ marginBottom: 12 }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: "50%",
+                  background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  margin: "0 auto 8px"
+                }}>
+                  <User size={24} color={colors.white} />
+                </div>
+                <h4 style={{ color: theme === THEMES.WHITE ? colors.slate : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
+                  Already logged in as {user.name}
+                </h4>
+                <p style={{ color: colors.slate, fontSize: 13, marginBottom: 12 }}>
+                  {user.email} • {user.role}
+                </p>
+              </div>
+              <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+                <button
+                  onClick={() => {
+                    const dashboardMap = {
+                      patient: 'patient-dashboard',
+                      admin: 'admin-dashboard',
+                      superadmin: 'superadmin-dashboard'
+                    };
+                    setView(dashboardMap[user.role] || 'home');
+                  }}
+                  style={{
+                    padding: "8px 16px",
+                    background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+                    border: "none", borderRadius: 8,
+                    color: colors.white, fontSize: 13, fontWeight: 600,
+                    cursor: "pointer", transition: "all 0.2s ease"
+                  }}
+                >
+                  Go to Dashboard
+                </button>
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    padding: "8px 16px",
+                    background: "none",
+                    border: `1px solid ${colors.gold}`,
+                    borderRadius: 8,
+                    color: colors.gold, fontSize: 13, fontWeight: 600,
+                    cursor: "pointer", transition: "all 0.2s ease"
+                  }}
+                >
+                  <LogOut size={14} style={{ marginRight: 4 }} />
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: "grid", gap: 20 }}>
+          <form ref={formRef} onSubmit={handleManualSubmit} style={{ display: "grid", gap: 20 }}>
             {/* Registration Fields */}
             {!isLogin && (
               <>
@@ -422,18 +610,18 @@ export default function LoginPage({ setView }) {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isSubmitting}
               style={{
                 padding: "14px",
-                background: loading ? `${colors.teal}50` : `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+                background: (loading || isSubmitting) ? `${colors.teal}50` : `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
                 border: "none", borderRadius: 12,
                 color: colors.white, fontSize: 16, fontWeight: 600,
-                cursor: loading ? "not-allowed" : "pointer",
+                cursor: (loading || isSubmitting) ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 transition: "all 0.2s ease"
               }}
             >
-              {loading ? (
+              {loading || isSubmitting ? (
                 "Processing..."
               ) : (
                 <>
@@ -458,7 +646,7 @@ export default function LoginPage({ setView }) {
               <div style={{ fontSize: 11, color: colors.slate, lineHeight: 1.6 }}>
                 <div><strong>Patient:</strong> patient@clinic.com / patient123</div>
                 <div><strong>Admin:</strong> admin@clinic.com / admin123</div>
-                <div><strong>Super Admin:</strong> superadmin@clinic.com / super123</div>
+                <div><strong>Super Admin:</strong> superadmin@cliniqpro.com / SuperAdmin@123</div>
               </div>
             </div>
           )}

@@ -18,6 +18,10 @@ async function createTables() {
         email VARCHAR(255),
         address TEXT,
         logo VARCHAR(500),
+        primary_color VARCHAR(7),
+        secondary_color VARCHAR(7),
+        description TEXT,
+        status ENUM('active', 'inactive', 'maintenance') DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX (slug)
       )
@@ -66,25 +70,25 @@ async function createTables() {
       )
     `);
 
-    // Appointments table - THE MOST IMPORTANT TABLE
+    // Appointments table - Clinic-specific appointments
     await db.execute(`
       CREATE TABLE IF NOT EXISTS appointments (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
         clinic_id INT NOT NULL,
+        user_id INT NOT NULL,
         doctor_id INT NOT NULL,
         appointment_date DATE NOT NULL,
         appointment_time TIME NOT NULL,
-        status ENUM('pending', 'confirmed', 'completed', 'cancelled') DEFAULT 'pending',
+        fee DECIMAL(10,2),
+        status ENUM('pending', 'confirmed', 'cancelled', 'completed') DEFAULT 'pending',
         notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
         INDEX (clinic_id),
-        INDEX (doctor_id),
-        INDEX (appointment_date),
-        INDEX (user_id)
+        INDEX (user_id),
+        INDEX (doctor_id)
       )
     `);
 

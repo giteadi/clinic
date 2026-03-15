@@ -1,38 +1,64 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
-import { Building2, Users, TrendingUp, Globe, Settings, Bell, ChevronRight, BarChart3, Shield, Activity, Plus, Edit2, Trash2, Eye, Pause, Play } from "lucide-react";
+import { Building2, Users, TrendingUp, Globe, Settings, Bell, ChevronRight, BarChart3, Shield, Activity, Plus, Edit2, Trash2, Eye, Pause, Play, LogOut } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import Avatar from "../common/Avatar";
 import BackButton from "../common/BackButton";
-import { addClinic, updateClinic, deleteClinic, toggleClinicStatus, addActivity, updateSystemHealth } from "../../store/superAdminSlice";
+import { useSuperAdmin } from "../../store/hooks";
 
 export default function SuperAdminDashboard({ setView }) {
   const { colors } = useTheme();
-  const dispatch = useDispatch();
-  const { globalStats, clinics, systemHealth, recentActivities } = useSelector(state => state.superAdmin);
+  const { 
+    globalStats, 
+    clinics, 
+    systemHealth, 
+    recentActivities, 
+    loading, 
+    error,
+    fetchStats,
+    fetchClinics,
+    addClinic,
+    updateClinicStatus,
+    deleteClinic
+  } = useSuperAdmin();
+  
   const [showAddClinicModal, setShowAddClinicModal] = useState(false);
   const [editingClinic, setEditingClinic] = useState(null);
   const [newClinic, setNewClinic] = useState({
     name: "",
-    city: "",
-    state: "",
-    doctors: 0,
-    established: ""
+    slug: "",
+    email: "",
+    phone: "",
+    address: "",
+    primary_color: "#3B82F6",
+    secondary_color: "#60A5FA",
+    description: ""
   });
+
+  // Check if super admin is logged in
+  useEffect(() => {
+    const token = localStorage.getItem('superAdminToken');
+    const adminData = localStorage.getItem('superAdminData');
+    
+    console.log('🔍 Super Admin Dashboard - Token:', !!token, 'Admin Data:', !!adminData);
+    
+    // Don't redirect, just fetch data
+    fetchStats();
+    fetchClinics();
+  }, []); // Empty dependency array - run only once
 
   // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
       // Random system health updates
-      dispatch(updateSystemHealth({
-        responseTime: `${Math.floor(Math.random() * 50 + 100)}ms`,
-        errorRate: `${(Math.random() * 0.5).toFixed(1)}%`
-      }));
+      // dispatch(updateSystemHealth({
+      //   responseTime: `${Math.floor(Math.random() * 50 + 100)}ms`,
+      //   errorRate: `${(Math.random() * 0.5).toFixed(1)}%`
+      // }));
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [dispatch]);
+  }, []);
 
   const formatNumber = (num) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'Cr';
@@ -45,41 +71,39 @@ export default function SuperAdminDashboard({ setView }) {
   };
 
   const handleAddClinic = () => {
-    if (newClinic.name && newClinic.city) {
-      dispatch(addClinic(newClinic));
-      dispatch(addActivity({
-        type: "clinic_added",
-        clinic: newClinic.name,
-        city: newClinic.city,
-        admin: "Super Admin"
-      }));
-      setNewClinic({ name: "", city: "", state: "", doctors: 0, established: "" });
+    if (newClinic.name && newClinic.slug && newClinic.email) {
+      addClinic(newClinic);
+      setNewClinic({
+        name: "",
+        slug: "",
+        email: "",
+        phone: "",
+        address: "",
+        primary_color: "#3B82F6",
+        secondary_color: "#60A5FA",
+        description: ""
+      });
       setShowAddClinicModal(false);
     }
   };
 
   const handleToggleClinicStatus = (clinicId) => {
-    dispatch(toggleClinicStatus(clinicId));
     const clinic = clinics.find(c => c.id === clinicId);
-    dispatch(addActivity({
-      type: "clinic_status_changed",
-      clinic: clinic.name,
-      status: clinic.status === "active" ? "maintenance" : "active",
-      admin: "Super Admin"
-    }));
+    const newStatus = clinic.status === "active" ? "inactive" : "active";
+    updateClinicStatus(clinicId, newStatus);
   };
 
   const handleDeleteClinic = (clinicId) => {
     const clinic = clinics.find(c => c.id === clinicId);
     if (window.confirm(`Are you sure you want to delete ${clinic.name}?`)) {
-      dispatch(deleteClinic(clinicId));
-      dispatch(addActivity({
-        type: "clinic_deleted",
-        clinic: clinic.name,
-        city: clinic.city,
-        admin: "Super Admin"
-      }));
+      deleteClinic(clinicId);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('superAdminToken');
+    localStorage.removeItem('superAdminData');
+    setView("superadmin-login");
   };
 
   // Dynamic stats from Redux
@@ -87,7 +111,7 @@ export default function SuperAdminDashboard({ setView }) {
     { icon: Building2, label: "Total Clinics", value: globalStats.totalClinics, change: `+${globalStats.monthlyGrowth.clinics}%`, trend: "up" },
     { icon: Users, label: "Total Patients", value: formatNumber(globalStats.totalPatients), change: `+${globalStats.monthlyGrowth.patients}%`, trend: "up" },
     { icon: TrendingUp, label: "Total Revenue", value: formatCurrency(globalStats.totalRevenue), change: `+${globalStats.monthlyGrowth.revenue}%`, trend: "up" },
-    { icon: Activity, label: "Active Doctors", value: formatNumber(globalStats.activeDoctors), change: `+${globalStats.monthlyGrowth.doctors}%`, trend: "up" },
+    { icon: Activity, label: "Active Doctors", value: formatNumber(globalStats.totalDoctors), change: `+${globalStats.monthlyGrowth.doctors}%`, trend: "up" },
   ];
 
   return (
@@ -124,6 +148,17 @@ export default function SuperAdminDashboard({ setView }) {
               }}>
                 <Settings size={16} /> System Settings
               </button>
+              <button
+                onClick={handleLogout}
+                style={{
+                  background: `${colors.red}15`, border: `1px solid ${colors.red}30`,
+                  borderRadius: 10, padding: "8px 16px", cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 8,
+                  color: colors.red, fontSize: 14, fontWeight: 600
+                }}
+              >
+                <LogOut size={16} /> Logout
+              </button>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Avatar initials="SA" color={colors.gold} size={40} />
                 <div>
@@ -140,38 +175,58 @@ export default function SuperAdminDashboard({ setView }) {
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
             gap: 20, marginBottom: 32 
           }}>
-            {dynamicStats.map((stat, i) => (
-              <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                style={{
-                  background: colors.white, borderRadius: 16, padding: 24,
-                  border: `1px solid ${colors.border}`, position: "relative", overflow: "hidden"
-                }}>
-                <div style={{ 
-                  position: "absolute", top: 0, right: 0, 
-                  width: 80, height: 80, 
-                  background: `linear-gradient(135deg, ${colors.gold}08, transparent)`,
-                  borderRadius: "0 16px 0 80px"
-                }} />
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
+            {loading ? (
+              <div style={{ 
+                gridColumn: "1 / -1", 
+                textAlign: "center", 
+                padding: "40px",
+                color: colors.slate 
+              }}>
+                Loading global statistics...
+              </div>
+            ) : error ? (
+              <div style={{ 
+                gridColumn: "1 / -1", 
+                textAlign: "center", 
+                padding: "40px",
+                color: colors.red 
+              }}>
+                Error loading statistics: {error}
+              </div>
+            ) : (
+              dynamicStats.map((stat, i) => (
+                <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+                  style={{
+                    background: colors.white, borderRadius: 16, padding: 24,
+                    border: `1px solid ${colors.border}`, position: "relative", overflow: "hidden"
+                  }}>
                   <div style={{ 
-                    width: 56, height: 56, borderRadius: 12, 
-                    background: `${colors.gold}18`, 
-                    display: "flex", alignItems: "center", justifyContent: "center" 
-                  }}>
-                    <stat.icon size={28} color={colors.gold} />
+                    position: "absolute", top: 0, right: 0, 
+                    width: 80, height: 80, 
+                    background: `linear-gradient(135deg, ${colors.gold}08, transparent)`,
+                    borderRadius: "0 16px 0 80px"
+                  }} />
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 16 }}>
+                    <div style={{ 
+                      width: 56, height: 56, borderRadius: 12, 
+                      background: `${colors.gold}18`, 
+                      display: "flex", alignItems: "center", justifyContent: "center" 
+                    }}>
+                      <stat.icon size={28} color={colors.gold} />
+                    </div>
+                    <div style={{
+                      padding: "4px 8px", borderRadius: 20, fontSize: 11, fontWeight: 600,
+                      background: stat.trend === "up" ? `${colors.teal}18` : `${colors.gold}18`,
+                      color: stat.trend === "up" ? colors.teal : colors.gold
+                    }}>
+                      {stat.change}
+                    </div>
                   </div>
-                  <div style={{
-                    padding: "4px 8px", borderRadius: 20, fontSize: 11, fontWeight: 600,
-                    background: stat.trend === "up" ? `${colors.teal}18` : `${colors.gold}18`,
-                    color: stat.trend === "up" ? colors.teal : colors.gold
-                  }}>
-                    {stat.change}
-                  </div>
-                </div>
-                <div style={{ color: colors.navy, fontWeight: 700, fontSize: 32, marginBottom: 4 }}>{stat.value}</div>
-                <div style={{ color: colors.slate, fontSize: 14 }}>{stat.label}</div>
-              </motion.div>
-            ))}
+                  <div style={{ color: colors.navy, fontWeight: 700, fontSize: 32, marginBottom: 4 }}>{stat.value}</div>
+                  <div style={{ color: colors.slate, fontSize: 14 }}>{stat.label}</div>
+                </motion.div>
+              ))
+            )}
           </div>
 
           {/* Main Content Grid */}
@@ -219,23 +274,24 @@ export default function SuperAdminDashboard({ setView }) {
                     }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ color: colors.navy, fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{clinic.name}</div>
-                      <div style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>{clinic.city}, {clinic.state}</div>
+                      <div style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>{clinic.email}</div>
+                      <div style={{ color: colors.slate, fontSize: 12, marginBottom: 2 }}>{clinic.address}</div>
                       <div style={{ display: "flex", gap: 12, fontSize: 11 }}>
-                        <span style={{ color: colors.slate }}>⭐ {clinic.rating}</span>
-                        <span style={{ color: colors.slate }}>👨‍⚕️ {clinic.doctors} doctors</span>
-                        <span style={{ color: colors.slate }}>📅 {clinic.established}</span>
+                        <span style={{ color: colors.slate }}>👨‍⚕️ {clinic.doctors_count || 0} doctors</span>
+                        <span style={{ color: colors.slate }}>� {clinic.patients || 0} patients</span>
+                        <span style={{ color: colors.slate }}>� {formatCurrency(clinic.total_revenue || 0)}</span>
                       </div>
                     </div>
                     <div style={{ textAlign: "right", marginRight: 16 }}>
-                      <div style={{ color: colors.navy, fontWeight: 600, fontSize: 13 }}>{formatNumber(clinic.patients)} patients</div>
-                      <div style={{ color: colors.teal, fontSize: 12 }}>{formatCurrency(clinic.revenue)}</div>
+                      <div style={{ color: colors.navy, fontWeight: 600, fontSize: 13 }}>{formatNumber(clinic.patients || 0)} patients</div>
+                      <div style={{ color: colors.teal, fontSize: 12 }}>{formatCurrency(clinic.total_revenue || 0)}</div>
                       <div style={{
                         padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600,
                         background: clinic.status === "active" ? `${colors.teal}18` : `${colors.red}20`,
                         color: clinic.status === "active" ? colors.teal : colors.red,
                         marginTop: 4
                       }}>
-                        {clinic.status}
+                        {clinic.status || 'active'}
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
@@ -330,6 +386,160 @@ export default function SuperAdminDashboard({ setView }) {
           </div>
         </motion.div>
       </div>
+
+      {/* Add Clinic Modal */}
+      {showAddClinicModal && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: colors.white, borderRadius: 16, padding: 32,
+            maxWidth: 500, width: "90%", maxHeight: "80vh", overflow: "auto"
+          }}>
+            <h3 style={{ color: colors.navy, marginBottom: 24 }}>Add New Clinic</h3>
+            
+            <div style={{ display: "grid", gap: 16 }}>
+              <div>
+                <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Clinic Name *</label>
+                <input
+                  type="text"
+                  value={newClinic.name}
+                  onChange={(e) => setNewClinic({...newClinic, name: e.target.value})}
+                  style={{
+                    width: "100%", padding: "8px 12px", border: `1px solid ${colors.border}`,
+                    borderRadius: 6, fontSize: 14
+                  }}
+                  placeholder="Enter clinic name"
+                />
+              </div>
+
+              <div>
+                <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Slug (Subdomain) *</label>
+                <input
+                  type="text"
+                  value={newClinic.slug}
+                  onChange={(e) => setNewClinic({...newClinic, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '-')})}
+                  style={{
+                    width: "100%", padding: "8px 12px", border: `1px solid ${colors.border}`,
+                    borderRadius: 6, fontSize: 14
+                  }}
+                  placeholder="clinic-name"
+                />
+                <small style={{ color: colors.slate, fontSize: 11 }}>
+                  This will be used as: {newClinic.slug || 'clinic-name'}.localhost:3000
+                </small>
+              </div>
+
+              <div>
+                <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Email *</label>
+                <input
+                  type="email"
+                  value={newClinic.email}
+                  onChange={(e) => setNewClinic({...newClinic, email: e.target.value})}
+                  style={{
+                    width: "100%", padding: "8px 12px", border: `1px solid ${colors.border}`,
+                    borderRadius: 6, fontSize: 14
+                  }}
+                  placeholder="clinic@example.com"
+                />
+              </div>
+
+              <div>
+                <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Phone</label>
+                <input
+                  type="tel"
+                  value={newClinic.phone}
+                  onChange={(e) => setNewClinic({...newClinic, phone: e.target.value})}
+                  style={{
+                    width: "100%", padding: "8px 12px", border: `1px solid ${colors.border}`,
+                    borderRadius: 6, fontSize: 14
+                  }}
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+
+              <div>
+                <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Address</label>
+                <textarea
+                  value={newClinic.address}
+                  onChange={(e) => setNewClinic({...newClinic, address: e.target.value})}
+                  style={{
+                    width: "100%", padding: "8px 12px", border: `1px solid ${colors.border}`,
+                    borderRadius: 6, fontSize: 14, minHeight: "80px", resize: "vertical"
+                  }}
+                  placeholder="Enter clinic address"
+                />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Primary Color</label>
+                  <input
+                    type="color"
+                    value={newClinic.primary_color}
+                    onChange={(e) => setNewClinic({...newClinic, primary_color: e.target.value})}
+                    style={{
+                      width: "100%", height: "36px", border: `1px solid ${colors.border}`,
+                      borderRadius: 6, cursor: "pointer"
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Secondary Color</label>
+                  <input
+                    type="color"
+                    value={newClinic.secondary_color}
+                    onChange={(e) => setNewClinic({...newClinic, secondary_color: e.target.value})}
+                    style={{
+                      width: "100%", height: "36px", border: `1px solid ${colors.border}`,
+                      borderRadius: 6, cursor: "pointer"
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ color: colors.slate, fontSize: 12, marginBottom: 4, display: "block" }}>Description</label>
+                <textarea
+                  value={newClinic.description}
+                  onChange={(e) => setNewClinic({...newClinic, description: e.target.value})}
+                  style={{
+                    width: "100%", padding: "8px 12px", border: `1px solid ${colors.border}`,
+                    borderRadius: 6, fontSize: 14, minHeight: "60px", resize: "vertical"
+                  }}
+                  placeholder="Brief description about the clinic"
+                />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setShowAddClinicModal(false)}
+                style={{
+                  padding: "8px 16px", border: `1px solid ${colors.border}`,
+                  borderRadius: 6, background: "none", cursor: "pointer",
+                  color: colors.slate, fontSize: 14
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddClinic}
+                disabled={loading}
+                style={{
+                  padding: "8px 16px", border: "none", borderRadius: 6,
+                  background: colors.teal, color: colors.white, cursor: "pointer",
+                  fontSize: 14, fontWeight: 600, opacity: loading ? 0.7 : 1
+                }}
+              >
+                {loading ? 'Creating...' : 'Create Clinic'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

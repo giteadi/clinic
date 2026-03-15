@@ -22,7 +22,7 @@ const clinicMiddleware = async (req, res, next) => {
     
     // Query database for clinic
     const query = `
-      SELECT id, name, slug, phone, email, address, logo, created_at 
+      SELECT id, name, slug, phone, email, address, created_at 
       FROM clinics 
       WHERE slug = ? 
       LIMIT 1

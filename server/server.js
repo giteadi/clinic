@@ -14,6 +14,7 @@ const appointmentRoutes = require('./routes/appointments');
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
 const clinicReviewsRoutes = require('./routes/clinicReviews');
+const superAdminRoutes = require('./routes/superAdmin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,6 +50,7 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/super-admin', superAdminRoutes); // Add super admin routes
 
 // Health check
 app.get('/api/health', (req, res) => {
