@@ -13,11 +13,45 @@ const ROLE_ACCESS = {
 export default function ProtectedRoute({ children, view, setView }) {
   const { isAuthenticated, user } = useSelector(state => state.auth);
   
+  // Get current subdomain
+  const getCurrentSubdomain = () => {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return null;
+    return hostname.split('.')[0];
+  };
+  
+  // Check if user belongs to current clinic
+  const validateClinicAccess = () => {
+    const subdomain = getCurrentSubdomain();
+    
+    // Skip validation for main domain, localhost, or super admin
+    if (!subdomain || user?.role === 'superadmin') {
+      return true;
+    }
+    
+    // For patients, check if they have linked clinic matching current subdomain
+    if (user?.role === 'patient' && user?.linkedClinic) {
+      // This should match the clinic slug/subdomain
+      // For now, we'll assume the linkedClinic has a slug property
+      return user.linkedClinic.slug === subdomain || user.linkedClinic.id === 1; // Mock validation
+    }
+    
+    // For admins, check if they belong to this clinic
+    if (user?.role === 'admin' && user?.clinicId) {
+      // In real app, this would check against clinic data
+      return true; // Mock validation
+    }
+    
+    return false;
+  };
+  
   console.log('🔍 ProtectedRoute Debug:', { 
     view, 
     isAuthenticated, 
     userRole: user?.role,
     user: user ? { id: user.id, name: user.name, role: user.role } : null,
+    currentSubdomain: getCurrentSubdomain(),
+    hasClinicAccess: validateClinicAccess(),
     timestamp: new Date().toISOString()
   });
   
@@ -40,11 +74,13 @@ export default function ProtectedRoute({ children, view, setView }) {
   // Determine if redirect is needed
   const needsAuthRedirect = !isAuthenticated && !publicRoutes.includes(view) && view !== 'superadmin-login';
   const needsRoleRedirect = isAuthenticated && !hasAccess && view !== 'login'; // Don't redirect if user is trying to access login
+  const needsClinicRedirect = isAuthenticated && hasAccess && !validateClinicAccess() && view !== 'clinic-selection';
   const needsLoginRedirect = false; // Never redirect from login page - let user stay on login
 
   console.log('🔍 ProtectedRoute Logic:', { 
     needsAuthRedirect, 
     needsRoleRedirect, 
+    needsClinicRedirect,
     needsLoginRedirect, 
     hasAccess, 
     userRole, 
@@ -59,16 +95,31 @@ export default function ProtectedRoute({ children, view, setView }) {
       return;
     }
     
+    if (needsClinicRedirect) {
+      console.log('🔄 ProtectedRoute - Clinic access denied, redirecting to clinic selection:', { 
+        userRole, 
+        currentSubdomain: getCurrentSubdomain(),
+        userClinic: user?.linkedClinic?.name || 'None'
+      });
+      setView('clinic-selection');
+      return;
+    }
+    
     if (needsRoleRedirect) {
       const redirectView = dashboardMap[userRole] || 'home';
       console.log('🔄 ProtectedRoute - Role redirect triggered:', { userRole, redirectView, view });
       setView(redirectView);
     }
-  }, [needsAuthRedirect, needsRoleRedirect, userRole, setView]);
+  }, [needsAuthRedirect, needsClinicRedirect, needsRoleRedirect, userRole, setView]);
   
   // If trying to access protected route without authentication
   if (needsAuthRedirect) {
     return <LoginPage setView={setView} />;
+  }
+  
+  // If user doesn't have clinic access
+  if (needsClinicRedirect) {
+    return null; // Will redirect in useEffect
   }
   
   // If user doesn't have role-based access

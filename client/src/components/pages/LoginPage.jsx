@@ -196,6 +196,7 @@ export default function LoginPage({ setView }) {
             linkedClinic: {
               id: 1,
               name: "City Medical Center",
+              slug: "citydental",
               address: "123 MG Road, Mumbai",
               phone: "+91 22 2345 6789",
               rating: 4.8,

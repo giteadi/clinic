@@ -5,7 +5,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const clinicMiddleware = require('./middleware/clinicMiddleware');
-const authMiddleware = require('./middleware/authMiddleware');
+const { authMiddleware, clinicAuthMiddleware } = require('./middleware/authMiddleware');
 
 // Import routes
 const clinicRoutes = require('./routes/clinics');
@@ -49,7 +49,7 @@ app.use('/api/clinics', clinicReviewsRoutes); // Add clinic-specific routes
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', clinicAuthMiddleware, adminRoutes); // Add clinic validation
 app.use('/api/super-admin', superAdminRoutes); // Add super admin routes
 
 // Health check

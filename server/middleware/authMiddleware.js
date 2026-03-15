@@ -72,7 +72,30 @@ const clinicAuthMiddleware = async (req, res, next) => {
       });
     }
 
-    req.admin = admins[0];
+    const admin = admins[0];
+    
+    // Get current subdomain from request
+    const hostname = req.hostname;
+    const subdomain = hostname.split('.')[0];
+    
+    console.log(`🔐 Admin Clinic Validation: ${admin.name} (${admin.clinic_slug}) trying to access ${subdomain} subdomain`);
+    
+    // Skip subdomain validation for localhost and main domain
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1' && subdomain !== 'www' && subdomain !== 'yourapp.com') {
+      // Validate that admin belongs to the current clinic subdomain
+      if (admin.clinic_slug !== subdomain) {
+        console.log(`❌ Access denied: Admin ${admin.name} from ${admin.clinic_slug} trying to access ${subdomain}`);
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied. You can only access your own clinic data.',
+          error: 'CLINIC_MISMATCH'
+        });
+      }
+    }
+
+    req.admin = admin;
+    req.clinicId = admin.clinic_id;
+    req.clinicSlug = admin.clinic_slug;
     next();
   } catch (error) {
     console.error('Clinic auth error:', error);

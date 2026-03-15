@@ -216,4 +216,177 @@ router.post('/staff', [
   }
 });
 
+/**
+ * GET /api/admin/appointments
+ * Get all appointments for this clinic
+ */
+router.get('/appointments', async (req, res) => {
+  try {
+    if (!req.clinicId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Clinic not detected'
+      });
+    }
+
+    const [appointments] = await db.execute(`
+      SELECT a.*, u.name as patient_name, u.email as patient_email, u.phone as patient_phone,
+             d.name as doctor_name, d.specialization
+      FROM appointments a
+      JOIN users u ON a.user_id = u.id
+      JOIN doctors d ON a.doctor_id = d.id
+      WHERE a.clinic_id = ?
+      ORDER BY a.appointment_date DESC, a.appointment_time DESC
+    `, [req.clinicId]);
+
+    res.json({
+      success: true,
+      data: appointments
+    });
+  } catch (error) {
+    console.error('Get appointments error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch appointments'
+    });
+  }
+});
+
+/**
+ * PUT /api/admin/appointments/:id/status
+ * Update appointment status (confirm, cancel, complete)
+ */
+router.put('/appointments/:id/status', [
+  body('status').isIn(['pending', 'confirmed', 'cancelled', 'completed']).withMessage('Invalid status')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    if (!req.clinicId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Clinic not detected'
+      });
+    }
+
+    const { status } = req.body;
+    const appointmentId = req.params.id;
+
+    // Check if appointment belongs to this clinic
+    const [appointments] = await db.execute(
+      'SELECT id FROM appointments WHERE id = ? AND clinic_id = ?',
+      [appointmentId, req.clinicId]
+    );
+
+    if (appointments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Appointment not found or access denied'
+      });
+    }
+
+    // Update appointment status
+    await db.execute(
+      'UPDATE appointments SET status = ?, updated_at = NOW() WHERE id = ?',
+      [status, appointmentId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Appointment status updated successfully'
+    });
+  } catch (error) {
+    console.error('Update appointment status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update appointment status'
+    });
+  }
+});
+
+/**
+ * POST /api/admin/appointments
+ * Book appointment on behalf of patient
+ */
+router.post('/appointments', [
+  body('patient_email').isEmail().withMessage('Valid patient email is required'),
+  body('doctor_id').notEmpty().withMessage('Doctor ID is required'),
+  body('appointment_date').isDate().withMessage('Valid date is required'),
+  body('appointment_time').notEmpty().withMessage('Time is required')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    if (!req.clinicId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Clinic not detected'
+      });
+    }
+
+    const { patient_email, doctor_id, appointment_date, appointment_time, notes } = req.body;
+
+    // Find patient
+    const [patients] = await db.execute(
+      'SELECT id FROM users WHERE email = ?',
+      [patient_email]
+    );
+
+    if (patients.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Patient not found'
+      });
+    }
+
+    const patient_id = patients[0].id;
+
+    // Check if slot is available
+    const [existing] = await db.execute(`
+      SELECT id FROM appointments 
+      WHERE doctor_id = ? AND appointment_date = ? AND appointment_time = ? 
+      AND status IN ('pending', 'confirmed') AND clinic_id = ?
+    `, [doctor_id, appointment_date, appointment_time, req.clinicId]);
+
+    if (existing.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Time slot already booked'
+      });
+    }
+
+    // Create appointment
+    const [result] = await db.execute(`
+      INSERT INTO appointments (user_id, doctor_id, clinic_id, appointment_date, appointment_time, notes, status)
+      VALUES (?, ?, ?, ?, ?, ?, 'confirmed')
+    `, [patient_id, doctor_id, req.clinicId, appointment_date, appointment_time, notes]);
+
+    res.status(201).json({
+      success: true,
+      message: 'Appointment booked successfully',
+      data: { id: result.insertId }
+    });
+  } catch (error) {
+    console.error('Book appointment error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to book appointment'
+    });
+  }
+});
+
 module.exports = router;
