@@ -1,9 +1,17 @@
 const express = require('express');
 const db = require('../config/database');
 const { body, validationResult } = require('express-validator');
+const crypto = require('crypto');
+const Razorpay = require('razorpay');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();
+
+// Initialize Razorpay
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlF5G5ag',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'test_secret_key'
+});
 
 /**
  * POST /api/appointments
@@ -194,6 +202,129 @@ router.put('/:id/status', [
     res.status(500).json({
       success: false,
       message: 'Failed to update appointment'
+    });
+  }
+});
+
+/**
+ * POST /api/appointments/create-order
+ * Create Razorpay order for appointment booking
+ */
+router.post('/create-order', authMiddleware, [
+  body('amount').isFloat({ min: 0.01 }).withMessage('Valid amount is required'),
+  body('appointmentData').notEmpty().withMessage('Appointment data is required')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { amount, appointmentData } = req.body;
+
+    // Create Razorpay order
+    const order = await razorpay.orders.create({
+      amount: Math.round(amount), // Amount in paise
+      currency: 'INR',
+      receipt: `APT_${Date.now()}`,
+      notes: {
+        appointmentData: JSON.stringify(appointmentData)
+      }
+    });
+
+    res.json({
+      success: true,
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      key: process.env.RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlF5G5ag'
+    });
+  } catch (error) {
+    console.error('Create Razorpay order error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create payment order'
+    });
+  }
+});
+
+/**
+ * POST /api/appointments/verify-payment
+ * Verify Razorpay payment and create appointment
+ */
+router.post('/verify-payment', authMiddleware, [
+  body('orderId').notEmpty().withMessage('Order ID is required'),
+  body('paymentId').notEmpty().withMessage('Payment ID is required'),
+  body('signature').notEmpty().withMessage('Signature is required'),
+  body('appointmentData').notEmpty().withMessage('Appointment data is required')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { orderId, paymentId, signature, appointmentData } = req.body;
+
+    // Verify signature
+    const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'test_secret_key');
+    hmac.update(orderId + '|' + paymentId);
+    const generatedSignature = hmac.digest('hex');
+
+    if (generatedSignature !== signature) {
+      return res.status(400).json({
+        success: false,
+        message: 'Payment verification failed: Invalid signature'
+      });
+    }
+
+    // Extract appointment data
+    const { doctorId, clinicId, date, time, patientDetails } = appointmentData;
+
+    // Create appointment record
+    const [result] = await db.execute(`
+      INSERT INTO appointments (
+        user_id, clinic_id, doctor_id, appointment_date, appointment_time, 
+        patient_name, patient_phone, patient_email, patient_age, patient_gender, 
+        reason, status, payment_id, order_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      req.user.id, 
+      clinicId, 
+      doctorId, 
+      date, 
+      time,
+      patientDetails.name,
+      patientDetails.phone,
+      patientDetails.email,
+      patientDetails.age,
+      patientDetails.gender,
+      patientDetails.reason,
+      'confirmed',
+      paymentId,
+      orderId
+    ]);
+
+    res.json({
+      success: true,
+      message: 'Payment verified and appointment created successfully',
+      appointmentId: result.insertId,
+      paymentId,
+      orderId
+    });
+  } catch (error) {
+    console.error('Verify payment error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to verify payment'
     });
   }
 });

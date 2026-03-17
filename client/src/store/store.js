@@ -8,6 +8,7 @@ import clinicSlice from './slices/clinicSlice'
 import doctorSlice from './slices/doctorSlice'
 import appointmentSlice from './slices/appointmentSlice'
 import superAdminSlice from './slices/superAdminSlice'
+import quickActionsSlice from './quickActionsSlice'
 
 // Root reducer
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   doctors: doctorSlice,
   appointments: appointmentSlice,
   superAdmin: superAdminSlice,
+  quickActions: quickActionsSlice,
 })
 
 // Load persisted state

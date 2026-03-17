@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Clock, User, Phone, Mail, CheckCircle, ArrowLeft, AlertCircle, CreditCard } from "lucide-react";
+import { Calendar, Clock, User, Phone, Mail, CheckCircle, ArrowLeft, AlertCircle, CreditCard, LogIn } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useSelector } from "react-redux";
 import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
+import PaymentPage from "./PaymentPage";
 
 export default function DoctorBookingPage({ setView }) {
   const { colors, theme } = useTheme();
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [selectedDate, setSelectedDate] = useState("today");
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingStep, setBookingStep] = useState(1);
+  const [showPayment, setShowPayment] = useState(false);
+  const [bookingData, setBookingData] = useState(null);
   const [patientDetails, setPatientDetails] = useState({
     name: "",
     phone: "",
@@ -24,22 +29,24 @@ export default function DoctorBookingPage({ setView }) {
   });
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
+  // Check authentication on mount
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setView("login");
+      return;
+    }
+  }, [isAuthenticated, setView]);
+
   useEffect(() => {
     console.log('DoctorBookingPage Debug - Component mounted');
-    // Get selected doctor and clinic from localStorage
     const doctorData = localStorage.getItem('selectedDoctor');
     const clinicData = localStorage.getItem('selectedClinic');
-    
-    console.log('DoctorBookingPage Debug - Data from localStorage:', { doctorData, clinicData });
     
     if (doctorData && clinicData) {
       const parsedDoctor = JSON.parse(doctorData);
       const parsedClinic = JSON.parse(clinicData);
-      console.log('DoctorBookingPage Debug - Parsed data:', { parsedDoctor, parsedClinic });
       setSelectedDoctor(parsedDoctor);
       setSelectedClinic(parsedClinic);
-    } else {
-      console.log('DoctorBookingPage Debug - No data found in localStorage');
     }
   }, []);
 
@@ -56,44 +63,38 @@ export default function DoctorBookingPage({ setView }) {
   };
 
   const handleConfirmBooking = async () => {
-    // Simulate booking API call
-    setBookingConfirmed(true);
-    
-    // Store booking details
-    const bookingData = {
+    const bookingInfo = {
       doctor: selectedDoctor,
       clinic: selectedClinic,
       date: selectedDate,
       time: selectedTime,
       patient: patientDetails,
-      bookingId: `BK${Date.now()}`,
       timestamp: new Date().toISOString()
     };
     
-    localStorage.setItem('latestBooking', JSON.stringify(bookingData));
-    
-    // Redirect to confirmation after 2 seconds
-    setTimeout(() => {
-      setView("booking-confirmation");
-    }, 2000);
+    setBookingData(bookingInfo);
+    setShowPayment(true);
   };
 
   const timeSlots = selectedDoctor?.availability && typeof selectedDoctor.availability === 'object'
     ? (selectedDate === "today" ? (selectedDoctor.availability.today || []) : (selectedDoctor.availability.tomorrow || []))
     : [];
-  
-  // Debug logs
-  console.log('DoctorBookingPage Debug:', {
-    selectedDoctor,
-    selectedClinic,
-    selectedDate,
-    timeSlots,
-    availability: selectedDoctor?.availability,
-    availabilityType: typeof selectedDoctor?.availability
-  });
+
+  // Show payment page if needed
+  if (showPayment && bookingData) {
+    return (
+      <PaymentPage 
+        bookingData={bookingData}
+        setView={setView}
+        onPaymentSuccess={() => {}}
+        onPaymentError={() => {
+          setShowPayment(false);
+        }}
+      />
+    );
+  }
 
   if (!selectedDoctor || !selectedClinic) {
-    console.log('DoctorBookingPage Debug - Rendering loading state:', { selectedDoctor, selectedClinic });
     return (
       <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
@@ -125,17 +126,18 @@ export default function DoctorBookingPage({ setView }) {
               Book Appointment
             </h1>
             <p style={{ color: colors.slate, fontSize: 16 }}>
-              Complete your booking in 3 simple steps
+              Complete your booking in 4 simple steps
             </p>
           </motion.div>
         </div>
 
         {/* Progress Steps */}
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 40, maxWidth: 600 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 40, maxWidth: 800 }}>
           {[
             { step: 1, label: "Select Time" },
             { step: 2, label: "Patient Details" },
-            { step: 3, label: "Confirm" }
+            { step: 3, label: "Confirm" },
+            { step: 4, label: "Payment" }
           ].map((item) => (
             <div key={item.step} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
               <div style={{
@@ -159,7 +161,7 @@ export default function DoctorBookingPage({ setView }) {
               }}>
                 {item.label}
               </span>
-              {item.step < 3 && (
+              {item.step < 4 && (
                 <div style={{
                   flex: 1,
                   height: 2,
@@ -540,7 +542,7 @@ export default function DoctorBookingPage({ setView }) {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <span style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>Consultation Fee</span>
-                    <span style={{ color: colors.gold, fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ color: colors.teal, fontSize: 14, fontWeight: 600 }}>
                       {selectedDoctor.consultationFee}
                     </span>
                   </div>
@@ -592,14 +594,14 @@ export default function DoctorBookingPage({ setView }) {
                 alignItems: "center",
                 gap: 12,
                 padding: 16,
-                background: `${colors.gold}15`,
-                border: `1px solid ${colors.gold}30`,
+                background: `${colors.teal}15`,
+                border: `1px solid ${colors.teal}30`,
                 borderRadius: 8,
                 marginBottom: 24
               }}>
-                <CreditCard size={20} color={colors.gold} />
-                <span style={{ color: colors.gold, fontSize: 14 }}>
-                  Payment to be made at the clinic
+                <CreditCard size={20} color={colors.teal} />
+                <span style={{ color: colors.teal, fontSize: 14, fontWeight: 600 }}>
+                  Secure payment required to complete booking
                 </span>
               </div>
               
@@ -641,10 +643,13 @@ export default function DoctorBookingPage({ setView }) {
                   {bookingConfirmed ? (
                     <>
                       <CheckCircle size={16} />
-                      Confirming...
+                      Processing...
                     </>
                   ) : (
-                    "Confirm Booking"
+                    <>
+                      <CreditCard size={16} />
+                      Proceed to Payment
+                    </>
                   )}
                 </button>
               </div>

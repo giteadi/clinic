@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
-import { Calendar, Building2, Zap, Star } from "lucide-react";
+import { Calendar, Building2, Zap, Star, LogIn } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useClinic } from "../../contexts/ClinicContext";
+import { useSelector } from "react-redux";
 import { STATS } from "../../constants/data";
 import ClinicGallery from "./ClinicGallery";
 
 export default function Hero({ setView }) {
   const { colors, theme } = useTheme();
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const { 
     clinic, 
     loading, 
@@ -109,7 +111,13 @@ export default function Hero({ setView }) {
           maxWidth: "500px"
         }}>
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-            onClick={() => setView("doctors")}
+            onClick={() => {
+              if (!isAuthenticated) {
+                setView("login");
+              } else {
+                setView("doctors");
+              }
+            }}
             style={{
               background: `linear-gradient(135deg, ${isClinicSpecific ? primaryColor : colors.teal}, ${isClinicSpecific ? primaryColor : colors.tealDark})`,
               border: "none", borderRadius: 12, 
@@ -125,7 +133,15 @@ export default function Hero({ setView }) {
               boxShadow: `0 8px 30px ${isClinicSpecific ? primaryColor : colors.teal}40`,
               width: "100%"
             }}>
-            <Calendar size={18} /> Book Appointment
+            {isAuthenticated ? (
+              <>
+                <Calendar size={18} /> Book Appointment
+              </>
+            ) : (
+              <>
+                <LogIn size={18} /> Login to Book Appointment
+              </>
+            )}
           </motion.button>
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
             onClick={() => setView(isClinicSpecific ? "doctors" : "clinics")}
