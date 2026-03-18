@@ -10,6 +10,9 @@ const ROLE_ACCESS = {
   superadmin: ['*'] // Super admin can access everything
 };
 
+// Protected booking routes - require authentication
+const PROTECTED_BOOKING_ROUTES = ['clinic-selection', 'doctor-selection', 'doctor-booking', 'booking-confirmation', 'admin-book-appointment'];
+
 export default function ProtectedRoute({ children, view, setView }) {
   const { isAuthenticated, user } = useSelector(state => state.auth);
   
@@ -72,7 +75,7 @@ export default function ProtectedRoute({ children, view, setView }) {
   };
   
   // Determine if redirect is needed
-  const needsAuthRedirect = !isAuthenticated && !publicRoutes.includes(view) && view !== 'superadmin-login';
+  const needsAuthRedirect = !isAuthenticated && (!publicRoutes.includes(view) || PROTECTED_BOOKING_ROUTES.includes(view)) && view !== 'superadmin-login';
   const needsRoleRedirect = isAuthenticated && !hasAccess && view !== 'login'; // Don't redirect if user is trying to access login
   const needsClinicRedirect = isAuthenticated && hasAccess && !validateClinicAccess() && view !== 'clinic-selection';
   const needsLoginRedirect = false; // Never redirect from login page - let user stay on login
@@ -85,12 +88,21 @@ export default function ProtectedRoute({ children, view, setView }) {
     hasAccess, 
     userRole, 
     view,
+    isProtectedBookingRoute: PROTECTED_BOOKING_ROUTES.includes(view),
     timestamp: new Date().toISOString()
   });
   
   // Handle redirects with useEffect
   useEffect(() => {
     if (needsAuthRedirect) {
+      // Log when user tries to access booking without authentication
+      if (PROTECTED_BOOKING_ROUTES.includes(view)) {
+        console.log('🔐 BOOKING ACCESS DENIED - Redirecting to login:', {
+          attemptedView: view,
+          isAuthenticated,
+          timestamp: new Date().toISOString()
+        });
+      }
       // Will render LoginPage component, no redirect needed
       return;
     }

@@ -3,9 +3,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // Async thunk for fetching doctors
 export const fetchDoctors = createAsyncThunk(
   'doctors/fetchDoctors',
-  async (_, { rejectWithValue }) => {
+  async (clinicId, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/doctors')
+      // If clinicId is provided, fetch doctors for that specific clinic
+      const url = clinicId ? `/api/doctors?clinicId=${clinicId}` : '/api/doctors';
+      const response = await fetch(url)
       
       if (!response.ok) {
         throw new Error('Failed to fetch doctors')

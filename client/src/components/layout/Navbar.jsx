@@ -203,20 +203,23 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
           {!isMobile && (
             <button
               onClick={() => {
-                if (isAuthenticated && actualUserRole !== "guest") {
-                  // Check if user is a patient and has a linked clinic
-                  if (actualUserRole === "patient" && user?.linkedClinic) {
-                    // Set the linked clinic and go directly to doctor selection
-                    localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
-                    setView("doctor-selection");
-                  } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
-                    // For admin/superadmin, go to appointment management
-                    setView("admin-appointment");
-                  } else {
-                    // For other users or patients without linked clinic, show clinic selection
-                    setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
-                  }
+                if (!isAuthenticated) {
+                  // User not logged in - redirect to login
+                  console.log('🔐 BOOKING DENIED - User not authenticated. Redirecting to login.');
+                  setView("login");
+                  return;
+                }
+                
+                // User is authenticated
+                if (actualUserRole === "patient" && user?.linkedClinic) {
+                  // Patient with linked clinic - go to doctor selection
+                  localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
+                  setView("doctor-selection");
+                } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
+                  // Admin/SuperAdmin - go to appointment management  
+                  setView("admin-appointment");
                 } else {
+                  // Other authenticated users - show clinic or doctor selection
                   setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
                 }
               }}
@@ -440,39 +443,45 @@ export default function Navbar({ view, setView, userRole, setUserRole }) {
             )}
 
             {/* BOOK APPOINTMENT BUTTON IN MOBILE MENU */}
-            {isAuthenticated && actualUserRole !== "guest" && (
-              <button
-                onClick={() => {
-                  // Check if user is a patient and has a linked clinic
-                  if (actualUserRole === "patient" && user?.linkedClinic) {
-                    // Set the linked clinic and go directly to doctor selection
-                    localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
-                    setView("doctor-selection");
-                  } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
-                    // For admin/superadmin, go to appointment management
-                    setView("admin-appointment");
-                  } else {
-                    // For other users or patients without linked clinic, show clinic selection
-                    setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
-                  }
+            <button
+              onClick={() => {
+                if (!isAuthenticated) {
+                  // Unauthenticated user - redirect to login
+                  console.log('🔐 BOOKING DENIED - User not authenticated. Redirecting to login.');
+                  setView("login");
                   setMobileMenuOpen(false);
-                }}
-                style={{
-                  background: `linear-gradient(135deg, ${isClinicSpecific ? primaryColor : colors.teal}, ${isClinicSpecific ? primaryColor : colors.tealDark})`,
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "12px 16px",
-                  cursor: "pointer",
-                  color: colors.white,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  width: "100%",
-                  marginBottom: 12
-                }}
-              >
-                Book Appointment
-              </button>
-            )}
+                  return;
+                }
+                
+                // Authenticated user
+                if (actualUserRole === "patient" && user?.linkedClinic) {
+                  // Patient with linked clinic - go to doctor selection
+                  localStorage.setItem('selectedClinic', JSON.stringify(user.linkedClinic));
+                  setView("doctor-selection");
+                } else if (actualUserRole === "admin" || actualUserRole === "superadmin") {
+                  // Admin/SuperAdmin - go to appointment management
+                  setView("admin-appointment");
+                } else {
+                  // Other authenticated users - show clinic or doctor selection
+                  setView(isClinicSpecific ? "doctor-selection" : "clinic-selection");
+                }
+                setMobileMenuOpen(false);
+              }}
+              style={{
+                background: `linear-gradient(135deg, ${isClinicSpecific ? primaryColor : colors.teal}, ${isClinicSpecific ? primaryColor : colors.tealDark})`,
+                border: "none",
+                borderRadius: 8,
+                padding: "12px 16px",
+                cursor: "pointer",
+                color: colors.white,
+                fontSize: 14,
+                fontWeight: 600,
+                width: "100%",
+                marginBottom: 12
+              }}
+            >
+              Book Appointment
+            </button>
 
             {/* ACTION BUTTON INSIDE MOBILE MENU */}
             {isAuthenticated && actualUserRole !== "guest" ? (

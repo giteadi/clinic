@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Clock, MapPin, Search, Filter, User, Loader2 } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useClinic } from "../../contexts/ClinicContext";
 import { THEMES } from "../../contexts/ThemeContext";
 import { useDoctors } from "../../store/hooks";
 import "./DoctorsPage.css";
 
 export default function DoctorsPage({ setView }) {
   const { theme, colors } = useTheme();
+  const { isClinicSpecific, clinicName } = useClinic();
+  const { isAuthenticated } = useSelector(state => state.auth);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
   
@@ -27,18 +31,27 @@ export default function DoctorsPage({ setView }) {
     }
   }, [fetchDoctorsData, lastFetched]);
 
-  // Extract unique specialties from doctors
-  const specialties = ["all", ...new Set(doctors.map(doc => doc.specialty))];
+  // Filter doctors by clinic if viewing a specific clinic
+  // Note: Backend API already filters by clinic_id, so all returned doctors are from the current clinic
+  const clinicFilteredDoctors = doctors;
 
-  const filteredDoctors = doctors.filter(doctor => {
+  // Extract unique specialties from filtered doctors
+  const specialties = ["all", ...new Set(clinicFilteredDoctors.map(doc => doc.specialization || doc.specialty))];
+
+  const filteredDoctors = clinicFilteredDoctors.filter(doctor => {
     const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doctor.clinic.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSpecialty = selectedSpecialty === "all" || doctor.specialty === selectedSpecialty;
+                         (doctor.specialization || doctor.specialty || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSpecialty = selectedSpecialty === "all" || (doctor.specialization || doctor.specialty) === selectedSpecialty;
     return matchesSearch && matchesSpecialty;
   });
 
+  // Handle book appointment - protect with authentication
   const handleBookAppointment = (doctor) => {
+    if (!isAuthenticated) {
+      console.log('🔐 BOOKING DENIED - User not authenticated. Redirecting to login before booking doctor.');
+      setView("login");
+      return;
+    }
     // Navigate to appointment page with pre-selected doctor
     setView("appointment");
   };
@@ -85,7 +98,7 @@ export default function DoctorsPage({ setView }) {
             Find Your Doctor
           </h1>
           <p style={{ color: colors.slate, fontSize: "clamp(16px, 2.5vw, 18px)", lineHeight: 1.6 }}>
-            Connect with {doctors.length}+ expert doctors across all specialties
+            Connect with {clinicFilteredDoctors.length}+ expert doctors {isClinicSpecific ? `at ${clinicName}` : "across all specialties"}
           </p>
         </div>
 

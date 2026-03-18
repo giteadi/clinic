@@ -3,10 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Clock, MapPin, Phone, Mail, Users, Calendar, Search, Filter, User, ChevronRight } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useClinic } from "../../contexts/ClinicContext";
 import { setSelectedClinic } from "../../store/clinicSlice";
 
 export default function ClinicPage({ setView }) {
   const { colors } = useTheme();
+  const { isClinicSpecific } = useClinic();
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const { clinics, selectedClinic } = useSelector(state => state.clinic);
@@ -16,6 +18,55 @@ export default function ClinicPage({ setView }) {
   const [showDoctorDetails, setShowDoctorDetails] = useState(null);
 
   const specialties = ["all", "General Physician", "Cardiologist", "Pediatrician", "Orthopedic", "Dermatologist", "Neurologist"];
+
+  // If viewing a specific clinic, don't show clinic selection page
+  if (isClinicSpecific) {
+    return (
+      <div className="theme-transition" style={{
+        minHeight: "100vh",
+        background: colors.navy,
+        padding: "clamp(80px, 10vw, 100px) clamp(20px, 5vw, 32px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <div style={{
+          textAlign: "center",
+          color: colors.white
+        }}>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(24px, 4vw, 36px)",
+            marginBottom: 16
+          }}>
+            You are already viewing a specific clinic.
+          </h2>
+          <p style={{
+            fontSize: "clamp(16px, 2vw, 18px)",
+            marginBottom: 24,
+            color: colors.slate
+          }}>
+            Browse doctors from the Doctors page or click "Book Appointment" to get started.
+          </p>
+          <button
+            onClick={() => setView("doctors")}
+            style={{
+              background: colors.teal,
+              color: colors.white,
+              border: "none",
+              padding: "10px 24px",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontSize: 16,
+              fontWeight: 600
+            }}
+          >
+            View Doctors
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Filter clinics based on user role
   const getFilteredClinics = () => {
@@ -57,7 +108,13 @@ export default function ClinicPage({ setView }) {
     setShowDoctorDetails(clinic);
   };
 
+  // Protect book appointment button
   const handleBookAppointment = (doctor, clinic) => {
+    if (!isAuthenticated) {
+      console.log('🔐 BOOKING DENIED - User not authenticated. Redirecting to login.');
+      setView("login");
+      return;
+    }
     // Navigate to appointment with pre-selected clinic and doctor
     setView("appointment");
   };
