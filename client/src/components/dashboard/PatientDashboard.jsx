@@ -8,7 +8,7 @@ import Avatar from "../common/Avatar";
 import BackButton from "../common/BackButton";
 
 export default function PatientDashboard({ setView }) {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [activeTab, setActiveTab] = useState("upcoming");
   const { user } = useSelector(state => state.auth);
 
@@ -25,7 +25,7 @@ export default function PatientDashboard({ setView }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.cream, paddingTop: 80 }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
@@ -35,7 +35,7 @@ export default function PatientDashboard({ setView }) {
                 text="Back to Home"
               />
               <div>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: colors.navy, marginBottom: 8, fontWeight: 700 }}>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: theme === "white" ? colors.slate : colors.white, marginBottom: 8, fontWeight: 700 }}>
                   Patient Dashboard
                 </h1>
                 <p style={{ color: colors.slate, fontSize: 16 }}>Manage your appointments and medical records</p>
@@ -53,7 +53,7 @@ export default function PatientDashboard({ setView }) {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Avatar initials="PA" color={colors.teal} size={40} />
                 <div>
-                  <div style={{ color: colors.navy, fontWeight: 600, fontSize: 15 }}>Patient Account</div>
+                  <div style={{ color: theme === "white" ? colors.slate : colors.white, fontWeight: 600, fontSize: 15 }}>Patient Account</div>
                   <div style={{ color: colors.slate, fontSize: 12 }}>patient@example.com</div>
                 </div>
               </div>
@@ -67,15 +67,20 @@ export default function PatientDashboard({ setView }) {
             gap: 20, marginBottom: 32 
           }}>
             {[
-              { icon: Calendar, label: "Upcoming", value: "3", color: COLORS.teal },
-              { icon: FileText, label: "Medical Records", value: "12", color: COLORS.gold },
+              { icon: Calendar, label: "Upcoming", value: "3", color: colors.teal },
+              { icon: FileText, label: "Medical Records", value: "12", color: colors.gold },
               { icon: Heart, label: "Treatments", value: "8", color: "#E91E63" },
               { icon: Activity, label: "Lab Tests", value: "5", color: "#9C27B0" },
             ].map((stat, i) => (
               <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 style={{
-                  background: COLORS.white, borderRadius: 16, padding: 24,
-                  border: `1px solid ${COLORS.border}`, display: "flex", alignItems: "center", gap: 16
+                  background: theme === "white" ? colors.white : colors.navyLight, 
+                  borderRadius: 16, 
+                  padding: 24,
+                  border: `1px solid ${colors.border}`, 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: 16
                 }}>
                 <div style={{ 
                   width: 48, height: 48, borderRadius: 12, 
@@ -85,8 +90,8 @@ export default function PatientDashboard({ setView }) {
                   <stat.icon size={24} color={stat.color} />
                 </div>
                 <div>
-                  <div style={{ color: COLORS.navy, fontWeight: 700, fontSize: 24 }}>{stat.value}</div>
-                  <div style={{ color: COLORS.slate, fontSize: 13 }}>{stat.label}</div>
+                  <div style={{ color: theme === "white" ? colors.slate : colors.white, fontWeight: 700, fontSize: 24 }}>{stat.value}</div>
+                  <div style={{ color: colors.slate, fontSize: 13 }}>{stat.label}</div>
                 </div>
               </motion.div>
             ))}
@@ -94,19 +99,21 @@ export default function PatientDashboard({ setView }) {
 
           {/* Tabs */}
           <div style={{ 
-            background: COLORS.white, borderRadius: 16, 
-            border: `1px solid ${COLORS.border}`, overflow: "hidden" 
+            background: theme === "white" ? colors.white : colors.navyLight, 
+            borderRadius: 16, 
+            border: `1px solid ${colors.border}`, 
+            overflow: "hidden" 
           }}>
             <div style={{ 
-              display: "flex", borderBottom: `1px solid ${COLORS.border}` 
+              display: "flex", borderBottom: `1px solid ${colors.border}` 
             }}>
               {["upcoming", "past", "medical"].map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)}
                   style={{
                     flex: 1, padding: "16px", border: "none", background: "none",
                     cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-                    color: activeTab === tab ? COLORS.teal : COLORS.slate,
-                    borderBottom: activeTab === tab ? `2px solid ${COLORS.teal}` : "2px solid transparent",
+                    color: activeTab === tab ? colors.teal : colors.slate,
+                    borderBottom: activeTab === tab ? `2px solid ${colors.teal}` : "2px solid transparent",
                     fontSize: 14
                   }}>
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -121,28 +128,28 @@ export default function PatientDashboard({ setView }) {
                     <motion.div key={apt.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                       style={{
                         display: "flex", justifyContent: "space-between", alignItems: "center",
-                        padding: 20, background: COLORS.cream, borderRadius: 12
+                        padding: 20, background: theme === "white" ? colors.cream : colors.navy, borderRadius: 12
                       }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                         <Avatar initials={apt.doctor.img} color={apt.doctor.color} size={48} />
                         <div>
-                          <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 15 }}>{apt.doctor.name}</div>
-                          <div style={{ color: COLORS.slate, fontSize: 13 }}>{apt.reason}</div>
+                          <div style={{ color: theme === "white" ? colors.slate : colors.white, fontWeight: 600, fontSize: 15 }}>{apt.doctor.name}</div>
+                          <div style={{ color: colors.slate, fontSize: 13 }}>{apt.reason}</div>
                           <div style={{ 
                             display: "flex", alignItems: "center", gap: 8, marginTop: 4 
                           }}>
-                            <Calendar size={14} color={COLORS.teal} />
-                            <span style={{ color: COLORS.teal, fontSize: 12 }}>{apt.date}</span>
-                            <Clock size={14} color={COLORS.slate} />
-                            <span style={{ color: COLORS.slate, fontSize: 12 }}>{apt.time}</span>
+                            <Calendar size={14} color={colors.teal} />
+                            <span style={{ color: colors.teal, fontSize: 12 }}>{apt.date}</span>
+                            <Clock size={14} color={colors.slate} />
+                            <span style={{ color: colors.slate, fontSize: 12 }}>{apt.time}</span>
                           </div>
                         </div>
                       </div>
                       <div style={{ textAlign: "right" }}>
                         <div style={{ 
                           padding: "4px 12px", borderRadius: 20, fontSize: 11, fontWeight: 600,
-                          background: apt.status === "confirmed" ? `${COLORS.teal}18` : `${COLORS.gold}18`,
-                          color: apt.status === "confirmed" ? COLORS.teal : COLORS.gold
+                          background: apt.status === "confirmed" ? `${colors.teal}18` : `${colors.gold}18`,
+                          color: apt.status === "confirmed" ? colors.teal : colors.gold
                         }}>
                           {apt.status}
                         </div>
@@ -165,19 +172,19 @@ export default function PatientDashboard({ setView }) {
                       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{ 
                           width: 40, height: 40, borderRadius: 10, 
-                          background: `${COLORS.teal}18`, 
+                          background: `${colors.teal}18`, 
                           display: "flex", alignItems: "center", justifyContent: "center" 
                         }}>
-                          <FileText size={20} color={COLORS.teal} />
+                          <FileText size={20} color={colors.teal} />
                         </div>
                         <div>
-                          <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 14 }}>{record.type}</div>
-                          <div style={{ color: COLORS.slate, fontSize: 12 }}>{record.doctor}</div>
+                          <div style={{ color: theme === "white" ? colors.slate : colors.white, fontWeight: 600, fontSize: 14 }}>{record.type}</div>
+                          <div style={{ color: colors.slate, fontSize: 12 }}>{record.doctor}</div>
                         </div>
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ color: COLORS.navy, fontWeight: 600, fontSize: 13 }}>{record.date}</div>
-                        <ChevronRight size={16} color={COLORS.slate} style={{ marginTop: 4 }} />
+                        <div style={{ color: theme === "white" ? colors.slate : colors.white, fontWeight: 600, fontSize: 13 }}>{record.date}</div>
+                        <ChevronRight size={16} color={colors.slate} style={{ marginTop: 4 }} />
                       </div>
                     </motion.div>
                   ))}

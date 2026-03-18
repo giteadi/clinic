@@ -58,7 +58,7 @@ export default function AdminDashboard({ setView }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.cream, paddingTop: 80 }}>
+    <div style={{ minHeight: "100vh", background: colors.navy, paddingTop: 80 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px" }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
@@ -68,7 +68,7 @@ export default function AdminDashboard({ setView }) {
                 text="Back to Home"
               />
               <div>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: colors.slate, marginBottom: 8, fontWeight: 700 }}>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: theme === "white" ? colors.slate : colors.white, marginBottom: 8, fontWeight: 700 }}>
                   Admin Dashboard
                 </h1>
                 <p style={{ color: colors.slate, fontSize: 16 }}>Manage clinic operations and staff</p>
@@ -94,7 +94,7 @@ export default function AdminDashboard({ setView }) {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <Avatar initials="AD" color={colors.teal} size={40} />
                 <div>
-                  <div style={{ color: colors.slate, fontWeight: 600, fontSize: 15 }}>Admin User</div>
+                  <div style={{ color: theme === "white" ? colors.slate : colors.white, fontWeight: 600, fontSize: 15 }}>Admin User</div>
                   <div style={{ color: colors.slate, fontSize: 12 }}>admin@clinic.com</div>
                 </div>
               </div>
@@ -110,8 +110,12 @@ export default function AdminDashboard({ setView }) {
             {stats.map((stat, i) => (
               <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 style={{
-                  background: colors.white, borderRadius: 16, padding: 24,
-                  border: `1px solid ${colors.border}`, position: "relative", overflow: "hidden"
+                  background: theme === "white" ? colors.white : colors.navyLight, 
+                  borderRadius: 16, 
+                  padding: 24,
+                  border: `1px solid ${colors.border}`, 
+                  position: "relative", 
+                  overflow: "hidden"
                 }}>
                 <div style={{ 
                   position: "absolute", top: 0, right: 0, 
@@ -135,8 +139,8 @@ export default function AdminDashboard({ setView }) {
                     {stat.change}
                   </div>
                 </div>
-                <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>{stat.value}</div>
-                <div style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 14 }}>{stat.label}</div>
+                <div style={{ color: theme === 'white' ? colors.slate : colors.white, fontWeight: 700, fontSize: 28, marginBottom: 4 }}>{stat.value}</div>
+                <div style={{ color: colors.slate, fontSize: 14 }}>{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -148,16 +152,23 @@ export default function AdminDashboard({ setView }) {
             gap: 24 
           }}>
             <div style={{ 
-              background: colors.white, borderRadius: 16, 
-              border: `1px solid ${colors.border}`, overflow: "hidden" 
+              background: theme === "white" ? colors.white : colors.navyLight, 
+              borderRadius: 16, 
+              border: `1px solid ${colors.border}`, 
+              overflow: "hidden" 
             }}>
               <div style={{ 
-                padding: 20, borderBottom: `1px solid ${colors.border}`,
-                display: "flex", justifyContent: "space-between", alignItems: "center" 
+                padding: 20, 
+                borderBottom: `1px solid ${colors.border}`,
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center" 
               }}>
                 <h3 style={{ 
                   fontFamily: "'Playfair Display', serif", 
-                  fontSize: 18, color: colors.slate, fontWeight: 700 
+                  fontSize: 18, 
+                  color: theme === "white" ? colors.slate : colors.white, 
+                  fontWeight: 700 
                 }}>
                   Recent Appointments
                 </h3>
@@ -167,15 +178,18 @@ export default function AdminDashboard({ setView }) {
                 {recentAppointments.map(apt => (
                   <motion.div key={apt.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                     style={{
-                      display: "flex", justifyContent: "space-between", alignItems: "center",
-                      padding: "12px 0", borderBottom: `1px solid ${colors.border}`
+                      display: "flex", 
+                      justifyContent: "space-between", 
+                      alignItems: "center",
+                      padding: "12px 0", 
+                      borderBottom: `1px solid ${colors.border}`
                     }}>
                     <div>
-                      <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 600, fontSize: 14 }}>{apt.patient}</div>
-                      <div style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 12 }}>{apt.doctor}</div>
+                      <div style={{ color: theme === 'white' ? colors.slate : colors.white, fontWeight: 600, fontSize: 14 }}>{apt.patient}</div>
+                      <div style={{ color: colors.slate, fontSize: 12 }}>{apt.doctor}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 600, fontSize: 13 }}>{apt.time}</div>
+                      <div style={{ color: theme === 'white' ? colors.slate : colors.white, fontWeight: 600, fontSize: 13 }}>{apt.time}</div>
                       <div style={{
                         padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600,
                         background: apt.status === "confirmed" ? `${colors.teal}18` : `${colors.gold}18`,
@@ -191,16 +205,23 @@ export default function AdminDashboard({ setView }) {
             </div>
 
             <div style={{ 
-              background: colors.white, borderRadius: 16, 
-              border: `1px solid ${colors.border}`, overflow: "hidden" 
+              background: theme === "white" ? colors.white : colors.navyLight, 
+              borderRadius: 16, 
+              border: `1px solid ${colors.border}`, 
+              overflow: "hidden" 
             }}>
               <div style={{ 
-                padding: 20, borderBottom: `1px solid ${colors.border}`,
-                display: "flex", justifyContent: "space-between", alignItems: "center" 
+                padding: 20, 
+                borderBottom: `1px solid ${colors.border}`,
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center" 
               }}>
                 <h3 style={{ 
                   fontFamily: "'Playfair Display', serif", 
-                  fontSize: 18, color: colors.slate, fontWeight: 700 
+                  fontSize: 18, 
+                  color: theme === "white" ? colors.slate : colors.white, 
+                  fontWeight: 700 
                 }}>
                   Quick Actions
                 </h3>
@@ -215,23 +236,33 @@ export default function AdminDashboard({ setView }) {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleQuickAction(action)}
                       style={{
-                        display: "flex", alignItems: "center", gap: 12,
-                        padding: 16, background: colors.cream, borderRadius: 12,
-                        border: "none", cursor: "pointer", width: "100%",
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 12,
+                        padding: 16, 
+                        background: theme === "white" ? colors.cream : colors.navy, 
+                        borderRadius: 12,
+                        border: `1px solid ${colors.border}`, 
+                        cursor: "pointer", 
+                        width: "100%",
                         opacity: action.enabled ? 1 : 0.5
                       }}>
                       <div style={{ 
-                        width: 40, height: 40, borderRadius: 10, 
+                        width: 40, 
+                        height: 40, 
+                        borderRadius: 10, 
                         background: `${action.color}18`, 
-                        display: "flex", alignItems: "center", justifyContent: "center" 
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "center" 
                       }}>
                         {IconComponent && <IconComponent size={20} color={action.color} />}
                       </div>
                       <div style={{ textAlign: "left", flex: 1 }}>
-                        <div style={{ color: theme === 'white' ? '#1a202c' : colors.slate, fontWeight: 600, fontSize: 14 }}>{action.label}</div>
-                        <div style={{ color: theme === 'white' ? '#4a5568' : colors.slate, fontSize: 11, marginTop: 2, opacity: 0.8 }}>{action.description}</div>
+                        <div style={{ color: theme === 'white' ? colors.slate : colors.white, fontWeight: 600, fontSize: 14 }}>{action.label}</div>
+                        <div style={{ color: colors.slate, fontSize: 11, marginTop: 2, opacity: 0.8 }}>{action.description}</div>
                       </div>
-                      <ChevronRight size={16} color={theme === 'white' ? '#4a5568' : colors.slate} />
+                      <ChevronRight size={16} color={colors.slate} />
                     </motion.button>
                   );
                 })}
