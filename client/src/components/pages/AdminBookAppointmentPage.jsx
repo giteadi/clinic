@@ -134,9 +134,9 @@ export default function AdminBookAppointmentPage({ setView }) {
         
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
-          <BackButton 
-            onClick={() => setView("admin-appointment")}
-            text="Back to Appointments"
+          <BackButton
+            onClick={() => setView("admin-dashboard")}
+            text="Back to Dashboard"
             style={{ marginBottom: 24 }}
           />
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
