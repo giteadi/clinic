@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
 })
 
 // Load persisted state
-const preloadedState = undefined; // Temporarily disable localStorage to fix login issue
+const preloadedState = loadState();
 
 // Configure store
 export const store = configureStore({

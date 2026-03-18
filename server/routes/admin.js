@@ -86,11 +86,49 @@ router.post('/login', [
   }
 });
 
+// Import admin controller
+const adminController = require('../controllers/adminController');
+
 /**
- * GET /api/admin/dashboard
- * Get dashboard stats for current clinic
+ * Dashboard & Stats Routes
  */
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', adminController.getDashboardStats);
+
+/**
+ * Patients Routes
+ */
+router.get('/patients', adminController.getPatients);
+
+/**
+ * Appointments Routes
+ */
+router.get('/appointments', adminController.getAppointments);
+router.put('/appointments/:appointmentId', adminController.updateAppointment);
+router.delete('/appointments/:appointmentId', adminController.deleteAppointment);
+
+/**
+ * Clinic Settings Routes
+ */
+router.get('/clinic-settings', adminController.getClinicSettings);
+router.put('/clinic-settings/:clinicId', adminController.updateClinicSettings);
+
+/**
+ * Doctors Routes
+ */
+router.get('/doctors', adminController.getDoctors);
+router.post('/doctors', adminController.createDoctor);
+router.put('/doctors/:doctorId', adminController.updateDoctor);
+router.delete('/doctors/:doctorId', adminController.deleteDoctor);
+
+// ============================================================================
+// LEGACY CODE - Keep for backward compatibility
+// ============================================================================
+
+/**
+ * GET /api/admin/dashboard-legacy
+ * Legacy dashboard stats endpoint
+ */
+router.get('/dashboard-legacy', async (req, res) => {
   try {
     if (!req.clinicId) {
       return res.status(400).json({

@@ -1,38 +1,64 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Settings, Clock, MapPin, Phone, Mail, Globe, Save, Upload, X, Plus, Trash2 } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useSelector, useDispatch } from "react-redux";
 import BackButton from "../common/BackButton";
+import { fetchClinicSettings, updateClinicSettings, clearSuccess } from "../../store/slices/adminSlice";
 
 export default function ClinicSettingsPage({ setView }) {
   const { colors, theme } = useTheme();
   const [activeTab, setActiveTab] = useState("general");
+  const dispatch = useDispatch();
+  const { settings, loading, error, success } = useSelector(state => state.admin);
+  const { admin, token } = useSelector(state => state.auth);
+
   const [formData, setFormData] = useState({
-    clinicName: "City Medical Center",
-    email: "info@citymedical.com",
-    phone: "+91 22 2345 6789",
-    address: "123 MG Road, Mumbai, Maharashtra 400001",
-    website: "www.citymedical.com",
-    timings: {
-      monday: { open: "09:00", close: "21:00", closed: false },
-      tuesday: { open: "09:00", close: "21:00", closed: false },
-      wednesday: { open: "09:00", close: "21:00", closed: false },
-      thursday: { open: "09:00", close: "21:00", closed: false },
-      friday: { open: "09:00", close: "21:00", closed: false },
-      saturday: { open: "09:00", close: "18:00", closed: false },
-      sunday: { open: "closed", close: "closed", closed: true }
-    },
-    specialties: ["General", "Cardiology", "Orthopedics", "Pediatrics"],
-    features: ["Emergency Services", "Lab Tests", "X-Ray", "Pharmacy"]
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    description: "",
+    primary_color: "#3B82F6",
+    secondary_color: "#10B981"
   });
 
-  const [newSpecialty, setNewSpecialty] = useState("");
-  const [newFeature, setNewFeature] = useState("");
+  // Fetch clinic settings on mount
+  useEffect(() => {
+    if (admin?.clinic?.id && token) {
+      dispatch(fetchClinicSettings({ 
+        clinicId: admin.clinic.id, 
+        token 
+      }));
+    }
+  }, [admin, token, dispatch]);
+
+  // Update form when settings are loaded
+  useEffect(() => {
+    if (settings) {
+      setFormData({
+        name: settings.name || "",
+        email: settings.email || "",
+        phone: settings.phone || "",
+        address: settings.address || "",
+        description: settings.description || "",
+        primary_color: settings.primary_color || "#3B82F6",
+        secondary_color: settings.secondary_color || "#10B981"
+      });
+    }
+  }, [settings]);
+
+  // Clear success message after 3 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => dispatch(clearSuccess()), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, dispatch]);
 
   const tabs = [
     { id: "general", label: "General Info", icon: Settings },
-    { id: "timings", label: "Timings", icon: Clock },
-    { id: "services", label: "Services", icon: Settings }
+    { id: "branding", label: "Branding", icon: Settings }
   ];
 
   const handleInputChange = (field, value) => {
@@ -42,60 +68,15 @@ export default function ClinicSettingsPage({ setView }) {
     }));
   };
 
-  const handleTimingChange = (day, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      timings: {
-        ...prev.timings,
-        [day]: {
-          ...prev.timings[day],
-          [field]: value
-        }
-      }
-    }));
-  };
-
-  const handleAddSpecialty = () => {
-    if (newSpecialty.trim() && !formData.specialties.includes(newSpecialty.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        specialties: [...prev.specialties, newSpecialty.trim()]
-      }));
-      setNewSpecialty("");
-    }
-  };
-
-  const handleRemoveSpecialty = (specialty) => {
-    setFormData(prev => ({
-      ...prev,
-      specialties: prev.specialties.filter(s => s !== specialty)
-    }));
-  };
-
-  const handleAddFeature = () => {
-    if (newFeature.trim() && !formData.features.includes(newFeature.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        features: [...prev.features, newFeature.trim()]
-      }));
-      setNewFeature("");
-    }
-  };
-
-  const handleRemoveFeature = (feature) => {
-    setFormData(prev => ({
-      ...prev,
-      features: prev.features.filter(f => f !== feature)
-    }));
-  };
-
   const handleSave = () => {
-    console.log("Saving clinic settings:", formData);
-    // TODO: Implement save functionality
-    alert("Clinic settings saved successfully!");
+    if (admin?.clinic?.id && token) {
+      dispatch(updateClinicSettings({
+        clinicId: admin.clinic.id,
+        settings: formData,
+        token
+      }));
+    }
   };
-
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
   return (
     <div style={{ minHeight: "100vh", background: theme === 'white' ? colors.cream : colors.navy, paddingTop: 80, paddingBottom: 40 }}>
@@ -122,6 +103,32 @@ export default function ClinicSettingsPage({ setView }) {
             </p>
           </motion.div>
         </div>
+
+        {error && (
+          <div style={{ 
+            background: '#fee', 
+            border: '1px solid #fcc', 
+            color: '#c33', 
+            padding: '12px 16px', 
+            borderRadius: 8, 
+            marginBottom: 20 
+          }}>
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div style={{ 
+            background: '#efe', 
+            border: '1px solid #cfc', 
+            color: '#3c3', 
+            padding: '12px 16px', 
+            borderRadius: 8, 
+            marginBottom: 20 
+          }}>
+            ✓ {success}
+          </div>
+        )}
 
         {/* Tabs */}
         <div style={{ 
@@ -174,8 +181,9 @@ export default function ClinicSettingsPage({ setView }) {
                 </label>
                 <input
                   type="text"
-                  value={formData.clinicName}
-                  onChange={(e) => handleInputChange("clinicName", e.target.value)}
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  disabled={loading}
                   style={{
                     width: "100%",
                     background: theme === 'white' ? colors.white : colors.navyLight,
@@ -183,7 +191,8 @@ export default function ClinicSettingsPage({ setView }) {
                     borderRadius: 8,
                     padding: "12px 16px",
                     color: theme === 'white' ? colors.slate : colors.white,
-                    fontSize: 14
+                    fontSize: 14,
+                    opacity: loading ? 0.6 : 1
                   }}
                 />
               </div>
@@ -197,6 +206,7 @@ export default function ClinicSettingsPage({ setView }) {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
+                    disabled={loading}
                     style={{
                       width: "100%",
                       background: theme === 'white' ? colors.white : colors.navyLight,
@@ -204,7 +214,8 @@ export default function ClinicSettingsPage({ setView }) {
                       borderRadius: 8,
                       padding: "12px 16px",
                       color: theme === 'white' ? colors.slate : colors.white,
-                      fontSize: 14
+                      fontSize: 14,
+                      opacity: loading ? 0.6 : 1
                     }}
                   />
                 </div>
@@ -216,6 +227,7 @@ export default function ClinicSettingsPage({ setView }) {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
+                    disabled={loading}
                     style={{
                       width: "100%",
                       background: theme === 'white' ? colors.white : colors.navyLight,
@@ -223,7 +235,8 @@ export default function ClinicSettingsPage({ setView }) {
                       borderRadius: 8,
                       padding: "12px 16px",
                       color: theme === 'white' ? colors.slate : colors.white,
-                      fontSize: 14
+                      fontSize: 14,
+                      opacity: loading ? 0.6 : 1
                     }}
                   />
                 </div>
@@ -236,6 +249,7 @@ export default function ClinicSettingsPage({ setView }) {
                 <textarea
                   value={formData.address}
                   onChange={(e) => handleInputChange("address", e.target.value)}
+                  disabled={loading}
                   rows={3}
                   style={{
                     width: "100%",
@@ -245,19 +259,21 @@ export default function ClinicSettingsPage({ setView }) {
                     padding: "12px 16px",
                     color: theme === 'white' ? colors.slate : colors.white,
                     fontSize: 14,
-                    resize: "vertical"
+                    resize: "vertical",
+                    opacity: loading ? 0.6 : 1
                   }}
                 />
               </div>
 
               <div>
                 <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
-                  Website
+                  Description
                 </label>
-                <input
-                  type="url"
-                  value={formData.website}
-                  onChange={(e) => handleInputChange("website", e.target.value)}
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  disabled={loading}
+                  rows={4}
                   style={{
                     width: "100%",
                     background: theme === 'white' ? colors.white : colors.navyLight,
@@ -265,270 +281,122 @@ export default function ClinicSettingsPage({ setView }) {
                     borderRadius: 8,
                     padding: "12px 16px",
                     color: theme === 'white' ? colors.slate : colors.white,
-                    fontSize: 14
+                    fontSize: 14,
+                    resize: "vertical",
+                    opacity: loading ? 0.6 : 1
                   }}
                 />
               </div>
             </div>
           )}
 
-          {activeTab === "timings" && (
-            <div style={{ display: "grid", gap: 20 }}>
-              <h3 style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                Clinic Timings
-              </h3>
-              {days.map(day => (
-                <div key={day} style={{ 
-                  display: "grid", 
-                  gridTemplateColumns: "120px 1fr 1fr auto", 
-                  gap: 16,
-                  alignItems: "center",
-                  padding: "16px",
-                  background: theme === 'white' ? colors.white : colors.navyLight,
-                  borderRadius: 8,
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <span style={{ 
-                    color: theme === 'white' ? colors.slate : colors.white, 
-                    fontSize: 14, 
-                    fontWeight: 600,
-                    textTransform: "capitalize"
-                  }}>
-                    {day}
-                  </span>
-                  <input
-                    type="time"
-                    value={formData.timings[day].closed ? "closed" : formData.timings[day].open}
-                    onChange={(e) => handleTimingChange(day, "open", e.target.value)}
-                    disabled={formData.timings[day].closed}
-                    style={{
-                      background: formData.timings[day].closed ? colors.slate : colors.white,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      color: formData.timings[day].closed ? colors.slate : colors.slate,
-                      fontSize: 14
-                    }}
-                  />
-                  <input
-                    type="time"
-                    value={formData.timings[day].closed ? "closed" : formData.timings[day].close}
-                    onChange={(e) => handleTimingChange(day, "close", e.target.value)}
-                    disabled={formData.timings[day].closed}
-                    style={{
-                      background: formData.timings[day].closed ? colors.slate : colors.white,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      color: formData.timings[day].closed ? colors.slate : colors.slate,
-                      fontSize: 14
-                    }}
-                  />
-                  <label style={{ 
-                    display: "flex", 
-                    alignItems: "center", 
-                    gap: 8,
-                    cursor: "pointer"
-                  }}>
-                    <input
-                      type="checkbox"
-                      checked={formData.timings[day].closed}
-                      onChange={(e) => handleTimingChange(day, "closed", e.target.checked)}
-                      style={{ cursor: "pointer" }}
-                    />
-                    <span style={{ color: colors.slate, fontSize: 14 }}>
-                      Closed
-                    </span>
+          {activeTab === "branding" && (
+            <div style={{ display: "grid", gap: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+                <div>
+                  <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    Primary Color
                   </label>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {activeTab === "services" && (
-            <div style={{ display: "grid", gap: 32 }}>
-              <div>
-                <h3 style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                  Medical Specialties
-                </h3>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
-                  {formData.specialties.map((specialty, index) => (
-                    <div
-                      key={index}
+                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <input
+                      type="color"
+                      value={formData.primary_color}
+                      onChange={(e) => handleInputChange("primary_color", e.target.value)}
+                      disabled={loading}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 16px",
-                        background: `${colors.teal}18`,
-                        border: `1px solid ${colors.teal}30`,
-                        borderRadius: 20,
-                        color: colors.teal,
-                        fontSize: 14,
-                        fontWeight: 600
+                        width: "60px",
+                        height: "40px",
+                        borderRadius: 8,
+                        border: `1px solid ${colors.border}`,
+                        cursor: "pointer",
+                        opacity: loading ? 0.6 : 1
                       }}
-                    >
-                      {specialty}
-                      <button
-                        onClick={() => handleRemoveSpecialty(specialty)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 2,
-                          color: colors.teal
-                        }}
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 12 }}>
-                  <input
-                    type="text"
-                    value={newSpecialty}
-                    onChange={(e) => setNewSpecialty(e.target.value)}
-                    placeholder="Add new specialty"
-                    onKeyPress={(e) => e.key === "Enter" && handleAddSpecialty()}
-                    style={{
-                      flex: 1,
-                      background: theme === 'white' ? colors.white : colors.navyLight,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 8,
-                      padding: "10px 16px",
-                      color: theme === 'white' ? colors.slate : colors.white,
-                      fontSize: 14
-                    }}
-                  />
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleAddSpecialty}
-                    style={{
-                      background: colors.teal,
-                      border: "none",
-                      borderRadius: 8,
-                      padding: "10px 16px",
-                      cursor: "pointer",
-                      color: colors.white,
-                      fontSize: 14,
-                      fontWeight: 600,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6
-                    }}
-                  >
-                    <Plus size={16} />
-                    Add
-                  </motion.button>
-                </div>
-              </div>
-
-              <div>
-                <h3 style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                  Clinic Features
-                </h3>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
-                  {formData.features.map((feature, index) => (
-                    <div
-                      key={index}
+                    />
+                    <input
+                      type="text"
+                      value={formData.primary_color}
+                      onChange={(e) => handleInputChange("primary_color", e.target.value)}
+                      disabled={loading}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 16px",
-                        background: `${colors.gold}18`,
-                        border: `1px solid ${colors.gold}30`,
-                        borderRadius: 20,
-                        color: colors.gold,
+                        flex: 1,
+                        background: theme === 'white' ? colors.white : colors.navyLight,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8,
+                        padding: "10px 14px",
+                        color: theme === 'white' ? colors.slate : colors.white,
                         fontSize: 14,
-                        fontWeight: 600
+                        opacity: loading ? 0.6 : 1
                       }}
-                    >
-                      {feature}
-                      <button
-                        onClick={() => handleRemoveFeature(feature)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 2,
-                          color: colors.gold
-                        }}
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
+                    />
+                  </div>
                 </div>
-                <div style={{ display: "flex", gap: 12 }}>
-                  <input
-                    type="text"
-                    value={newFeature}
-                    onChange={(e) => setNewFeature(e.target.value)}
-                    placeholder="Add new feature"
-                    onKeyPress={(e) => e.key === "Enter" && handleAddFeature()}
-                    style={{
-                      flex: 1,
-                      background: theme === 'white' ? colors.white : colors.navyLight,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 8,
-                      padding: "10px 16px",
-                      color: theme === 'white' ? colors.slate : colors.white,
-                      fontSize: 14
-                    }}
-                  />
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleAddFeature}
-                    style={{
-                      background: colors.gold,
-                      border: "none",
-                      borderRadius: 8,
-                      padding: "10px 16px",
-                      cursor: "pointer",
-                      color: colors.white,
-                      fontSize: 14,
-                      fontWeight: 600,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6
-                    }}
-                  >
-                    <Plus size={16} />
-                    Add
-                  </motion.button>
+
+                <div>
+                  <label style={{ color: theme === 'white' ? colors.slate : colors.white, fontSize: 14, fontWeight: 600, marginBottom: 8, display: "block" }}>
+                    Secondary Color
+                  </label>
+                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <input
+                      type="color"
+                      value={formData.secondary_color}
+                      onChange={(e) => handleInputChange("secondary_color", e.target.value)}
+                      disabled={loading}
+                      style={{
+                        width: "60px",
+                        height: "40px",
+                        borderRadius: 8,
+                        border: `1px solid ${colors.border}`,
+                        cursor: "pointer",
+                        opacity: loading ? 0.6 : 1
+                      }}
+                    />
+                    <input
+                      type="text"
+                      value={formData.secondary_color}
+                      onChange={(e) => handleInputChange("secondary_color", e.target.value)}
+                      disabled={loading}
+                      style={{
+                        flex: 1,
+                        background: theme === 'white' ? colors.white : colors.navyLight,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: 8,
+                        padding: "10px 14px",
+                        color: theme === 'white' ? colors.slate : colors.white,
+                        fontSize: 14,
+                        opacity: loading ? 0.6 : 1
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {/* Save Button */}
-          <div style={{ marginTop: 32, textAlign: "center" }}>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleSave}
-              style={{
-                background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
-                border: "none",
-                borderRadius: 12,
-                padding: "14px 32px",
-                cursor: "pointer",
-                color: colors.white,
-                fontSize: 16,
-                fontWeight: 600,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8
-              }}
-            >
-              <Save size={18} />
-              Save Settings
-            </motion.button>
-          </div>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleSave}
+            disabled={loading}
+            style={{
+              background: loading ? colors.slate : colors.teal,
+              border: "none",
+              borderRadius: 12,
+              padding: "14px 32px",
+              cursor: loading ? "not-allowed" : "pointer",
+              color: colors.white,
+              fontSize: 16,
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 32,
+              opacity: loading ? 0.6 : 1
+            }}
+          >
+            <Save size={18} />
+            {loading ? "Saving..." : "Save Changes"}
+          </motion.button>
         </motion.div>
       </div>
     </div>

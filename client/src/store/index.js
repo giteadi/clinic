@@ -4,6 +4,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import authSlice from './slices/authSlice';
 import clinicSlice from './slices/clinicSlice';
 import superAdminSlice from './slices/superAdminSlice';
+import adminSlice from './slices/adminSlice';
 import quickActionsSlice from './quickActionsSlice';
 
 // Create custom storage using localStorage directly
@@ -66,6 +67,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   clinic: clinicSlice,
   superAdmin: superAdminSlice,
+  admin: adminSlice,
   quickActions: quickActionsSlice
 });
 

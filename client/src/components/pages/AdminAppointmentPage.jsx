@@ -1,87 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Calendar, Users, Clock, Plus, Edit, Trash2, Filter, ChevronRight } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useSelector, useDispatch } from "react-redux";
 import BackButton from "../common/BackButton";
 import Avatar from "../common/Avatar";
+import { fetchAppointments, updateAppointmentStatus, deleteAppointment } from "../../store/slices/adminSlice";
 
 export default function AdminAppointmentPage({ setView }) {
   const { colors, theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedDate, setSelectedDate] = useState("");
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      patientName: "Rahul Sharma",
-      patientEmail: "rahul.sharma@email.com",
-      patientPhone: "+91 98765 43210",
-      doctorName: "Dr. Ayesha Khan",
-      specialty: "Cardiology",
-      date: "2024-12-20",
-      time: "10:00 AM",
-      status: "confirmed",
-      reason: "Regular checkup",
-      duration: "30 min",
-      type: "consultation"
-    },
-    {
-      id: 2,
-      patientName: "Priya Patel",
-      patientEmail: "priya.patel@email.com",
-      patientPhone: "+91 98765 43211",
-      doctorName: "Dr. Rahul Mehta",
-      specialty: "General",
-      date: "2024-12-20",
-      time: "11:30 AM",
-      status: "pending",
-      reason: "Follow-up consultation",
-      duration: "45 min",
-      type: "followup"
-    },
-    {
-      id: 3,
-      patientName: "Amit Kumar",
-      patientEmail: "amit.kumar@email.com",
-      patientPhone: "+91 98765 43212",
-      doctorName: "Dr. Priya Sharma",
-      specialty: "Pediatrics",
-      date: "2024-12-19",
-      time: "2:00 PM",
-      status: "completed",
-      reason: "Vaccination",
-      duration: "15 min",
-      type: "vaccination"
-    },
-    {
-      id: 4,
-      patientName: "Sneha Reddy",
-      patientEmail: "sneha.reddy@email.com",
-      patientPhone: "+91 98765 43213",
-      doctorName: "Dr. Arjun Patel",
-      specialty: "Orthopedics",
-      date: "2024-12-21",
-      time: "3:30 PM",
-      status: "cancelled",
-      reason: "X-Ray consultation",
-      duration: "20 min",
-      type: "diagnostic"
-    }
-  ]);
+  const dispatch = useDispatch();
+  const { appointments, loading, error } = useSelector(state => state.admin);
+  const { admin, token } = useSelector(state => state.auth);
 
-  const doctors = [
-    { id: 1, name: "Dr. Ayesha Khan", specialty: "Cardiology" },
-    { id: 2, name: "Dr. Rahul Mehta", specialty: "General" },
-    { id: 3, name: "Dr. Priya Sharma", specialty: "Pediatrics" },
-    { id: 4, name: "Dr. Arjun Patel", specialty: "Orthopedics" }
-  ];
+  // Fetch appointments on mount
+  useEffect(() => {
+    if (admin?.clinic?.id && token) {
+      dispatch(fetchAppointments({ 
+        clinicId: admin.clinic.id, 
+        token,
+        status: selectedFilter === "all" ? "" : selectedFilter
+      }));
+    }
+  }, [admin, token, dispatch, selectedFilter]);
 
   const filteredAppointments = appointments.filter(apt => {
-    const matchesSearch = apt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         apt.doctorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         apt.reason.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = apt.patientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         apt.doctorName?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = selectedFilter === "all" || apt.status === selectedFilter;
-    const matchesDate = apt.date === selectedDate;
-    return matchesSearch && matchesFilter && (selectedDate === "" || matchesDate);
+    return matchesSearch && matchesFilter;
   });
 
   const getStatusColor = (status) => {
@@ -96,27 +45,37 @@ export default function AdminAppointmentPage({ setView }) {
 
   const handleAppointmentAction = (action, appointmentId) => {
     switch (action) {
-      case "view":
-        // TODO: Navigate to appointment details
-        alert(`Viewing appointment ${appointmentId}`);
+      case "confirm":
+        if (token) {
+          dispatch(updateAppointmentStatus({ 
+            appointmentId, 
+            status: "confirmed", 
+            token 
+          }));
+        }
         break;
-      case "edit":
-        // TODO: Navigate to edit appointment form
-        alert(`Editing appointment ${appointmentId}`);
+      case "complete":
+        if (token) {
+          dispatch(updateAppointmentStatus({ 
+            appointmentId, 
+            status: "completed", 
+            token 
+          }));
+        }
         break;
-      case "delete":
-        if (window.confirm("Are you sure you want to delete this appointment?")) {
-          setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
-          alert(`Deleted appointment ${appointmentId}`);
+      case "cancel":
+        if (window.confirm("Are you sure you want to cancel this appointment?")) {
+          if (token) {
+            dispatch(deleteAppointment({ appointmentId, token }));
+          }
         }
         break;
       default:
-        console.log(`Unknown action: ${action} for appointment ${appointmentId}`);
+        console.log(`Unknown action: ${action}`);
     }
   };
 
   const handleBookNewAppointment = () => {
-    // Navigate to admin booking page (shows only admin's clinic doctors)
     setView("admin-book-appointment");
   };
 
@@ -146,6 +105,19 @@ export default function AdminAppointmentPage({ setView }) {
           </div>
         </div>
 
+        {error && (
+          <div style={{ 
+            background: '#fee', 
+            border: '1px solid #fcc', 
+            color: '#c33', 
+            padding: '12px 16px', 
+            borderRadius: 8, 
+            marginBottom: 20 
+          }}>
+            {error}
+          </div>
+        )}
+
         {/* Action Bar */}
         <div style={{ 
           display: "grid", 
@@ -156,7 +128,7 @@ export default function AdminAppointmentPage({ setView }) {
           <button
             onClick={handleBookNewAppointment}
             style={{
-              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark})`,
+              background: `linear-gradient(135deg, ${colors.teal}, ${colors.tealDark || colors.teal})`,
               border: "none",
               borderRadius: 12,
               padding: "14px 20px",
@@ -201,14 +173,14 @@ export default function AdminAppointmentPage({ setView }) {
                 background: colors.background || colors.navyLight,
                 border: `1px solid ${colors.border}`,
                 borderRadius: 12,
-                padding: "12px 16px 12px 48px",
+                padding: "12px 16px 12px 46px",
                 color: theme === 'white' ? '#1a202c' : colors.white,
                 fontSize: 14,
                 outline: "none"
               }}
             />
           </div>
-          
+
           <select
             value={selectedFilter}
             onChange={(e) => setSelectedFilter(e.target.value)}
@@ -224,169 +196,125 @@ export default function AdminAppointmentPage({ setView }) {
             }}
           >
             <option value="all">All Status</option>
-            <option value="confirmed">Confirmed</option>
             <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
           </select>
         </div>
 
-        {/* Results Count */}
-        <div style={{ marginBottom: 24 }}>
-          <p style={{ color: colors.slate, fontSize: 14 }}>
-            Found {filteredAppointments.length} appointments
-          </p>
-        </div>
-
-        {/* Appointments List */}
-        <div style={{ display: "grid", gap: 20 }}>
-          {filteredAppointments.map((appointment, index) => (
-            <div
-              key={appointment.id}
-              style={{
-                background: colors.background || colors.navyLight,
-                border: `1px solid ${colors.border}`,
-                borderRadius: 16,
-                padding: 24
-            }}
-          >
-              <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 24, alignItems: "start" }}>
-                
-                {/* Date & Time */}
-                <div style={{ textAlign: "center" }}>
-                  <div style={{
-                    width: 60, height: 60, borderRadius: 12,
-                    background: `${colors.teal}18`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    marginBottom: 8
-                  }}>
-                    <Calendar size={24} color={colors.teal} />
+        {/* Appointments Table */}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "40px", color: colors.slate }}>Loading appointments...</div>
+        ) : filteredAppointments.length === 0 ? (
+          <div style={{
+            background: theme === 'white' ? colors.white : colors.navyLight,
+            border: `1px solid ${colors.border}`,
+            borderRadius: 12,
+            padding: 40,
+            textAlign: "center"
+          }}>
+            <p style={{ color: colors.slate, marginBottom: 16 }}>No appointments found</p>
+            <p style={{ color: colors.slate, fontSize: 14 }}>
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        ) : (
+          <div style={{
+            background: theme === 'white' ? colors.white : colors.navyLight,
+            border: `1px solid ${colors.border}`,
+            borderRadius: 12,
+            overflow: "hidden"
+          }}>
+            {filteredAppointments.map((apt, idx) => (
+              <div key={apt.id} style={{
+                padding: "16px",
+                borderBottom: idx < filteredAppointments.length - 1 ? `1px solid ${colors.border}` : "none",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 20
+              }}>
+                <div style={{ flex: 1, minWidth: "200px" }}>
+                  <div style={{ color: theme === 'white' ? colors.slate : colors.white, fontWeight: 600, fontSize: 15 }}>
+                    {apt.patientName}
                   </div>
-                  <div style={{ textAlign: "center" }}>
-                    <div style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 12, fontWeight: 600 }}>
-                      {new Date(appointment.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </div>
-                    <div style={{ color: colors.slate, fontSize: 11 }}>
-                      {appointment.time}
-                    </div>
+                  <div style={{ color: colors.slate, fontSize: 13, marginTop: 4 }}>
+                    Dr. {apt.doctorName} • {apt.specialization}
                   </div>
-                </div>
-
-                {/* Appointment Details */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ marginBottom: 12 }}>
-                    <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 16, fontWeight: 600, marginBottom: 4 }}>
-                      {appointment.reason}
-                    </h3>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 16, color: colors.slate, fontSize: 12 }}>
-                      <span>{appointment.doctorName}</span>
-                      <span>•</span>
-                      <span>{appointment.specialty}</span>
-                      <span>•</span>
-                      <span>{appointment.duration}</span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
-                    <div>
-                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Patient</p>
-                      <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
-                        {appointment.patientName}
-                      </p>
-                    </div>
-                    <div>
-                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Contact</p>
-                      <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 12 }}>
-                        {appointment.patientPhone}
-                      </p>
-                    </div>
-                    <div>
-                      <p style={{ color: colors.slate, fontSize: 11, marginBottom: 2 }}>Type</p>
-                      <p style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 13, fontWeight: 600 }}>
-                        {appointment.type}
-                      </p>
-                    </div>
+                  <div style={{ color: colors.slate, fontSize: 12, marginTop: 4 }}>
+                    📅 {apt.appointment_date} at {apt.appointment_time}
                   </div>
                 </div>
 
-                {/* Status and Actions */}
-                <div style={{ textAlign: "right" }}>
-                  <div style={{
-                    padding: "6px 12px",
-                    borderRadius: 20,
-                    fontSize: 11,
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ 
+                    padding: "6px 12px", 
+                    borderRadius: 20, 
+                    fontSize: 12, 
                     fontWeight: 600,
-                    background: `${getStatusColor(appointment.status)}18`,
-                    color: getStatusColor(appointment.status),
-                    marginBottom: 16,
+                    background: `${getStatusColor(apt.status)}18`,
+                    color: getStatusColor(apt.status),
                     textTransform: "capitalize"
                   }}>
-                    {appointment.status}
+                    {apt.status}
                   </div>
-                  
-                  <div style={{ display: "flex", gap: 8 }}>
+
+                  {apt.status === "pending" && (
                     <button
-                      onClick={() => handleAppointmentAction("view", appointment.id)}
+                      onClick={() => handleAppointmentAction("confirm", apt.id)}
                       style={{
-                        background: `${colors.teal}15`,
-                        border: `1px solid ${colors.teal}30`,
+                        background: colors.teal,
+                        border: "none",
                         borderRadius: 8,
-                        padding: "8px",
+                        padding: "8px 14px",
                         cursor: "pointer",
-                        color: colors.teal
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: 600
                       }}
                     >
-                      <ChevronRight size={16} />
+                      Confirm
                     </button>
+                  )}
+
+                  {apt.status === "confirmed" && (
                     <button
-                      onClick={() => handleAppointmentAction("edit", appointment.id)}
+                      onClick={() => handleAppointmentAction("complete", apt.id)}
                       style={{
-                        background: `${colors.gold}15`,
-                        border: `1px solid ${colors.gold}30`,
+                        background: "#10B981",
+                        border: "none",
                         borderRadius: 8,
-                        padding: "8px",
+                        padding: "8px 14px",
                         cursor: "pointer",
-                        color: colors.gold
+                        color: "white",
+                        fontSize: 12,
+                        fontWeight: 600
                       }}
                     >
-                      <Edit size={16} />
+                      Complete
                     </button>
-                    <button
-                      onClick={() => handleAppointmentAction("delete", appointment.id)}
-                      style={{
-                        background: `${colors.red}15`,
-                        border: `1px solid ${colors.red}30`,
-                        borderRadius: 8,
-                        padding: "8px",
-                        cursor: "pointer",
-                        color: colors.red
-                      }}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                  )}
+
+                  <button
+                    onClick={() => handleAppointmentAction("cancel", apt.id)}
+                    style={{
+                      background: "none",
+                      border: `1px solid ${colors.red}`,
+                      borderRadius: 8,
+                      padding: "8px 14px",
+                      cursor: "pointer",
+                      color: colors.red,
+                      fontSize: 12,
+                      fontWeight: 600
+                    }}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* No Results */}
-        {filteredAppointments.length === 0 && (
-          <div style={{
-            textAlign: "center",
-            padding: "60px 20px",
-            background: colors.background || colors.navyLight,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 16
-          }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>📅</div>
-            <h3 style={{ color: theme === 'white' ? '#1a202c' : colors.white, fontSize: 20, marginBottom: 8 }}>
-              No appointments found
-            </h3>
-            <p style={{ color: colors.slate, fontSize: 14 }}>
-              Try adjusting your search criteria or filters
-            </p>
+            ))}
           </div>
         )}
       </div>
