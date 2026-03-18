@@ -50,6 +50,14 @@ export default function DoctorBookingPage({ setView }) {
     }
   }, []);
 
+  const handleGoBack = () => {
+    if (user?.role === "admin") {
+      setView("admin-dashboard");
+    } else {
+      setView("doctor-selection");
+    }
+  };
+
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
     setBookingStep(2);
@@ -110,9 +118,9 @@ export default function DoctorBookingPage({ setView }) {
         
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
-          <BackButton 
-            onClick={() => setView("doctor-selection")}
-            text="Back to Doctors"
+          <BackButton
+            onClick={handleGoBack}
+            text="Back to Dashboard"
             style={{ marginBottom: 24 }}
           />
           

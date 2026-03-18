@@ -8,6 +8,7 @@ import clinicSlice from './slices/clinicSlice'
 import doctorSlice from './slices/doctorSlice'
 import appointmentSlice from './slices/appointmentSlice'
 import superAdminSlice from './slices/superAdminSlice'
+import adminSlice from './slices/adminSlice'
 import quickActionsSlice from './quickActionsSlice'
 
 // Root reducer
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   doctors: doctorSlice,
   appointments: appointmentSlice,
   superAdmin: superAdminSlice,
+  admin: adminSlice,
   quickActions: quickActionsSlice,
 })
 

@@ -115,7 +115,7 @@ export default function AdminDashboard({ setView }) {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 20 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              <BackButton 
+              <BackButton
                 onClick={() => setView && setView("home")}
                 text="Back to Home"
               />
